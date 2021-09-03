@@ -7,10 +7,8 @@
 
 import Foundation
 
-public func buildDailyRegisterRequestFilter(_ dayOfWeekIndex: Int) -> DailyRegisterFilterRequestNode {
-  let dayOfWeek = getDayOfWeekByIndex(dayOfWeekIndex)
-
-  return DRFRN(
+public func buildDailyRegisterRequestFilter(_ dayOfWeek: DayOfWeek) -> DailyRegisterFilterRequestNode {
+  DRFRN(
     include: [
       DRFRN.DaysOfWeekRelation(
         relation: "daysOfWeek",
