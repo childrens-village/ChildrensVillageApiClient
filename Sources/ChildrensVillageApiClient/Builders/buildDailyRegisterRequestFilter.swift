@@ -10,18 +10,18 @@ import Foundation
 public func buildDailyRegisterRequestFilter(_ dayOfWeekIndex: Int) -> DailyRegisterFilterRequestNode {
   let dayOfWeek = getDayOfWeekByIndex(dayOfWeekIndex)
 
-  return DailyRegisterFilterRequestNode(
+  return DRFRN(
     include: [
-      DailyRegisterFilterRequestNode.DaysOfWeekRelation(
+      DRFRN.DaysOfWeekRelation(
         relation: "daysOfWeek",
-        scope: DailyRegisterFilterRequestNode.DaysOfWeekScope(
-          where: DailyRegisterFilterRequestNode.DaysOfWeekWhere(
+        scope: DRFRN.DaysOfWeekScope(
+          where: DRFRN.DaysOfWeekWhere(
             day: dayOfWeek
           ),
           include: [
-            DailyRegisterFilterRequestNode.PupilsRelation(
+            DRFRN.PupilsRelation(
               relation: "pupils",
-              scope: DailyRegisterFilterRequestNode.PupilsScope(
+              scope: DRFRN.PupilsScope(
                 order: "lastName, firstName"
               )
             )

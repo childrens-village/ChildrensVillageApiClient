@@ -66,12 +66,12 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    let expectedResult = """
 //      {"include":[{"relation":"daysOfWeek","scope":{"where":{"day":"Monday"},"include":[{"relation":"pupils","scope":{"order":"lastName, firstName"}}]}}]}
 //      """
-    let pupilsScopeNode = DailyRegisterFilterRequestNode.PupilsScope(order: "lastName, firstName")
-    let pupilsRelationNode = DailyRegisterFilterRequestNode.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
-    let whereNode = DailyRegisterFilterRequestNode.DaysOfWeekWhere(day: "Monday")
-    let daysOfWeekScopeNode = DailyRegisterFilterRequestNode.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
-    let daysOfWeekRelationNode = DailyRegisterFilterRequestNode.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
-    let expectedResult = DailyRegisterFilterRequestNode(include: [daysOfWeekRelationNode])
+    let pupilsScopeNode = DRFRN.PupilsScope(order: "lastName, firstName")
+    let pupilsRelationNode = DRFRN.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
+    let whereNode = DRFRN.DaysOfWeekWhere(day: "Monday")
+    let daysOfWeekScopeNode = DRFRN.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
+    let daysOfWeekRelationNode = DRFRN.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
+    let expectedResult = DRFRN(include: [daysOfWeekRelationNode])
 
     let result = buildDailyRegisterRequestFilter(1)
     XCTAssertEqual(result, expectedResult)
@@ -96,5 +96,4 @@ class ChildrensVillageApiClientTests: XCTestCase {
       // Put the code you want to measure the time of here.
     }
   }
-
 }
