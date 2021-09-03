@@ -18,28 +18,6 @@ class ChildrensVillageApiClientTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
-  func testGetDayOfWeekByIndex() throws {
-    let dataSets = [
-      [1, "Monday"],
-      [5, "Friday"],
-      [7, "Sunday"]
-    ]
-
-    for dataSet in dataSets {
-      let result = getDayOfWeekByIndex(dataSet[0] as! Int)
-      assert(result == dataSet[1] as! String)
-    }
-  }
-
-  func testGetDayOfWeekByIndexDefaultsToMonday() throws {
-    let unexpectedDayOfWeekIndexes = [-1, 0, 8, 10, 123]
-
-    for unexpectedIndex in unexpectedDayOfWeekIndexes {
-      let result = getDayOfWeekByIndex(unexpectedIndex)
-      assert(result == "Monday")
-    }
-  }
-
   func testBuildDailyRegisterRequestFilter() throws {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -68,12 +46,12 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //      """
     let pupilsScopeNode = DRFRN.PupilsScope(order: "lastName, firstName")
     let pupilsRelationNode = DRFRN.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
-    let whereNode = DRFRN.DaysOfWeekWhere(day: "Monday")
+    let whereNode = DRFRN.DaysOfWeekWhere(day: .Monday)
     let daysOfWeekScopeNode = DRFRN.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
     let daysOfWeekRelationNode = DRFRN.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
     let expectedResult = DRFRN(include: [daysOfWeekRelationNode])
 
-    let result = buildDailyRegisterRequestFilter(1)
+    let result = buildDailyRegisterRequestFilter(.Monday)
     XCTAssertEqual(result, expectedResult)
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }

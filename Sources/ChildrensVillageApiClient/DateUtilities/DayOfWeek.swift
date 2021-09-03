@@ -1,6 +1,6 @@
 import Foundation
 
-enum DayOfWeek: String, Decodable {
+public enum DayOfWeek: String, Codable, Equatable {
   case Monday
   case Tuesday
   case Wednesday

@@ -18,7 +18,7 @@ public struct DailyRegisterFilterRequestNode: Codable, Equatable {
   }
 
   struct DaysOfWeekWhere: Codable, Equatable {
-    var day: String
+    var day: DayOfWeek
   }
 
   struct DaysOfWeekScope: Codable, Equatable {
