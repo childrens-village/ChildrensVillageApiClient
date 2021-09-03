@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias DRFRN = DailyRegisterFilterRequestNode
+
 public struct DailyRegisterFilterRequestNode: Codable, Equatable {
   var include: [DaysOfWeekRelation]
 
