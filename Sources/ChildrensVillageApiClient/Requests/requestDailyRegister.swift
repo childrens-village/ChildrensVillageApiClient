@@ -25,14 +25,8 @@ public func requestDailyRegister(
 }
 
 func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
-  let path = "/api/branches/\(branchId)"
+  let path = "/branches/\(branchId)"
   let queryItem = URLQueryItem(name: "filter", value: filter)
 
-  var urlComponent = URLComponents()
-  urlComponent.scheme = "https"
-  urlComponent.host = "childrens-village.co.uk"
-  urlComponent.path = path
-  urlComponent.queryItems = [queryItem]
-
-  return urlComponent
+  return buildUrlComponent(path, queryItems: [queryItem])
 }
