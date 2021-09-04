@@ -68,6 +68,25 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result, expectedResult)
   }
 
+  func testBuildUrlComponent() {
+    let path = "/users/123"
+
+    let result = buildUrlComponent(path)
+
+    XCTAssertEqual(result.path, "/api/users/123")
+  }
+
+  func testBuildUrlComponent_withQuery() {
+    let path = "/books/321"
+    let firstQueryItem = URLQueryItem(name: "lorem", value: "ipsum")
+    let secondQueryItem = URLQueryItem(name: "dolor", value: "sit")
+
+    let result = buildUrlComponent(path, queryItems: [firstQueryItem, secondQueryItem])
+
+    XCTAssertEqual(result.path, "/api/books/321")
+    XCTAssertEqual(result.query, "lorem=ipsum&dolor=sit")
+  }
+
   func testPerformanceExample() throws {
     // This is an example of a performance test case.
     self.measure {
