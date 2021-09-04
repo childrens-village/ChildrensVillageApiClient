@@ -5,13 +5,15 @@ import XCTest
 @available(iOS 15.0.0, *)
 class ApiClientIntegrationTests: XCTestCase {
   var jwtToken = ""
+  let login = "<login>"
+  let password = "<password>"
   let baseUrl = "https://childrens-village.co.uk/api"
 
   override func setUp() async throws {
     let url = URL(string: "\(baseUrl)/users/login")
     let credentials = [
-      "email": "<login>",
-      "password": "<password>"
+      "email": login,
+      "password": password
     ]
 
     do {
@@ -32,6 +34,15 @@ class ApiClientIntegrationTests: XCTestCase {
     let result: TokenError = try await requestTokenWithJsonCredentials(url!, credentials)
 
     print("Error details: \(result.error.name)")
+  }
+
+  func testRequestToken() async throws {
+    do {
+      let result: Token = try await requestToken(login, password)
+      print("Token: \(result.token)")
+    } catch {
+      print("Authentication failed. Please enter correct credentials and try again.")
+    }
   }
 
   func testRequestWithAuthorisation() async throws {
