@@ -5,7 +5,7 @@ import XCTest
 // You will need to re-generate this token for the test to pass
 let jwtToken = "<valid.token.here>"
 
-class ApiClientTest: XCTestCase {
+class ApiClientIntegrationTests: XCTestCase {
   @available(iOS 15.0.0, *)
   func testRequestWithAuthorisation() async throws {
     let branchId = 1
@@ -16,5 +16,13 @@ class ApiClientTest: XCTestCase {
     let result: PupilsByDayByBranch = try await requestWithAuthorisation(endpoint, token: jwtToken)
 
     assert(result.id == branchId)
+  }
+
+  @available(iOS 15.0.0, *)
+  func testRequestDailyRegister() async throws {
+    let branchId = 1
+    let dayOfTheWeek = DayOfWeek.Monday
+
+    let _: [Pupil] = try await requestDailyRegister(branchId: branchId, dayOfWeek: dayOfTheWeek, token: jwtToken)
   }
 }
