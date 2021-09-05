@@ -9,19 +9,17 @@ import Foundation
 import JwtApiClient
 
 @available(iOS 15.0.0, *)
-public func requestDailyRegister(
+public func requestDailyRegister<T: Decodable>(
   branchId: Int,
   dayOfWeek: DayOfWeek,
   token: String
-) async throws -> [Pupil] {
+) async throws -> T {
   let urlFilter = buildDailyRegisterRequestFilter(dayOfWeek)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
-  guard let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url else { return [] }
+  let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  let result: PupilsByDayByBranch = try await requestWithAuthorisation(endpoint, token: token)
-
-  return result.daysOfWeek.first?.pupils ?? []
+  return try await requestWithAuthorisation(endpoint, token: token)
 }
 
 func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
