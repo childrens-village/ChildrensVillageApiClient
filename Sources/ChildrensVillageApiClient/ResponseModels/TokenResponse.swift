@@ -12,21 +12,21 @@
 
 import Foundation
 
-struct Token: Decodable {
+public struct TokenResponse: Decodable {
   let token: String
 }
 
-extension Token {
+extension TokenResponse {
   enum CodingKeys: CodingKey {
     case token
   }
 
-  init(from decoder: Decoder) throws {
+  public init(from decoder: Decoder) throws {
     if let container = try? decoder.container(keyedBy: CodingKeys.self),
        let token = try? container.decode(String.self, forKey: .token) {
       self.init(token: token)
     } else {
-      throw try TokenError(from: decoder).error
+      throw try ErrorResponse(from: decoder).error
     }
   }
 }

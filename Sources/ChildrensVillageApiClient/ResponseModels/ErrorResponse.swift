@@ -1,5 +1,5 @@
 import Foundation
 
-struct TokenError: Decodable {
+public struct ErrorResponse: Decodable {
   let error: ApiError
 }
