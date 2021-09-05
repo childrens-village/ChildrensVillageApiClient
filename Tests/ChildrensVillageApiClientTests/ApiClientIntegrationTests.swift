@@ -43,7 +43,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
     let endpoint = "\(baseUrl)/branches/\(branchId)?filter=%7B%22include%22%3A%5B%7B%22relation%22%3A%22daysOfWeek%22%2C%22scope%22%3A%7B%22where%22%3A%7B%22day%22%3A%22\(dayOfTheWeek)%22%7D%2C%22include%22%3A%5B%7B%22relation%22%3A%22pupils%22%2C%22scope%22%3A%7B%22order%22%3A%22firstName%22%7D%7D%5D%7D%7D%5D%7D"
 
-    let result: PupilsByDayByBranch = try await requestWithAuthorisation(endpoint, token: jwtToken)
+    let result: DailyRegisterResponse = try await requestWithAuthorisation(endpoint, token: jwtToken)
 
     assert(result.id == branchId)
   }
@@ -52,6 +52,11 @@ class ApiClientIntegrationTests: XCTestCase {
     let branchId = 1
     let dayOfTheWeek = DayOfWeek.Monday
 
-    let _: [Pupil] = try await requestDailyRegister(branchId: branchId, dayOfWeek: dayOfTheWeek, token: jwtToken)
+    do {
+      let result: DailyRegisterResponse = try await requestDailyRegister(branchId: branchId, dayOfWeek: dayOfTheWeek, token: jwtToken)
+      print("Branch ID: \(result.id)")
+    } catch let error as ApiError {
+      print("Request failed: \(error.message)")
+    }
   }
 }
