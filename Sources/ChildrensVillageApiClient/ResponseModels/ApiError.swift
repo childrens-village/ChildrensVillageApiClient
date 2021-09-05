@@ -5,3 +5,5 @@ struct ApiError: Decodable {
   let name: String
   let message: String
 }
+
+extension ApiError: Error {}
