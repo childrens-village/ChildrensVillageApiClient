@@ -17,7 +17,7 @@ class ApiClientIntegrationTests: XCTestCase {
     ]
 
     do {
-      let result: Token = try await requestTokenWithJsonCredentials(url!, credentials)
+      let result: TokenResponse = try await requestTokenWithJsonCredentials(url!, credentials)
       jwtToken = result.token
     } catch _ as ApiError {
       print("Authentication failed. You need to specify correct credentials and try again.")
@@ -28,7 +28,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
   func testRequestToken() async throws {
     do {
-      let result: Token = try await requestToken(login, password)
+      let result: TokenResponse = try await requestToken(login, password)
       print("Token: \(result.token)")
     } catch let error as ApiError {
       print("Authentication failed: \(error.message)")
