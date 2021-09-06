@@ -16,7 +16,7 @@ public func requestToken<T: Decodable>(_ username: String, _ password: String) a
     "password": password
   ]
 
-  return try await requestTokenWithJsonCredentials(endpoint!, credentials)
+  return try await postJsonDictionary(endpoint!, credentials)
 }
 
 func buildTokenUrlComponent() -> URLComponents {

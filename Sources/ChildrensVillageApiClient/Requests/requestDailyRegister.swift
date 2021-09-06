@@ -19,7 +19,7 @@ public func requestDailyRegister<T: Decodable>(
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  return try await requestWithAuthorisation(endpoint, token: token)
+  return try await getJsonWithToken(endpoint, token: token)
 }
 
 func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
