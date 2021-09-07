@@ -9,7 +9,7 @@
 import Foundation
 
 public func buildDailyRegisterRequestFilter(_ date: Date) -> DailyRegisterFilterRequestNode {
-  let (isoDate, dayOfWeek) = getLocalDateParts(date)
+  let (isoDate, _, dayOfWeek) = getLocalIsoTimeParts(date)
 
   return DRFRN(
     include: [

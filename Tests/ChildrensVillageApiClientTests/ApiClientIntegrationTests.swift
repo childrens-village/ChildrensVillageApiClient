@@ -58,4 +58,65 @@ class ApiClientIntegrationTests: XCTestCase {
       print("Request failed: \(error.message)")
     }
   }
+
+//  TODO: Clean up data after running this test!
+  func testPostJsonDictionary_clockOn() async throws {
+    let url = URL(string: "\(baseUrl)/attendances")
+
+    let branchId = 1
+    let date = "2021-07-05"
+    let clockOnTime = "09:25"
+
+    let clockOnBody: [String: Any] = [
+      "pupilId": pupilId,
+      "branchId": branchId,
+      "date": date,
+      "clockOnTime": clockOnTime
+    ]
+
+    do {
+      let result: ClockOnResponse = try await postJsonDictionaryWithToken(url, token: jwtToken, dictionary: clockOnBody)
+      print("Generated clock-on ID: \(result.id)")
+    } catch _ as ApiError {
+      print("Request failed. You need to specify correct credentials and try again.")
+    } catch let error {
+      print("ERROR \(error)")
+    }
+  }
+
+//  TODO: Clean up data after running this test!
+  func testClockOnPupil() async throws {
+    let branchId = 1
+
+    do {
+      let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken)
+      print("Generated clock-on ID: \(result.id)")
+    } catch _ as ApiError {
+      print("Request failed. You need to specify correct credentials and try again.")
+    } catch let error {
+      print("ERROR \(error)")
+    }
+  }
+
+  //  TODO: Clean up data after running this test!
+  func testClockOnPupil_customDate() async throws {
+    let branchId = 1
+    var dc = DateComponents()
+    dc.year = 2021
+    dc.month = 9
+    dc.day = 6
+    dc.hour = 9
+    dc.minute = 25
+    dc.timeZone = TimeZone.current
+    let dateTime = Calendar.current.date(from: dc)!
+
+    do {
+      let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken, date: dateTime)
+      print("Generated clock-on ID: \(result.id)")
+    } catch _ as ApiError {
+      print("Request failed. You need to specify correct credentials and try again.")
+    } catch let error {
+      print("ERROR \(error)")
+    }
+  }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: We might not need this builder
 public func buildClockOnRequestBody(_ pupilId: String, branchId: Int, date: String, time: String) -> ClockOnRequestBody {
   ClockOnRequestBody(
      pupilId: pupilId,
