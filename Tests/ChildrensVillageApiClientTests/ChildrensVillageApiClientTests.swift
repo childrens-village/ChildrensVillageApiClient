@@ -82,14 +82,14 @@ class ChildrensVillageApiClientTests: XCTestCase {
   }
 
   func testBuildClockOnRequestUrlFilter() throws {
-    let expectedResult = ClockOnRequestUrlFilter(
+    let expectedResult = ClockOnRequestBody(
       pupilId: "uuid-123",
       branchId: 321,
       date: "2021-07-25",
       clockOnTime: "09:25"
    )
 
-    let result = buildClockOnRequestUrlFilter("uuid-123", branchId: 321, date: "2021-07-25", time: "09:25")
+    let result = buildClockOnRequestBody("uuid-123", branchId: 321, date: "2021-07-25", time: "09:25")
     XCTAssertEqual(result, expectedResult)
   }
 
