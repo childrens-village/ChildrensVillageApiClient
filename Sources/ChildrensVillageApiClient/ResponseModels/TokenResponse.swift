@@ -13,7 +13,7 @@
 import Foundation
 
 public struct TokenResponse: Decodable {
-  let token: String
+  public let token: String
 }
 
 extension TokenResponse {

@@ -1,7 +1,7 @@
 import Foundation
 
 public struct PupilsByDay: Decodable {
-  let id: Int
-  let day: DayOfWeek
-  let pupils: [Pupil]
+  public let id: Int
+  public let day: DayOfWeek
+  public let pupils: [Pupil]
 }

@@ -1,9 +1,9 @@
 import Foundation
 
-public struct Pupil: Decodable {
-  let id: String
-  let firstName: String
-  let lastName: String
-  let dateOfBirth: String?
-  let prefix: TitlePrefix?
+public struct Pupil: Identifiable, Decodable {
+  public let id: String
+  public let firstName: String
+  public let lastName: String
+  public let dateOfBirth: String?
+  public let prefix: TitlePrefix?
 }

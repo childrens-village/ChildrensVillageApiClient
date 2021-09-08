@@ -1,8 +1,8 @@
 import Foundation
 
 public struct Geolocation: Decodable {
-  let latitude: Float
-  let longitude: Float
+  public let latitude: Float
+  public let longitude: Float
 
   enum CodingKeys: String, CodingKey {
     case latitude = "x"
