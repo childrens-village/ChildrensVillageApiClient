@@ -8,7 +8,6 @@
 import Foundation
 import JwtApiClient
 
-@available(iOS 15.0.0, *)
 public func requestToken<T: Decodable>(_ username: String, _ password: String) async throws -> T {
   let endpoint = buildTokenUrlComponent().url
   let credentials = [

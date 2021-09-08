@@ -8,7 +8,6 @@
 import Foundation
 import JwtApiClient
 
-@available(iOS 15.0.0, *)
 public func requestDailyRegister<T: Decodable>(
   branchId: Int,
   dayOfWeek: DayOfWeek,

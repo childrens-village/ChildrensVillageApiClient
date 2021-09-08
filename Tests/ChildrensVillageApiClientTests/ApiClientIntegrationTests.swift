@@ -2,7 +2,6 @@ import XCTest
 @testable import ChildrensVillageApiClient
 @testable import JwtApiClient
 
-@available(iOS 15.0.0, *)
 class ApiClientIntegrationTests: XCTestCase {
   var jwtToken = ""
   let login = "<login>"
