@@ -49,10 +49,10 @@ class ApiClientIntegrationTests: XCTestCase {
 
   func testRequestDailyRegister() async throws {
     let branchId = 1
-    let dayOfTheWeek = DayOfWeek.Monday
+    let date = Date(isoDate: "2021-09-07")
 
     do {
-      let result: DailyRegisterResponse = try await requestDailyRegister(branchId: branchId, dayOfWeek: dayOfTheWeek, token: jwtToken)
+      let result: DailyRegisterResponse = try await requestDailyRegister(branchId: branchId, date: date, token: jwtToken)
       print("Branch ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")

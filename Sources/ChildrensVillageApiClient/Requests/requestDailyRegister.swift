@@ -10,10 +10,10 @@ import JwtApiClient
 
 public func requestDailyRegister<T: Decodable>(
   branchId: Int,
-  dayOfWeek: DayOfWeek,
+  date: Date,
   token: String
 ) async throws -> T {
-  let urlFilter = buildDailyRegisterRequestFilter(dayOfWeek)
+  let urlFilter = buildDailyRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!

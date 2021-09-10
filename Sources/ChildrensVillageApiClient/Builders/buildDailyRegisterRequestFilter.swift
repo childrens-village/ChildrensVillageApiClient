@@ -1,14 +1,17 @@
 //
 //  buildDailyRegisterRequestFilter.swift
-//  buildDailyRegisterRequestFilter
+//  Builds a tree of nested structures representing the URL
+//  filter for the daily register API request query string.
 //
 //  Created by Chris Kobrzak on 20/07/2021.
 //
 
 import Foundation
 
-public func buildDailyRegisterRequestFilter(_ dayOfWeek: DayOfWeek) -> DailyRegisterFilterRequestNode {
-  DRFRN(
+public func buildDailyRegisterRequestFilter(_ date: Date) -> DailyRegisterFilterRequestNode {
+  let (isoDate, dayOfWeek) = getLocalDateParts(date)
+
+  return DRFRN(
     include: [
       DRFRN.DaysOfWeekRelation(
         relation: "daysOfWeek",
@@ -20,7 +23,17 @@ public func buildDailyRegisterRequestFilter(_ dayOfWeek: DayOfWeek) -> DailyRegi
             DRFRN.PupilsRelation(
               relation: "pupils",
               scope: DRFRN.PupilsScope(
-                order: "lastName, firstName"
+                order: "firstName, lastName",
+                include: [
+                  DRFRN.AttendancesRelation(
+                    relation: "attendances",
+                    scope: DRFRN.AttendancesScope(
+                      where: DRFRN.AttendancesWhere(
+                        date: isoDate
+                      )
+                    )
+                  )
+                ]
               )
             )
           ]

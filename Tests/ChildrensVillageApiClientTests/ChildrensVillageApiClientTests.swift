@@ -18,6 +18,16 @@ class ChildrensVillageApiClientTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
+  func testGetDayOfWeek() throws {
+    let validEntries = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    let expectedResults = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday]
+
+    for (index, input) in validEntries.enumerated() {
+      let result = try! getDayOfWeek(string: input)
+      XCTAssertEqual(result, expectedResults[index])
+    }
+  }
+
   func testBuildDailyRegisterRequestFilter() throws {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -33,7 +43,17 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //                {
 //                  "relation": "pupils",
 //                  "scope": {
-//                    "order": "lastName"
+//                    "order": "lastName",
+//                    "include": [
+//                      {
+//                        "relation": "attendances",
+//                        "scope": {
+//                          "where": {
+//                            "date": "2021-07-05"
+//                          }
+//                        }
+//                      }
+//                    ]
 //                  }
 //                }
 //              ]
@@ -44,14 +64,19 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    let expectedResult = """
 //      {"include":[{"relation":"daysOfWeek","scope":{"where":{"day":"Monday"},"include":[{"relation":"pupils","scope":{"order":"lastName, firstName"}}]}}]}
 //      """
-    let pupilsScopeNode = DRFRN.PupilsScope(order: "lastName, firstName")
+    let sampleMonday = "2021-07-05"
+    let date = Date(isoDate: sampleMonday)
+    let attendancesWhere = DRFRN.AttendancesWhere(date: sampleMonday)
+    let attendancesScopeNode = DRFRN.AttendancesScope(where: attendancesWhere)
+    let attendancesRelationNode = DRFRN.AttendancesRelation(relation: "attendances", scope: attendancesScopeNode)
+    let pupilsScopeNode = DRFRN.PupilsScope(order: "firstName, lastName", include: [attendancesRelationNode])
     let pupilsRelationNode = DRFRN.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
     let whereNode = DRFRN.DaysOfWeekWhere(day: .Monday)
     let daysOfWeekScopeNode = DRFRN.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
     let daysOfWeekRelationNode = DRFRN.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
     let expectedResult = DRFRN(include: [daysOfWeekRelationNode])
 
-    let result = buildDailyRegisterRequestFilter(.Monday)
+    let result = buildDailyRegisterRequestFilter(date)
     XCTAssertEqual(result, expectedResult)
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }
