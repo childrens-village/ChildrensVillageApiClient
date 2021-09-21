@@ -7,6 +7,8 @@ class ApiClientIntegrationTests: XCTestCase {
   let login = "<login>"
   let password = "<password>"
   let baseUrl = "https://childrens-village.co.uk/api"
+  let pupilId = "<pupil ID>"
+  var clockOnIds: [Int] = []
 
   override func setUp() async throws {
     let url = URL(string: "\(baseUrl)/users/login")
@@ -76,6 +78,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await postJsonDictionaryWithToken(url, token: jwtToken, dictionary: clockOnBody)
+      clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch _ as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
@@ -90,6 +93,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken)
+      clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch _ as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
@@ -112,11 +116,43 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken, date: dateTime)
+      clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch _ as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
     } catch let error {
       print("ERROR \(error)")
+    }
+  }
+
+  func testDeleteWithToken() async throws {
+    let clockOnId = 40
+    let endpoint = URL(string: "\(baseUrl)/attendances/\(clockOnId)")!
+
+    do {
+      try await deleteWithToken(endpoint, token: jwtToken)
+    } catch _ as ApiError {
+      print("Request failed. You need to specify correct credentials and try again.")
+    } catch let error {
+      print("ERROR \(error)")
+    }
+  }
+
+  func testRevertPupilClockOn() async throws {
+    let clockOnId = 40
+
+    do {
+      try await revertPupilClockOn(attendanceId: clockOnId, token: jwtToken)
+    } catch _ as ApiError {
+      print("Request failed. Invalid log-in reversion.")
+    } catch let error {
+      print("ERROR \(error)")
+    }
+  }
+
+  override func tearDown() async throws {
+    for clockOnId in clockOnIds {
+      try await revertPupilClockOn(attendanceId: clockOnId, token: jwtToken)
     }
   }
 }
