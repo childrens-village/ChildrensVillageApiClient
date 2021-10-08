@@ -12,7 +12,7 @@ public enum DayOfWeek: String, CaseIterable, Codable, Equatable {
 
 func getDayOfWeek(string: String) throws -> DayOfWeek {
   for dayOfWeek in DayOfWeek.allCases {
-    if (dayOfWeek.rawValue != string) {
+    guard dayOfWeek.rawValue == string else {
       continue
     }
 

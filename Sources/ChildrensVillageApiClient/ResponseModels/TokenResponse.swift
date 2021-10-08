@@ -22,11 +22,11 @@ extension TokenResponse {
   }
 
   public init(from decoder: Decoder) throws {
-    if let container = try? decoder.container(keyedBy: CodingKeys.self),
-       let token = try? container.decode(String.self, forKey: .token) {
-      self.init(token: token)
-    } else {
-      throw try ErrorResponse(from: decoder).error
+    guard let container = try? decoder.container(keyedBy: CodingKeys.self),
+          let token = try? container.decode(String.self, forKey: .token) else {
+        throw try ErrorResponse(from: decoder).error
     }
+
+    self.init(token: token)
   }
 }

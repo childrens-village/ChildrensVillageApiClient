@@ -25,21 +25,21 @@ extension ClockOnResponse {
   }
 
   public init(from decoder: Decoder) throws {
-    if let container = try? decoder.container(keyedBy: CodingKeys.self),
+    guard let container = try? decoder.container(keyedBy: CodingKeys.self),
        let id = try? container.decode(Int.self, forKey: .id),
        let pupilId = try? container.decode(String.self, forKey: .pupilId),
        let branchId = try? container.decode(Int.self, forKey: .branchId),
        let date = try? container.decode(String.self, forKey: .date),
-       let clockOnTime = try? container.decode(String.self, forKey: .clockOnTime) {
-      self.init(
-        id: id,
-        pupilId: pupilId,
-        branchId: branchId,
-        date: date,
-        clockOnTime: clockOnTime
-      )
-    } else {
+       let clockOnTime = try? container.decode(String.self, forKey: .clockOnTime) else {
       throw try ErrorResponse(from: decoder).error
     }
+
+    self.init(
+      id: id,
+      pupilId: pupilId,
+      branchId: branchId,
+      date: date,
+      clockOnTime: clockOnTime
+    )
   }
 }
