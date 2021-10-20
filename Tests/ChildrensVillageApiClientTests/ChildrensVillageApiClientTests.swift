@@ -81,6 +81,42 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }
 
+  func testBuildFacilitatorsRequestFilter() throws {
+// Endpoint: /parents
+// Filter object:
+//  {
+//    "order": "firstName, lastName",
+//    "where": {
+//      "active": true,
+//      "facilitating": true
+//    },
+//    "fields": {
+//      "id": true,
+//      "primary": true,
+//      "firstName": true,
+//      "lastName": true,
+//      "prefix": true,
+//      "phone": true,
+//      "email": true
+//    }
+//  }
+//      {"order":"firstName","where":{"active":true,"facilitating":true},"fields":{"id":true,"primary":true,"firstName":true,"lastName":true,"prefix":true,"phone":true,"email":true}}
+
+    let fieldNode = FRF.Field(
+      id: true,
+      firstName: true,
+      lastName: true,
+      prefix: true,
+      phone: true,
+      email: true
+    )
+    let whereNode = FRF.Where(active: true, facilitating: true)
+    let expectedResult = FRF(fields: fieldNode, where: whereNode, order: "firstName, lastName")
+
+    let result = buildFacilitatorsRequestFilter()
+    XCTAssertEqual(result, expectedResult)
+  }
+
   func testBuildClockOnRequestUrlFilter() throws {
     let expectedResult = ClockOnRequestBody(
       pupilId: "uuid-123",

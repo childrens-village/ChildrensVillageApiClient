@@ -61,6 +61,15 @@ class ApiClientIntegrationTests: XCTestCase {
     }
   }
 
+  func testRequestFacilitators() async throws {
+    do {
+      let results: [FacilitatorResponse] = try await requestFacilitators(token: jwtToken)
+      print("Total: \(results.count)")
+    } catch let error as ApiError {
+      print("Request failed: \(error.message)")
+    }
+  }
+
 //  TODO: Clean up data after running this test!
   func testPostJsonDictionary_clockOn() async throws {
     let url = URL(string: "\(baseUrl)/attendances")
