@@ -5,6 +5,6 @@ public struct Pupil: Identifiable, Decodable {
   public let firstName: String
   public let lastName: String
   public let dateOfBirth: String?
-  public let prefix: TitlePrefix?
+  public let prefix: TitlePrefix
   public let attendances: [Attendance]?
 }
