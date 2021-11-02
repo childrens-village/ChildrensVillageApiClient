@@ -153,7 +153,7 @@ class ApiClientIntegrationTests: XCTestCase {
     let clockOnId = 40
 
     do {
-      try await revertPupilClockOn(attendanceId: clockOnId, token: jwtToken)
+      try await revertPupilClockOn(token: jwtToken, attendanceId: clockOnId)
     } catch _ as ApiError {
       print("Request failed. Invalid log-in reversion.")
     } catch let error {
@@ -163,7 +163,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
   override func tearDown() async throws {
     for clockOnId in clockOnIds {
-      try await revertPupilClockOn(attendanceId: clockOnId, token: jwtToken)
+      try await revertPupilClockOn(token: jwtToken, attendanceId: clockOnId)
     }
   }
 }
