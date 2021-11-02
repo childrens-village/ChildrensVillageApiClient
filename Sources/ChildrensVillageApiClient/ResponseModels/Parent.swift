@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Parent: Identifiable, Decodable {
+public struct Parent: Attending, Identifiable, Decodable {
   public let id: String
   public let active: Bool?
   public let facilitating: Bool?

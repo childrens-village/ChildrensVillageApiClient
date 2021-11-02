@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Pupil: Identifiable, Decodable {
+public struct Pupil: Attending, Identifiable, Decodable {
   public let id: String
   public let firstName: String
   public let lastName: String
