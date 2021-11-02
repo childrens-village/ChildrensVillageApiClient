@@ -5,5 +5,5 @@ public enum TitlePrefix: String, Decodable {
   case Master
   case Miss
   case Mrs
-  case Mister
+  case Mr
 }
