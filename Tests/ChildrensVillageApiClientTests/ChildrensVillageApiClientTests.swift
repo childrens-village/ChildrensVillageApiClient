@@ -69,14 +69,14 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday)
     let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
     let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
-    let pupilsScopeNode = DRFRN.PupilsScope(order: "firstName, lastName", include: [attendancesRelationNode])
-    let pupilsRelationNode = DRFRN.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
-    let whereNode = DRFRN.DaysOfWeekWhere(day: .Monday)
-    let daysOfWeekScopeNode = DRFRN.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
-    let daysOfWeekRelationNode = DRFRN.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
-    let expectedResult = DRFRN(include: [daysOfWeekRelationNode])
+    let pupilsScopeNode = PRRF.PupilsScope(order: "firstName, lastName", include: [attendancesRelationNode])
+    let pupilsRelationNode = PRRF.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
+    let whereNode = PRRF.DaysOfWeekWhere(day: .Monday)
+    let daysOfWeekScopeNode = PRRF.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
+    let daysOfWeekRelationNode = PRRF.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
+    let expectedResult = PRRF(include: [daysOfWeekRelationNode])
 
-    let result = buildDailyRegisterRequestFilter(date)
+    let result = buildPupilsRegisterRequestFilter(date)
     XCTAssertEqual(result, expectedResult)
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }
@@ -112,7 +112,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //  }
 //      {"order":"firstName, lastName","where":{"active":true,"facilitating":true},"fields":{"id":true,"primary":true,"firstName":true,"lastName":true,"prefix":true,"phone":true,"email":true},"include":[{"relation":"attendances","scope":{"where":{"date":"<date>"}}}]}
 
-    let fieldNode = FRF.Field(
+    let fieldNode = FRRF.Field(
       id: true,
       firstName: true,
       lastName: true,
@@ -120,7 +120,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       phone: true,
       email: true
     )
-    let whereNode = FRF.Where(active: true, facilitating: true)
+    let whereNode = FRRF.Where(active: true, facilitating: true)
 
     let sampleTuesday = "2021-10-18"
     let date = Date(isoDate: sampleTuesday)
@@ -128,9 +128,9 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
     let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
 
-    let expectedResult = FRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
+    let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
 
-    let result = buildFacilitatorsRequestFilter(date)
+    let result = buildFacilitatorsRegisterRequestFilter(date)
     XCTAssertEqual(result, expectedResult)
   }
 

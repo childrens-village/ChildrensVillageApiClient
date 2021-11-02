@@ -54,7 +54,7 @@ class ApiClientIntegrationTests: XCTestCase {
     let date = Date(isoDate: "2021-09-07")
 
     do {
-      let result: DailyRegisterResponse = try await requestDailyRegister(branchId: branchId, date: date, token: jwtToken)
+      let result: DailyRegisterResponse = try await requestPupilsRegister(branchId: branchId, date: date, token: jwtToken)
       print("Branch ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")
@@ -65,7 +65,7 @@ class ApiClientIntegrationTests: XCTestCase {
     let date = Date(isoDate: "2021-10-18")
 
     do {
-      let results: [FacilitatorResponse] = try await requestFacilitators(token: jwtToken, date: date)
+      let results: [FacilitatorResponse] = try await requestFacilitatorsRegister(token: jwtToken, date: date)
       print("Total: \(results.count)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")

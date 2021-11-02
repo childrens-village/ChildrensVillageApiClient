@@ -8,21 +8,21 @@
 
 import Foundation
 
-public func buildDailyRegisterRequestFilter(_ date: Date) -> DailyRegisterFilterRequestNode {
+public func buildPupilsRegisterRequestFilter(_ date: Date) -> PupilsRegisterRequestFilter {
   let (isoDate, _, dayOfWeek) = getLocalIsoTimeParts(date)
 
-  return DRFRN(
+  return PRRF(
     include: [
-      DRFRN.DaysOfWeekRelation(
+      PRRF.DaysOfWeekRelation(
         relation: "daysOfWeek",
-        scope: DRFRN.DaysOfWeekScope(
-          where: DRFRN.DaysOfWeekWhere(
+        scope: PRRF.DaysOfWeekScope(
+          where: PRRF.DaysOfWeekWhere(
             day: dayOfWeek
           ),
           include: [
-            DRFRN.PupilsRelation(
+            PRRF.PupilsRelation(
               relation: "pupils",
-              scope: DRFRN.PupilsScope(
+              scope: PRRF.PupilsScope(
                 order: "firstName, lastName",
                 include: [
                   ARRF(

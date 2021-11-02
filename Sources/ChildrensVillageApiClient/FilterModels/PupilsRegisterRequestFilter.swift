@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias DRFRN = DailyRegisterFilterRequestNode
+typealias PRRF = PupilsRegisterRequestFilter
 
-public struct DailyRegisterFilterRequestNode: Codable, Equatable {
+public struct PupilsRegisterRequestFilter: Codable, Equatable {
   var include: [DaysOfWeekRelation]
 
   struct DaysOfWeekRelation: Codable, Equatable {

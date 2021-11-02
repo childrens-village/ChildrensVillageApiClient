@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func buildFacilitatorsRequestFilter(_ date: Date) -> FacilitatorsRequestFilter {
+public func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> FacilitatorsRegisterRequestFilter {
   let (isoDate, _, _) = getLocalIsoTimeParts(date)
 
-  return FRF(
-    fields: FRF.Field(
+  return FRRF(
+    fields: FRRF.Field(
       id: true,
       firstName: true,
       lastName: true,
@@ -30,7 +30,7 @@ public func buildFacilitatorsRequestFilter(_ date: Date) -> FacilitatorsRequestF
         )
       )
     ],
-    where: FRF.Where(
+    where: FRRF.Where(
       active: true,
       facilitating: true
     ),
