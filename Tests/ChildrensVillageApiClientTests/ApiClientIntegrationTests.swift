@@ -103,7 +103,7 @@ class ApiClientIntegrationTests: XCTestCase {
     let branchId = 1
 
     do {
-      let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken)
+      let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId)
       clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch _ as ApiError {
@@ -126,7 +126,7 @@ class ApiClientIntegrationTests: XCTestCase {
     let dateTime = Calendar.current.date(from: dc)!
 
     do {
-      let result: ClockOnResponse = try await clockOnPupil(pupilId: pupilId, branchId: branchId, token: jwtToken, date: dateTime)
+      let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId, date: dateTime)
       clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch _ as ApiError {
