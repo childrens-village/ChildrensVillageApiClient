@@ -8,7 +8,9 @@
 
 import Foundation
 
-public func buildFacilitatorsRequestFilter() -> FacilitatorsRequestFilter? {
+public func buildFacilitatorsRequestFilter(_ date: Date) -> FacilitatorsRequestFilter {
+  let (isoDate, _, _) = getLocalIsoTimeParts(date)
+
   return FRF(
     fields: FRF.Field(
       id: true,
@@ -18,6 +20,16 @@ public func buildFacilitatorsRequestFilter() -> FacilitatorsRequestFilter? {
       phone: true,
       email: true
     ),
+    include: [
+      ARRF(
+        relation: "attendances",
+        scope: ARRF.AttendancesScope(
+          where: ARRF.AttendancesWhere(
+            date: isoDate
+          )
+        )
+      )
+    ],
     where: FRF.Where(
       active: true,
       facilitating: true

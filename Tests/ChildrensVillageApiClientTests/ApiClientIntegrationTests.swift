@@ -62,8 +62,10 @@ class ApiClientIntegrationTests: XCTestCase {
   }
 
   func testRequestFacilitators() async throws {
+    let date = Date(isoDate: "2021-10-18")
+
     do {
-      let results: [FacilitatorResponse] = try await requestFacilitators(token: jwtToken)
+      let results: [FacilitatorResponse] = try await requestFacilitators(token: jwtToken, date: date)
       print("Total: \(results.count)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")

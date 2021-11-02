@@ -25,10 +25,10 @@ public func buildDailyRegisterRequestFilter(_ date: Date) -> DailyRegisterFilter
               scope: DRFRN.PupilsScope(
                 order: "firstName, lastName",
                 include: [
-                  DRFRN.AttendancesRelation(
+                  ARRF(
                     relation: "attendances",
-                    scope: DRFRN.AttendancesScope(
-                      where: DRFRN.AttendancesWhere(
+                    scope: ARRF.AttendancesScope(
+                      where: ARRF.AttendancesWhere(
                         date: isoDate
                       )
                     )

@@ -10,6 +10,7 @@ extension FacilitatorResponse {
     case prefix
     case phone
     case email
+    case attendances
   }
 
   public init(from decoder: Decoder) throws {
@@ -23,8 +24,9 @@ extension FacilitatorResponse {
       throw try ErrorResponse(from: decoder).error
     }
 
-    // Handle properties that can have null values
+    // Handle properties that can have null values or might be missing
     let email = try container.decodeIfPresent(String.self, forKey: .email)
+    let attendances = try container.decodeIfPresent([Attendance].self, forKey: .attendances)
 
     self.init(
       id: id,
@@ -35,7 +37,8 @@ extension FacilitatorResponse {
       lastName: lastName,
       prefix: prefix,
       phone: phone,
-      email: email
+      email: email,
+      attendances: attendances
     )
   }
 }

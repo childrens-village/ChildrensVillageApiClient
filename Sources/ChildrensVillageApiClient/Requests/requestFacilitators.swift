@@ -8,8 +8,8 @@
 import Foundation
 import JwtApiClient
 
-public func requestFacilitators<T: Decodable>(token: String) async throws -> T {
-  let urlFilter = buildFacilitatorsRequestFilter()
+public func requestFacilitators<T: Decodable>(token: String, date: Date) async throws -> T {
+  let urlFilter = buildFacilitatorsRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildFacilitatorsUrlComponent(filter: filterJson).url!
