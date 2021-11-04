@@ -20,10 +20,12 @@ class ApiClientIntegrationTests: XCTestCase {
     do {
       let result: TokenResponse = try await postJsonDictionary(url!, credentials)
       jwtToken = result.token
-    } catch _ as ApiError {
+    } catch let error as ApiError {
       print("Authentication failed. You need to specify correct credentials and try again.")
+      throw error
     } catch {
       print("Unknown authentication error.")
+      throw error
     }
   }
 
@@ -33,8 +35,10 @@ class ApiClientIntegrationTests: XCTestCase {
       print("Token: \(result.token)")
     } catch let error as ApiError {
       print("Authentication failed: \(error.message)")
+      throw error
     } catch {
       print("Authentication failed. Please enter correct credentials and try again.")
+      throw error
     }
   }
 
@@ -58,6 +62,7 @@ class ApiClientIntegrationTests: XCTestCase {
       print("Branch ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")
+      throw error
     }
   }
 
@@ -69,10 +74,10 @@ class ApiClientIntegrationTests: XCTestCase {
       print("Total: \(results.count)")
     } catch let error as ApiError {
       print("Request failed: \(error.message)")
+      throw error
     }
   }
 
-//  TODO: Clean up data after running this test!
   func testPostJsonDictionary_clockOn() async throws {
     let url = URL(string: "\(baseUrl)/attendances")
 
@@ -91,14 +96,15 @@ class ApiClientIntegrationTests: XCTestCase {
       let result: ClockOnResponse = try await postJsonDictionaryWithToken(url, token: jwtToken, dictionary: clockOnBody)
       clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
-    } catch _ as ApiError {
+    } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
+      throw error
     } catch let error {
       print("ERROR \(error)")
+      throw error
     }
   }
 
-//  TODO: Clean up data after running this test!
   func testClockOnPupil() async throws {
     let branchId = 1
 
@@ -106,14 +112,15 @@ class ApiClientIntegrationTests: XCTestCase {
       let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId)
       clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
-    } catch _ as ApiError {
+    } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
+      throw error
     } catch let error {
       print("ERROR \(error)")
+      throw error
     }
   }
 
-  //  TODO: Clean up data after running this test!
   func testClockOnPupil_customDate() async throws {
     let branchId = 1
     var dc = DateComponents()
@@ -129,10 +136,12 @@ class ApiClientIntegrationTests: XCTestCase {
       let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId, date: dateTime)
       clockOnIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
-    } catch _ as ApiError {
+    } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
+      throw error
     } catch let error {
       print("ERROR \(error)")
+      throw error
     }
   }
 
@@ -146,6 +155,7 @@ class ApiClientIntegrationTests: XCTestCase {
       print("Request failed. You need to specify correct credentials and try again.")
     } catch let error {
       print("ERROR \(error)")
+      throw error
     }
   }
 
@@ -154,10 +164,12 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       try await revertPupilClockOn(token: jwtToken, attendanceId: clockOnId)
-    } catch _ as ApiError {
+    } catch let error as ApiError {
       print("Request failed. Invalid log-in reversion.")
+      throw error
     } catch let error {
       print("ERROR \(error)")
+      throw error
     }
   }
 
