@@ -134,18 +134,6 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result, expectedResult)
   }
 
-  func testBuildClockOnRequestUrlFilter() throws {
-    let expectedResult = ClockOnRequestBody(
-      pupilId: "uuid-123",
-      branchId: 321,
-      date: "2021-07-25",
-      clockOnTime: "09:25"
-   )
-
-    let result = buildClockOnRequestBody("uuid-123", branchId: 321, date: "2021-07-25", time: "09:25")
-    XCTAssertEqual(result, expectedResult)
-  }
-
   func testBuildUrlComponent() {
     let path = "/users/123"
 
