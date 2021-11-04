@@ -8,7 +8,9 @@ class ApiClientIntegrationTests: XCTestCase {
   let password = "<password>"
   let baseUrl = "https://childrens-village.co.uk/api"
   let pupilId = "<pupil ID>"
-  var clockOnIds: [Int] = []
+  let facilitatorId = "<facilitator ID>"
+  var pupilClockingIds: [Int] = []
+  var facilitatorClockingIds: [Int] = []
 
   override func setUp() async throws {
     let url = URL(string: "\(baseUrl)/users/login")
@@ -53,7 +55,7 @@ class ApiClientIntegrationTests: XCTestCase {
     assert(result.id == branchId)
   }
 
-  func testRequestDailyRegister() async throws {
+  func testRequestPupilsRegister() async throws {
     let branchId = 1
     let date = Date(isoDate: "2021-09-07")
 
@@ -66,7 +68,7 @@ class ApiClientIntegrationTests: XCTestCase {
     }
   }
 
-  func testRequestFacilitators() async throws {
+  func testRequestFacilitatorsRegister() async throws {
     let date = Date(isoDate: "2021-10-18")
 
     do {
@@ -78,7 +80,7 @@ class ApiClientIntegrationTests: XCTestCase {
     }
   }
 
-  func testPostJsonDictionary_clockOn() async throws {
+  func testPostJsonDictionary_pupilClockOn() async throws {
     let url = URL(string: "\(baseUrl)/attendances")
 
     let branchId = 1
@@ -94,7 +96,7 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await postJsonDictionaryWithToken(url, token: jwtToken, dictionary: clockOnBody)
-      clockOnIds.append(result.id)
+      pupilClockingIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
@@ -110,10 +112,26 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId)
-      clockOnIds.append(result.id)
+      pupilClockingIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
+      throw error
+    } catch let error {
+      print("ERROR \(error)")
+      throw error
+    }
+  }
+
+  func testClockOnFacilitator() async throws {
+    let branchId = 1
+
+    do {
+      let result: ClockOnResponse = try await clockOnFacilitator(token: jwtToken, facilitatorId: facilitatorId, branchId: branchId)
+      facilitatorClockingIds.append(result.id)
+      print("Generated facilitator clock-on ID: \(result.id)")
+    } catch let error as ApiError {
+      print("Facilitator clocking request failed. You need to specify correct credentials and try again.")
       throw error
     } catch let error {
       print("ERROR \(error)")
@@ -134,10 +152,34 @@ class ApiClientIntegrationTests: XCTestCase {
 
     do {
       let result: ClockOnResponse = try await clockOnPupil(token: jwtToken, pupilId: pupilId, branchId: branchId, date: dateTime)
-      clockOnIds.append(result.id)
+      pupilClockingIds.append(result.id)
       print("Generated clock-on ID: \(result.id)")
     } catch let error as ApiError {
       print("Request failed. You need to specify correct credentials and try again.")
+      throw error
+    } catch let error {
+      print("ERROR \(error)")
+      throw error
+    }
+  }
+
+  func testClockOnFacilitator_customDate() async throws {
+    let branchId = 1
+    var dc = DateComponents()
+    dc.year = 2021
+    dc.month = 9
+    dc.day = 6
+    dc.hour = 16
+    dc.minute = 25
+    dc.timeZone = TimeZone.current
+    let dateTime = Calendar.current.date(from: dc)!
+
+    do {
+      let result: ClockOnResponse = try await clockOnFacilitator(token: jwtToken, facilitatorId: facilitatorId, branchId: branchId, date: dateTime)
+      facilitatorClockingIds.append(result.id)
+      print("Generated facilitator clock-on ID: \(result.id)")
+    } catch let error as ApiError {
+      print("Facilitator clocking request failed. You need to specify correct credentials and try again.")
       throw error
     } catch let error {
       print("ERROR \(error)")
@@ -174,8 +216,12 @@ class ApiClientIntegrationTests: XCTestCase {
   }
 
   override func tearDown() async throws {
-    for clockOnId in clockOnIds {
+    for clockOnId in pupilClockingIds {
       try await revertPupilClockOn(token: jwtToken, attendanceId: clockOnId)
+    }
+
+    for clockOnId in facilitatorClockingIds {
+      try await revertFacilitatorClockOn(token: jwtToken, attendanceId: clockOnId)
     }
   }
 }
