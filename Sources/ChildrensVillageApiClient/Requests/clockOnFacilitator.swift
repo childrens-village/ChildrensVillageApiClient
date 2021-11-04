@@ -1,5 +1,5 @@
 //
-//  clockOnPupil.swift
+//  clockOnFacilitator.swift
 //
 //  Created by Chris Kobrzak on 07/09/2021.
 //
@@ -7,9 +7,10 @@
 import Foundation
 import JwtApiClient
 
-public func clockOnPupil<T: Decodable>(
+#warning("TODO: Unit test")
+public func clockOnFacilitator<T: Decodable>(
   token: String,
-  pupilId: String,
+  facilitatorId: String,
   branchId: Int,
   date: Date? = Date()
 ) async throws -> T {
@@ -17,7 +18,7 @@ public func clockOnPupil<T: Decodable>(
   let (date, time, _) = getLocalIsoTimeParts(date ?? Date())
 
   let body: [String: Any] = [
-    "pupilId": pupilId,
+    "parentId": facilitatorId,
     "branchId": branchId,
     "date": date,
     "clockOnTime": time
@@ -27,7 +28,7 @@ public func clockOnPupil<T: Decodable>(
 }
 
 fileprivate func buildClockOnUrlComponent() -> URLComponents {
-  let path = "/attendances"
+  let path = "/parent-attendances"
 
   return buildUrlComponent(path)
 }

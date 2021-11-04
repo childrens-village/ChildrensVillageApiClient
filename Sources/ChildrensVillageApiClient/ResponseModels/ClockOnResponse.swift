@@ -9,7 +9,6 @@ import Foundation
 
 public struct ClockOnResponse: Decodable {
   public let id: Int
-  public let pupilId: String
   public let branchId: Int
   public let date: String
   public let clockOnTime: String
@@ -27,7 +26,6 @@ extension ClockOnResponse {
   public init(from decoder: Decoder) throws {
     guard let container = try? decoder.container(keyedBy: CodingKeys.self),
        let id = try? container.decode(Int.self, forKey: .id),
-       let pupilId = try? container.decode(String.self, forKey: .pupilId),
        let branchId = try? container.decode(Int.self, forKey: .branchId),
        let date = try? container.decode(String.self, forKey: .date),
        let clockOnTime = try? container.decode(String.self, forKey: .clockOnTime) else {
@@ -36,7 +34,6 @@ extension ClockOnResponse {
 
     self.init(
       id: id,
-      pupilId: pupilId,
       branchId: branchId,
       date: date,
       clockOnTime: clockOnTime

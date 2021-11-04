@@ -8,12 +8,12 @@
 import Foundation
 import JwtApiClient
 
-public func requestDailyRegister<T: Decodable>(
+public func requestPupilsRegister<T: Decodable>(
   branchId: Int,
   date: Date,
   token: String
 ) async throws -> T {
-  let urlFilter = buildDailyRegisterRequestFilter(date)
+  let urlFilter = buildPupilsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
