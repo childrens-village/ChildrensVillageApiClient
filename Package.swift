@@ -18,7 +18,11 @@ let package = Package(
         .package(
           name: "JwtApiClient",
           url: "git@github.com:chris-kobrzak/JwtApiClient.git",
-          from: "0.0.1"
+          branch: "mockingbird"
+        ),
+        .package(
+          name: "Mockingbird",
+          url: "https://github.com/birdrides/mockingbird.git", .upToNextMinor(from: "0.20.0")
         )
     ],
     targets: [
@@ -29,6 +33,6 @@ let package = Package(
             dependencies: ["JwtApiClient"]),
         .testTarget(
             name: "ChildrensVillageApiClientTests",
-            dependencies: ["ChildrensVillageApiClient"]),
+            dependencies: ["Mockingbird", "JwtApiClient", "ChildrensVillageApiClient"]),
     ]
 )

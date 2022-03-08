@@ -30,7 +30,7 @@ class MockJsonApiClient {
 extension String: Error {}
 
 extension MockJsonApiClient: JsonApiCompatible {
-  func post<T>(_ url: URL!, token: String, dictionary: [String : Any]) async throws -> T where T : Decodable {
+  func post<T>(_ url: URL!, dictionary: [String : Any], token: String) async throws -> T where T : Decodable {
     throw "Implement me"
   }
   
@@ -46,7 +46,7 @@ extension MockJsonApiClient: JsonApiCompatible {
     throw "Implement me"
   }
   
-  func patch(_ url: URL!, token: String, dictionary: [String : Any]) async throws {
+  func patch(_ url: URL!, dictionary: [String : Any], token: String) async throws {
     throw "Implement me"
   }
   
