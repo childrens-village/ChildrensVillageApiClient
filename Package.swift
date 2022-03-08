@@ -18,7 +18,7 @@ let package = Package(
         .package(
           name: "JwtApiClient",
           url: "git@github.com:chris-kobrzak/JwtApiClient.git",
-          branch: "main"
+          from: "0.0.1"
         )
     ],
     targets: [
