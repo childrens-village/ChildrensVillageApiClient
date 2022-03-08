@@ -1,5 +1,5 @@
 //
-//  requestFacilitators.swift
+//  requestFacilitatorsRegisterTask.swift
 //  File
 //
 //  Created by Chris Kobrzak on 20/10/2021.
@@ -8,7 +8,7 @@
 import Foundation
 import JwtApiClient
 
-public func requestFacilitatorsRegister<T: Decodable>(token: String, date: Date) async throws -> T {
+func requestFacilitatorsRegisterTask<T: Decodable>(_ token: String, _ date: Date) async throws -> T {
   let urlFilter = buildFacilitatorsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 

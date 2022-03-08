@@ -1,5 +1,5 @@
 //
-//  requestDailyRegister.swift
+//  requestPupilsRegisterTask.swift
 //  File
 //
 //  Created by Chris Kobrzak on 03/09/2021.
@@ -8,10 +8,10 @@
 import Foundation
 import JwtApiClient
 
-public func requestPupilsRegister<T: Decodable>(
-  branchId: Int,
-  date: Date,
-  token: String
+func requestPupilsRegisterTask<T: Decodable>(
+  _ token: String,
+  _ branchId: Int,
+  _ date: Date
 ) async throws -> T {
   let urlFilter = buildPupilsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)

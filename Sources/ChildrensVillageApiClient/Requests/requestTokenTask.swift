@@ -1,5 +1,5 @@
 //
-//  requestToken.swift
+//  requestTokenTask.swift
 //  Utility for logging in and obtaining the token for future requests.
 //
 //  Created by Chris Kobrzak on 04/09/2021.
@@ -8,7 +8,7 @@
 import Foundation
 import JwtApiClient
 
-public func requestToken<T: Decodable>(_ username: String, _ password: String) async throws -> T {
+func requestTokenTask<T: Decodable>(_ username: String, _ password: String) async throws -> T {
   let endpoint = buildTokenUrlComponent().url
   let credentials = [
     "email": username,

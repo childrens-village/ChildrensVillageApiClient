@@ -1,5 +1,5 @@
 //
-//  clockOnPupil.swift
+//  clockOnPupilTask.swift
 //
 //  Created by Chris Kobrzak on 07/09/2021.
 //
@@ -7,11 +7,11 @@
 import Foundation
 import JwtApiClient
 
-public func clockOnPupil<T: Decodable>(
-  token: String,
-  pupilId: String,
-  branchId: Int,
-  date: Date? = Date()
+func clockOnPupilTask<T: Decodable>(
+  _ token: String,
+  _ pupilId: String,
+  _ branchId: Int,
+  _ date: Date? = Date()
 ) async throws -> T {
   let endpoint = buildClockOnUrlComponent().url!
   let (date, time, _) = getLocalIsoTimeParts(date ?? Date())

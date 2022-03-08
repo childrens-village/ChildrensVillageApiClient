@@ -1,5 +1,5 @@
 //
-//  clockOnFacilitator.swift
+//  clockOnFacilitatorTask.swift
 //
 //  Created by Chris Kobrzak on 07/09/2021.
 //
@@ -8,11 +8,11 @@ import Foundation
 import JwtApiClient
 
 #warning("TODO: Unit test")
-public func clockOnFacilitator<T: Decodable>(
-  token: String,
-  facilitatorId: String,
-  branchId: Int,
-  date: Date? = Date()
+func clockOnFacilitatorTask<T: Decodable>(
+  _ token: String,
+  _ facilitatorId: String,
+  _ branchId: Int,
+  _ date: Date? = Date()
 ) async throws -> T {
   let endpoint = buildClockOnUrlComponent().url!
   let (date, time, _) = getLocalIsoTimeParts(date ?? Date())

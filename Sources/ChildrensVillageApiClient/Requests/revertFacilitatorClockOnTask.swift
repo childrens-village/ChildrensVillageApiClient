@@ -1,5 +1,5 @@
 //
-//  revertPupilClockOn.swift
+//  revertFacilitatorClockOnTask.swift
 //
 //  Created by Chris Kobrzak on 07/09/2021.
 //
@@ -7,9 +7,10 @@
 import Foundation
 import JwtApiClient
 
-public func revertPupilClockOn(
-  token: String,
-  attendanceId: Int
+#warning("TODO: Unit test")
+func revertFacilitatorClockOnTask(
+  _ token: String,
+  _ attendanceId: Int
 ) async throws {
   let endpoint = buildRevertClockOnUrlComponent(attendanceId: attendanceId).url!
 
@@ -17,7 +18,7 @@ public func revertPupilClockOn(
 }
 
 fileprivate func buildRevertClockOnUrlComponent(attendanceId: Int) -> URLComponents {
-  let path = "/attendances/\(attendanceId)"
+  let path = "/parent-attendances/\(attendanceId)"
 
   return buildUrlComponent(path)
 }
