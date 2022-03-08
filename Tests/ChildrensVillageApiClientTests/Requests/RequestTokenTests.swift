@@ -27,7 +27,7 @@ class RequestToken: XCTestCase {
 
     var result: String?
     do {
-      result = try await requestToken(login, password, apiClient: client)
+      result = try await requestToken(apiClient: client, login, password)
     } catch {
       XCTFail()
     }
