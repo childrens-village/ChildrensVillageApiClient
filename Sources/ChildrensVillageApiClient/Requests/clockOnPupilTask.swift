@@ -8,6 +8,7 @@ import Foundation
 import JwtApiClient
 
 func clockOnPupilTask<T: Decodable>(
+  apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ pupilId: String,
   _ branchId: Int,
@@ -23,7 +24,7 @@ func clockOnPupilTask<T: Decodable>(
     "clockOnTime": time
   ]
 
-  return try await postJsonDictionaryWithToken(endpoint, token: token, dictionary: body)
+  return try await apiClient.post(url: endpoint, dictionary: body, token: token)
 }
 
 fileprivate func buildClockOnUrlComponent() -> URLComponents {

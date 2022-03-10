@@ -31,12 +31,15 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let login = "joe.bloggs@mail.com"
     let password = "topS3cret"
 
-    let fakeResponse = TokenResponse(token: "fake-token")
+    let apiResponse = TokenResponse(token: "fake-token")
 
     given(
-      await client.post(any(URL.self), any(keys: "email", "password"))
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "email", "password")
+      )
     )
-      .willReturn(fakeResponse)
+      .willReturn(apiResponse)
 
     // Act
     let result: TokenResponse = try await requestTokenTask(apiClient: client, login, password)
@@ -49,12 +52,58 @@ class ChildrensVillageApiClientTests: XCTestCase {
     ]
 
     verify(
-      await client.post(expectedUrl!, any(where: { $0 == expectedPayload }))
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
     )
       .returning(TokenResponse.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result.token, fakeResponse.token)
+    XCTAssertEqual(result.token, apiResponse.token)
+  }
+
+  func testClockOnPupilTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let pupilId = "fake-pupil-uuid"
+    let branchId = 123
+//    let date = Date(isoDate: "2022-03-10")
+
+    let apiResponse = ClockOnResponse(id: 321, branchId: branchId, date: "2022-03-10", clockOnTime: "12:25")
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "pupilId", "branchId", "date", "clockOnTime"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: ClockOnResponse = try await clockOnPupilTask(apiClient: client, token, pupilId, branchId)
+
+    // Assert
+    let expectedUrl = URL(string: "https://childrens-village.co.uk/api/attendances")
+//    let expectedPayload: [String: Any] = [
+//      "pupilId": pupilId,
+//      "branchId": branchId,
+//      "date": "2022-03-10",
+//      "clockOnTime": "12:25"
+//    ]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ClockOnResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
   }
 
   func testPerformanceExample() throws {

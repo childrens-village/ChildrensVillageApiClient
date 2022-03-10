@@ -19,7 +19,7 @@ func requestTokenTask<T: Decodable>(
     "password": password
   ]
 
-  return try await apiClient.post(endpoint!, credentials)
+  return try await apiClient.post(url: endpoint!, dictionary: credentials)
 }
 
 func buildTokenUrlComponent() -> URLComponents {
