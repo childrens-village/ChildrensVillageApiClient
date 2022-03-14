@@ -106,6 +106,49 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.id, apiResponse.id)
   }
 
+  func testClockOnFacilitatorTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let facilitatorId = "fake-facilitator-uuid"
+    let branchId = 21
+//    let date = Date(isoDate: "2022-03-10")
+
+    let apiResponse = ClockOnResponse(id: 333, branchId: branchId, date: "2022-03-14", clockOnTime: "16:30")
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "parentId", "branchId", "date", "clockOnTime"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: ClockOnResponse = try await clockOnFacilitatorTask(apiClient: client, token, facilitatorId, branchId)
+
+    // Assert
+    let expectedUrl = URL(string: "https://childrens-village.co.uk/api/parent-attendances")
+//    let expectedPayload: [String: Any] = [
+//      "parentId": parentId,
+//      "branchId": branchId,
+//      "date": "2022-03-14",
+//      "clockOnTime": "16:30"
+//    ]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ClockOnResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
+  }
+
   func testPerformanceExample() throws {
     // This is an example of a performance test case.
     self.measure {
