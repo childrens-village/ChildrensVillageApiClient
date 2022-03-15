@@ -9,6 +9,7 @@ import Foundation
 import JwtApiClient
 
 func requestPupilsRegisterTask<T: Decodable>(
+  apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ branchId: Int,
   _ date: Date
@@ -18,7 +19,7 @@ func requestPupilsRegisterTask<T: Decodable>(
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  return try await getJsonWithToken(endpoint, token: token)
+  return try await apiClient.get(url: endpoint, token: token)
 }
 
 func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {

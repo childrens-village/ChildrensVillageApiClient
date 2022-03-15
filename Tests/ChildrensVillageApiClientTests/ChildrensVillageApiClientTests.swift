@@ -63,6 +63,54 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.token, apiResponse.token)
   }
 
+  func testRequestPupilsRegisterTask() async throws {
+    // Arrange
+    let token = "fake-register-token"
+    let branchId = 345
+    let isoDate = "2022-03-15"
+    let date = Date(isoDate: isoDate)
+
+    let branchName = "Branch Name"
+    let branchPostcode = "XY1 2ZZ"
+    let branchAddress = "Fake Address"
+    let geolocation = Geolocation(latitude: 51.01, longitude: 0.07)
+
+    let apiResponse = DailyRegisterResponse(
+      id: branchId,
+      name: branchName,
+      geolocation: geolocation,
+      postcode: branchPostcode,
+      address: branchAddress,
+      pupils: nil,
+      daysOfWeek: nil
+    )
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: DailyRegisterResponse = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+
+    // Assert
+    let expectedUrl = URL(string: "https://childrens-village.co.uk/api/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
+
+    verify(
+      await client.get(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .returning(DailyRegisterResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
+  }
+
   func testClockOnPupilTask() async throws {
     // Arrange
     let token = "fake-token"
