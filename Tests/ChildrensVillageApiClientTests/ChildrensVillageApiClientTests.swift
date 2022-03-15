@@ -64,6 +64,41 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.token, apiResponse.token)
   }
 
+  func testRequestTokenTask_withRequestError() async throws {
+    // Arrange
+    let login = "joe.bloggs@mail.com"
+    let password = "wrongPassword"
+
+    let error = ApiError(statusCode: 456, name: "fake error", message: "Fake error message")
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any([String: Any].self)
+      )
+    )
+      .willReturn(ErrorResponse(error: error))
+
+    // Act
+    do {
+      // In the actual code the type should be TokenResponse
+      let errorResponse: ErrorResponse = try await requestTokenTask(apiClient: client, login, password)
+      throw errorResponse.error
+    } catch let error as ApiError {
+      // Assert
+      verify(
+        await client.post(
+          url: any(URL.self),
+          dictionary: any([String: Any].self)
+        )
+      )
+        .returning(ErrorResponse.self)
+        .wasCalled(exactly(1))
+
+      XCTAssertEqual(error.statusCode, 456)
+    }
+  }
+
   func testRequestPupilsRegisterTask() async throws {
     // Arrange
     let token = "fake-register-token"
