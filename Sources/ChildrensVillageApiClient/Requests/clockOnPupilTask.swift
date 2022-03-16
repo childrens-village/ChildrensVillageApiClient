@@ -7,13 +7,13 @@
 import Foundation
 import JwtApiClient
 
-func clockOnPupilTask<T: Decodable>(
+func clockOnPupilTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ pupilId: String,
   _ branchId: Int,
   _ date: Date? = Date()
-) async throws -> T {
+) async throws -> ClockOnResponse {
   let endpoint = buildClockOnUrlComponent().url!
   let (date, time, _) = getLocalIsoTimeParts(date ?? Date())
 

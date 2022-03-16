@@ -8,11 +8,11 @@
 import Foundation
 import JwtApiClient
 
-func requestFacilitatorsRegisterTask<T: Decodable>(
+func requestFacilitatorsRegisterTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ date: Date
-) async throws -> T {
+) async throws -> [Parent] {
   let urlFilter = buildFacilitatorsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 

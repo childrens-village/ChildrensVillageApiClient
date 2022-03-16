@@ -8,11 +8,11 @@
 import Foundation
 import JwtApiClient
 
-func requestTokenTask<T: Decodable>(
+func requestTokenTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ username: String,
   _ password: String
-) async throws -> T {
+) async throws -> TokenResponse {
   let endpoint = buildTokenUrlComponent().url
   let credentials = [
     "email": username,

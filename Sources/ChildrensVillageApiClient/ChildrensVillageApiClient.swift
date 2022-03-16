@@ -10,43 +10,43 @@ import JwtApiClient
 public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public init() {}
 
-  public func requestToken<T: Decodable>(
+  public func requestToken(
     _ username: String,
     _ password: String
-  ) async throws -> T {
+  ) async throws -> TokenResponse {
     try await requestTokenTask(username, password)
   }
 
-  public func requestPupilsRegister<T>(
+  public func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> T where T : Decodable {
+  ) async throws -> [Pupil] {
     try await requestPupilsRegisterTask(token, branchId, date)
   }
 
-  public func requestFacilitatorsRegister<T>(
+  public func requestFacilitatorsRegister(
     _ token: String,
     _ date: Date
-  ) async throws -> T where T : Decodable {
+  ) async throws -> [Parent] {
     try await requestFacilitatorsRegisterTask(token, date)
   }
 
-  public func clockOnPupil<T>(
+  public func clockOnPupil(
     _ token: String,
     _ pupilId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> T where T : Decodable {
+  ) async throws -> ClockOnResponse{
     try await clockOnPupilTask(token, pupilId, branchId, date)
   }
 
-  public func clockOnFacilitator<T>(
+  public func clockOnFacilitator(
     _ token: String,
     _ facilitatorId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> T where T : Decodable {
+  ) async throws -> ClockOnResponse{
     try await clockOnFacilitatorTask(token, facilitatorId, branchId)
   }
 
