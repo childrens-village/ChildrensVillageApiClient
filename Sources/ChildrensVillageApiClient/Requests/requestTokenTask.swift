@@ -8,18 +8,18 @@
 import Foundation
 import JwtApiClient
 
-func requestTokenTask<T: Decodable>(
+func requestTokenTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ username: String,
   _ password: String
-) async throws -> T {
+) async throws -> TokenResponse {
   let endpoint = buildTokenUrlComponent().url
   let credentials = [
     "email": username,
     "password": password
   ]
 
-  return try await apiClient.post(endpoint!, credentials)
+  return try await apiClient.post(url: endpoint!, dictionary: credentials)
 }
 
 func buildTokenUrlComponent() -> URLComponents {

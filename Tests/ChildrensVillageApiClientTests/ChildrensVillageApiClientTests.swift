@@ -6,9 +6,18 @@
 //
 
 import XCTest
+import Mockingbird
+@testable import JwtApiClient
 @testable import ChildrensVillageApiClient
 
 class ChildrensVillageApiClientTests: XCTestCase {
+  
+  var client: JsonApiClientMock!
+  var baseApiUrl = "https://childrens-village.co.uk/api"
+  
+  override func setUp() {
+    client = mock(JsonApiClient.self).initialize()
+  }
 
   override func setUpWithError() throws {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -18,139 +27,326 @@ class ChildrensVillageApiClientTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
-  func testGetDayOfWeek() throws {
-    let validEntries = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    let expectedResults = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday]
+  func testRequestTokenTask() async throws {
+    // Arrange
+    let login = "joe.bloggs@mail.com"
+    let password = "topS3cret"
 
-    for (index, input) in validEntries.enumerated() {
-      let result = try! getDayOfWeek(string: input)
-      XCTAssertEqual(result, expectedResults[index])
-    }
-  }
+    let apiResponse = TokenResponse(token: "fake-token")
 
-  func testBuildDailyRegisterRequestFilter() throws {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-//      {
-//        "include": [
-//          {
-//            "relation": "daysOfWeek",
-//            "scope": {
-//              "where": {
-//                "day": "Monday"
-//              },
-//              "include": [
-//                {
-//                  "relation": "pupils",
-//                  "scope": {
-//                    "order": "lastName",
-//                    "include": [
-//                      {
-//                        "relation": "attendances",
-//                        "scope": {
-//                          "where": {
-//                            "date": "2021-07-05"
-//                          }
-//                        }
-//                      }
-//                    ]
-//                  }
-//                }
-//              ]
-//            }
-//          }
-//        ]
-//      }
-//    let expectedResult = """
-//      {"include":[{"relation":"daysOfWeek","scope":{"where":{"day":"Monday"},"include":[{"relation":"pupils","scope":{"order":"lastName, firstName"}}]}}]}
-//      """
-    let sampleMonday = "2021-07-05"
-    let date = Date(isoDate: sampleMonday)
-    let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
-    let pupilsScopeNode = PRRF.PupilsScope(order: "firstName, lastName", include: [attendancesRelationNode])
-    let pupilsRelationNode = PRRF.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
-    let whereNode = PRRF.DaysOfWeekWhere(day: .Monday)
-    let daysOfWeekScopeNode = PRRF.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
-    let daysOfWeekRelationNode = PRRF.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
-    let expectedResult = PRRF(include: [daysOfWeekRelationNode])
-
-    let result = buildPupilsRegisterRequestFilter(date)
-    XCTAssertEqual(result, expectedResult)
-//    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
-  }
-
-  func testBuildFacilitatorsRequestFilter() throws {
-// Endpoint: /parents
-// Filter object:
-//  {
-//    "order": "firstName, lastName",
-//    "where": {
-//      "active": true,
-//      "facilitating": true
-//    },
-//    "fields": {
-//      "id": true,
-//      "primary": true,
-//      "firstName": true,
-//      "lastName": true,
-//      "prefix": true,
-//      "phone": true,
-//      "email": true
-//    },
-//    "include": [
-//      {
-//        "relation": "attendances",
-//        "scope": {
-//          "where": {
-//            "date": "<date>"
-//          }
-//        }
-//      }
-//    ]
-//  }
-//      {"order":"firstName, lastName","where":{"active":true,"facilitating":true},"fields":{"id":true,"primary":true,"firstName":true,"lastName":true,"prefix":true,"phone":true,"email":true},"include":[{"relation":"attendances","scope":{"where":{"date":"<date>"}}}]}
-
-    let fieldNode = FRRF.Field(
-      id: true,
-      firstName: true,
-      lastName: true,
-      prefix: true,
-      phone: true,
-      email: true
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "email", "password")
+      )
     )
-    let whereNode = FRRF.Where(active: true, facilitating: true)
+      .willReturn(apiResponse)
 
-    let sampleTuesday = "2021-10-18"
-    let date = Date(isoDate: sampleTuesday)
-    let attendancesWhere = ARRF.AttendancesWhere(date: sampleTuesday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
+    // Act
+    let result: TokenResponse = try await requestTokenTask(apiClient: client, login, password)
 
-    let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/login")
+    let expectedPayload = [
+      "email": login,
+      "password": password
+    ]
 
-    let result = buildFacilitatorsRegisterRequestFilter(date)
-    XCTAssertEqual(result, expectedResult)
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
+    )
+      .returning(TokenResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.token, apiResponse.token)
   }
 
-  func testBuildUrlComponent() {
-    let path = "/users/123"
+  // FIXME: Mockingbird is complaining about the client.post mock
+//  func testRequestTokenTask_withRequestError() async throws {
+//    // Arrange
+//    let login = "joe.bloggs@mail.com"
+//    let password = "wrongPassword"
+//
+//    let error = ApiError(statusCode: 456, name: "fake error", message: "Fake error message")
+//
+//    given(
+//      await client.post(
+//        url: any(URL.self),
+//        dictionary: any([String: Any].self)
+//      )
+//    )
+//      .willReturn(ErrorResponse(error: error))
+//
+//    // Act
+//    do {
+//      let _: TokenResponse = try await requestTokenTask(apiClient: client, login, password)
+//    } catch let error as ApiError {
+//      // Assert
+//      verify(
+//        await client.post(
+//          url: any(URL.self),
+//          dictionary: any([String: Any].self)
+//        )
+//      )
+//        .returning(ErrorResponse.self)
+//        .wasCalled(exactly(1))
+//
+//      XCTAssertEqual(error.statusCode, 456)
+//    }
+//  }
 
-    let result = buildUrlComponent(path)
+  func testRequestPupilsRegisterTask() async throws {
+    // Arrange
+    let token = "fake-register-token"
+    let branchId = 345
+    let isoDate = "2022-03-15"
+    let date = Date(isoDate: isoDate)
 
-    XCTAssertEqual(result.path, "/api/users/123")
+    let branchName = "Branch Name"
+    let branchPostcode = "XY1 2ZZ"
+    let branchAddress = "Fake Address"
+    let geolocation = Geolocation(latitude: 51.01, longitude: 0.07)
+
+    let pupilA = Pupil(id: "pupil-a-id", firstName: "Joe", lastName: "Bloggs", dateOfBirth: "2015-01-01", prefix: TitlePrefix.Miss, attendances: nil)
+    let pupils = [pupilA]
+
+    let mondayPupils = PupilsByDay(id: 135, day: DayOfWeek.Monday, pupils: pupils)
+    let apiResponse = DailyRegisterResponse(
+      id: branchId,
+      name: branchName,
+      geolocation: geolocation,
+      postcode: branchPostcode,
+      address: branchAddress,
+      pupils: nil,
+      daysOfWeek: [mondayPupils]
+    )
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [Pupil] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
+
+    verify(
+      await client.get(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .returning(DailyRegisterResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils.first?.id)
   }
 
-  func testBuildUrlComponent_withQuery() {
-    let path = "/books/321"
-    let firstQueryItem = URLQueryItem(name: "lorem", value: "ipsum")
-    let secondQueryItem = URLQueryItem(name: "dolor", value: "sit")
+  func testRequestPupilsRegisterTask_noResults() async throws {
+    // Arrange
+    let token = "fake-auth-token"
+    let branchId = 3
+    let isoDate = "2022-03-16"
+    let date = Date(isoDate: isoDate)
 
-    let result = buildUrlComponent(path, queryItems: [firstQueryItem, secondQueryItem])
+    let branchName = "Branch Name"
+    let branchPostcode = "XY1 2ZZ"
+    let branchAddress = "Fake Address"
+    let geolocation = Geolocation(latitude: 51.03, longitude: 0.05)
 
-    XCTAssertEqual(result.path, "/api/books/321")
-    XCTAssertEqual(result.query, "lorem=ipsum&dolor=sit")
+    let apiResponse = DailyRegisterResponse(
+      id: branchId,
+      name: branchName,
+      geolocation: geolocation,
+      postcode: branchPostcode,
+      address: branchAddress,
+      pupils: nil,
+      daysOfWeek: nil
+    )
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [Pupil] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+
+    // Assert
+    XCTAssertEqual(result.count, 0)
+  }
+
+  func testRequestFacilitatorsRegisterTask() async throws {
+    // Arrange
+    let token = "fake-facilitator-token"
+    let parentId = "parent-a-id"
+    let isoDate = "2022-03-15"
+    let date = Date(isoDate: isoDate)
+
+    let facilitatorA = Parent(id: parentId, active: true, facilitating: true, primary: true, firstName: "Parent A First Name", lastName: "Parent A Last Name", prefix: TitlePrefix.Mrs, phone: "07590000000", email: "parent.a@mail.com", attendances: nil)
+    let apiResponse = [facilitatorA]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [Parent] = try await requestFacilitatorsRegisterTask(apiClient: client, token, date)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents?filter=%7B%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22lastName%22:true,%22prefix%22:true,%22phone%22:true,%22email%22:true%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D,%22order%22:%22firstName,%20lastName%22,%22where%22:%7B%22facilitating%22:true,%22active%22:true%7D%7D")
+
+    verify(
+      await client.get(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .returning([Parent].self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.first?.id, apiResponse.first?.id)
+  }
+
+  func testClockOnPupilTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let pupilId = "fake-pupil-uuid"
+    let branchId = 123
+//    let date = Date(isoDate: "2022-03-10")
+
+    let apiResponse = ClockOnResponse(id: 321, branchId: branchId, date: "2022-03-10", clockOnTime: "12:25")
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "pupilId", "branchId", "date", "clockOnTime"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: ClockOnResponse = try await clockOnPupilTask(apiClient: client, token, pupilId, branchId)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/attendances")
+//    let expectedPayload: [String: Any] = [
+//      "pupilId": pupilId,
+//      "branchId": branchId,
+//      "date": "2022-03-10",
+//      "clockOnTime": "12:25"
+//    ]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ClockOnResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
+  }
+
+  func testClockOnFacilitatorTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let facilitatorId = "fake-facilitator-uuid"
+    let branchId = 21
+//    let date = Date(isoDate: "2022-03-10")
+
+    let apiResponse = ClockOnResponse(id: 333, branchId: branchId, date: "2022-03-14", clockOnTime: "16:30")
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "parentId", "branchId", "date", "clockOnTime"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: ClockOnResponse = try await clockOnFacilitatorTask(apiClient: client, token, facilitatorId, branchId)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/parent-attendances")
+//    let expectedPayload: [String: Any] = [
+//      "parentId": parentId,
+//      "branchId": branchId,
+//      "date": "2022-03-14",
+//      "clockOnTime": "16:30"
+//    ]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ClockOnResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
+  }
+
+  func testRevertPupilClockOnTask() async throws {
+    // Arrange
+    let token = "fake-revert-token"
+    let attendanceId = 12345
+
+    // Act
+    try await revertPupilClockOnTask(apiClient: client, token, attendanceId)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/attendances/\(attendanceId)")
+
+    verify(
+      await client.delete(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
+  func testRevertFacilitatorClockOnTask() async throws {
+    // Arrange
+    let token = "fake-revert-token"
+    let attendanceId = 1234567
+
+    // Act
+    try await revertFacilitatorClockOnTask(apiClient: client, token, attendanceId)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/parent-attendances/\(attendanceId)")
+
+    verify(
+      await client.delete(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
   }
 
   func testPerformanceExample() throws {

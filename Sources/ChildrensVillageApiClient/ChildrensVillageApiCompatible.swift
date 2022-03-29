@@ -7,29 +7,29 @@
 import Foundation
 
 public protocol ChildrensVillageApiCompatible {
-  func requestToken<T: Decodable>(_ username: String, _ password: String) async throws -> T
+  func requestToken(_ username: String, _ password: String) async throws -> TokenResponse
 
-  func requestPupilsRegister<T: Decodable>(
+  func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> T
+  ) async throws -> [Pupil]
 
-  func requestFacilitatorsRegister<T: Decodable>(_ token: String, _ date: Date) async throws -> T
+  func requestFacilitatorsRegister(_ token: String, _ date: Date) async throws -> [Parent]
 
-  func clockOnPupil<T: Decodable>(
+  func clockOnPupil(
     _ token: String,
     _ pupilId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> T
+  ) async throws -> ClockOnResponse
 
-  func clockOnFacilitator<T: Decodable>(
+  func clockOnFacilitator(
     _ token: String,
     _ facilitatorId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> T
+  ) async throws -> ClockOnResponse
 
   func revertPupilClockOn(
     _ token: String,

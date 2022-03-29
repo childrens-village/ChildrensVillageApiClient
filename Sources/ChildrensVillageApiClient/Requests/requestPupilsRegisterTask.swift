@@ -8,17 +8,20 @@
 import Foundation
 import JwtApiClient
 
-func requestPupilsRegisterTask<T: Decodable>(
+func requestPupilsRegisterTask(
+  apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ branchId: Int,
   _ date: Date
-) async throws -> T {
+) async throws -> [Pupil] {
   let urlFilter = buildPupilsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  return try await getJsonWithToken(endpoint, token: token)
+  let response: DailyRegisterResponse = try await apiClient.get(url: endpoint, token: token)
+
+  return response.daysOfWeek?.first?.pupils ?? []
 }
 
 func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
