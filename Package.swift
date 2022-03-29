@@ -17,8 +17,8 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(
           name: "JwtApiClient",
-          url: "git@github.com:chris-kobrzak/JwtApiClient.git",
-          branch: "mockingbird"
+          url: "git@github.com:chris-kobrzak/JsonApiClient.git",
+            .upToNextMinor(from: "2.0.0")
         ),
         .package(
           name: "Mockingbird",
