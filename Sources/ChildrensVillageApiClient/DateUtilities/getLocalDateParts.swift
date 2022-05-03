@@ -17,9 +17,7 @@ func getLocalIsoTimeParts(_ from: Date = Date()) -> (String, String, DayOfWeek) 
   formatter.dateFormat = "HH:mm"
   let isoTime = formatter.string(from: from)
 
-  formatter.dateFormat = "EEEE"
-  let dayOfWeekString = formatter.string(from: from)
-  let dayOfWeek = try! getDayOfWeek(string: dayOfWeekString)
+  let dayOfWeek = try! getDayOfWeek(date: from)
 
   return (isoDate, isoTime, dayOfWeek)
 }
