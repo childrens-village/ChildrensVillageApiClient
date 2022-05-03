@@ -19,6 +19,7 @@ func getLocalIsoTimeParts(_ from: Date = Date()) -> (String, String, DayOfWeek) 
 
   formatter.dateFormat = "EEEE"
   let dayOfWeekString = formatter.string(from: from)
+  // FIXME: This breaks app when locale is set to anything but English
   let dayOfWeek = try! getDayOfWeek(string: dayOfWeekString)
 
   return (isoDate, isoTime, dayOfWeek)
