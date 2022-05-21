@@ -6,7 +6,7 @@
 
 import Foundation
 
-func getLocalIsoTimeParts(_ from: Date = Date()) -> (String, String, DayOfWeek) {
+func getLocalIsoTimeParts(_ from: Date = Date()) -> (String, String) {
   let formatter = DateFormatter()
   formatter.timeZone = TimeZone.current
   formatter.calendar = Calendar(identifier: .iso8601)
@@ -17,7 +17,5 @@ func getLocalIsoTimeParts(_ from: Date = Date()) -> (String, String, DayOfWeek) 
   formatter.dateFormat = "HH:mm"
   let isoTime = formatter.string(from: from)
 
-  let dayOfWeek = try! getDayOfWeek(date: from)
-
-  return (isoDate, isoTime, dayOfWeek)
+  return (isoDate, isoTime)
 }

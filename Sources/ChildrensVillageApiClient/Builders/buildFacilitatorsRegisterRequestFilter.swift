@@ -9,7 +9,7 @@
 import Foundation
 
 public func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> FacilitatorsRegisterRequestFilter {
-  let (isoDate, _, _) = getLocalIsoTimeParts(date)
+  let (isoDate, _) = getLocalIsoTimeParts(date)
 
   return FRRF(
     fields: FRRF.Field(

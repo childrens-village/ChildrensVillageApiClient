@@ -15,7 +15,7 @@ func clockOnPupilTask(
   _ date: Date? = Date()
 ) async throws -> ClockOnResponse {
   let endpoint = buildClockOnUrlComponent().url!
-  let (date, time, _) = getLocalIsoTimeParts(date ?? Date())
+  let (date, time) = getLocalIsoTimeParts(date ?? Date())
 
   let body: [String: Any] = [
     "pupilId": pupilId,
