@@ -9,7 +9,8 @@
 import Foundation
 
 public func buildPupilsRegisterRequestFilter(_ date: Date) -> PupilsRegisterRequestFilter {
-  let (isoDate, _, dayOfWeek) = getLocalIsoTimeParts(date)
+  let (isoDate, _) = getLocalIsoTimeParts(date)
+  let dayOfWeek = try! getDayOfWeek(date: date)
 
   return PRRF(
     include: [
