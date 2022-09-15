@@ -31,7 +31,12 @@ public struct PupilsRegisterRequestFilter: Codable, Equatable {
     var scope: PupilsScope
   }
 
+  struct PupilWhere: Codable, Equatable {
+    var active: Bool
+  }
+
   struct PupilsScope: Codable, Equatable {
+    var `where`: PupilWhere
     var order: String?
     var include: [AttendancesRelation]
   }

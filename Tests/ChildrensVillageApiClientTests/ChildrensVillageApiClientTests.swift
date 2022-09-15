@@ -136,7 +136,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let result: [Pupil] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
+    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22active%22:true%7D,%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
 
     verify(
       await client.get(
