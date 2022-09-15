@@ -24,6 +24,7 @@ public func buildPupilsRegisterRequestFilter(_ date: Date) -> PupilsRegisterRequ
             PRRF.PupilsRelation(
               relation: "pupils",
               scope: PRRF.PupilsScope(
+                where: PRRF.PupilWhere(active: true),
                 order: "firstName, lastName",
                 include: [
                   ARRF(

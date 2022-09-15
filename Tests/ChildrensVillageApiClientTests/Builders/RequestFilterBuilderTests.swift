@@ -19,8 +19,6 @@ class RequestFilterBuilderTests: XCTestCase {
   }
 
   func testBuildDailyRegisterRequestFilter() throws {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
 //      {
 //        "include": [
 //          {
@@ -33,7 +31,10 @@ class RequestFilterBuilderTests: XCTestCase {
 //                {
 //                  "relation": "pupils",
 //                  "scope": {
-//                    "order": "lastName",
+//                    "where": {
+//                      "active": true
+//                    },
+//                    "order": "firstName, lastName",
 //                    "include": [
 //                      {
 //                        "relation": "attendances",
@@ -59,7 +60,8 @@ class RequestFilterBuilderTests: XCTestCase {
     let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday)
     let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
     let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
-    let pupilsScopeNode = PRRF.PupilsScope(order: "firstName, lastName", include: [attendancesRelationNode])
+    let pupilWhere = PRRF.PupilWhere(active: true)
+    let pupilsScopeNode = PRRF.PupilsScope(where: pupilWhere, order: "firstName, lastName", include: [attendancesRelationNode])
     let pupilsRelationNode = PRRF.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
     let whereNode = PRRF.DaysOfWeekWhere(day: .Monday)
     let daysOfWeekScopeNode = PRRF.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
