@@ -157,7 +157,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .returning(DailyRegisterResponse.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils.first?.id)
+    XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
   }
 
   func testRequestPupilsRegisterTask_noResults() async throws {
