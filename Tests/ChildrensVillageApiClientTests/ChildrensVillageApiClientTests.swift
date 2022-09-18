@@ -160,6 +160,49 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
   }
 
+  func testRequestPupilTask() async throws {
+    // Arrange
+    let token = "fake-register-token"
+    let pupilId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let dayOfWeek = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: nil)
+    let apiResponse = PupilResponse(
+      id: pupilId,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Miss,
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: [dayOfWeek]
+    )
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: PupilResponse = try await requestPupilTask(apiClient: client, token, pupilId)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/753dfb2b-e6c7-4d35-9e6c-0665394b3e6a?filter=%7B%22include%22:%5B%7B%22relation%22:%22parents%22%7D,%7B%22relation%22:%22branches%22%7D,%7B%22relation%22:%22daysOfWeek%22%7D%5D,%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22active%22:true,%22lastName%22:true,%22prefix%22:true,%22dateOfBirth%22:true%7D%7D")
+
+    verify(
+      await client.get(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .returning(PupilResponse.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.id, apiResponse.id)
+  }
+
   func testRequestPupilsRegisterTask_noResults() async throws {
     // Arrange
     let token = "fake-auth-token"
