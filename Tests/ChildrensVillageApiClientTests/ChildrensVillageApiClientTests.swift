@@ -164,6 +164,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     // Arrange
     let token = "fake-register-token"
     let pupilId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    // FIXME: Define a parent and consider dropping the daysOfWeek value as it's not going to be used in this request
     let dayOfWeek = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: nil)
     let apiResponse = PupilResponse(
       id: pupilId,
