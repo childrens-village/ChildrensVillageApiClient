@@ -7,5 +7,5 @@ public struct Branch: Decodable {
   public let postcode: String
   public let address: String
   public let pupils: [Pupil]?
-  public let daysOfWeek: [PupilsByDay]?
+  public let daysOfWeek: [DayOfWeekModel]?
 }

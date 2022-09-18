@@ -123,7 +123,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     )
     let pupils = [pupilA]
 
-    let mondayPupils = PupilsByDay(id: 135, day: DayOfWeek.Monday, pupils: pupils)
+    let mondayPupils = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: pupils)
     let apiResponse = DailyRegisterResponse(
       id: branchId,
       name: branchName,
