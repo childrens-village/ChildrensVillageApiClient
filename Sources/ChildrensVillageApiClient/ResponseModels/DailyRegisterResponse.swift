@@ -19,7 +19,7 @@ extension DailyRegisterResponse {
        let geolocation = try? container.decode(Geolocation.self, forKey: .geolocation),
        let postcode = try? container.decode(String.self, forKey: .postcode),
        let address = try? container.decode(String.self, forKey: .address),
-       let daysOfWeek = try? container.decode([PupilsByDay].self, forKey: .daysOfWeek) else {
+       let daysOfWeek = try? container.decode([DayOfWeekModel].self, forKey: .daysOfWeek) else {
       throw try ErrorResponse(from: decoder).error
     }
 
