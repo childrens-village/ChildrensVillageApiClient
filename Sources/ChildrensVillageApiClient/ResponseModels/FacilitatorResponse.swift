@@ -15,7 +15,7 @@ extension FacilitatorResponse {
 
   public init(from decoder: Decoder) throws {
     guard let container = try? decoder.container(keyedBy: CodingKeys.self),
-        let id = try? container.decode(String.self, forKey: .id),
+        let id = try? container.decode(UUID.self, forKey: .id),
         let firstName = try? container.decode(String.self, forKey: .firstName),
         let lastName = try? container.decode(String.self, forKey: .lastName),
         let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix),

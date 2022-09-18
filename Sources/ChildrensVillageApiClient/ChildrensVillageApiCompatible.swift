@@ -19,14 +19,14 @@ public protocol ChildrensVillageApiCompatible {
 
   func clockOnPupil(
     _ token: String,
-    _ pupilId: String,
+    _ pupilId: UUID,
     _ branchId: Int,
     _ date: Date?
   ) async throws -> ClockOnResponse
 
   func clockOnFacilitator(
     _ token: String,
-    _ facilitatorId: String,
+    _ facilitatorId: UUID,
     _ branchId: Int,
     _ date: Date?
   ) async throws -> ClockOnResponse

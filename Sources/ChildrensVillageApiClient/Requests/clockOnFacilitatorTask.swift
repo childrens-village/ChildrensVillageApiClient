@@ -10,7 +10,7 @@ import JwtApiClient
 func clockOnFacilitatorTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
-  _ facilitatorId: String,
+  _ facilitatorId: UUID,
   _ branchId: Int,
   _ date: Date? = Date()
 ) async throws -> ClockOnResponse {
@@ -18,7 +18,7 @@ func clockOnFacilitatorTask(
   let (date, time) = getLocalIsoTimeParts(date ?? Date())
 
   let body: [String: Any] = [
-    "parentId": facilitatorId,
+    "parentId": facilitatorId.uuidString,
     "branchId": branchId,
     "date": date,
     "clockOnTime": time

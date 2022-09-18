@@ -7,7 +7,7 @@
 import Foundation
 
 public protocol Attending {
-  var id: String  { get }
+  var id: UUID  { get }
   var prefix: TitlePrefix { get }
   var firstName: String { get }
   var lastName: String { get }

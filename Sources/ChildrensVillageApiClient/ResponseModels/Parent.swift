@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Parent: Attending, Identifiable, Decodable {
-  public let id: String
+  public let id: UUID
   public let active: Bool?
   public let facilitating: Bool?
   public let primary: Bool?

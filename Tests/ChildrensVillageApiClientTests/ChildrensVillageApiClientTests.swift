@@ -110,7 +110,17 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchAddress = "Fake Address"
     let geolocation = Geolocation(latitude: 51.01, longitude: 0.07)
 
-    let pupilA = Pupil(id: "pupil-a-id", firstName: "Joe", lastName: "Bloggs", dateOfBirth: "2015-01-01", prefix: TitlePrefix.Miss, attendances: nil)
+    let pupilA = Pupil(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Miss,
+//      parents: nil,
+      attendances: nil//,
+//      branches: nil,
+//      daysOfWeek: nil
+    )
     let pupils = [pupilA]
 
     let mondayPupils = PupilsByDay(id: 135, day: DayOfWeek.Monday, pupils: pupils)
@@ -190,7 +200,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
   func testRequestFacilitatorsRegisterTask() async throws {
     // Arrange
     let token = "fake-facilitator-token"
-    let parentId = "parent-a-id"
+    let parentId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
     let isoDate = "2022-03-15"
     let date = Date(isoDate: isoDate)
 
@@ -226,7 +236,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
   func testClockOnPupilTask() async throws {
     // Arrange
     let token = "fake-token"
-    let pupilId = "fake-pupil-uuid"
+    let pupilId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
     let branchId = 123
 //    let date = Date(isoDate: "2022-03-10")
 
@@ -269,7 +279,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
   func testClockOnFacilitatorTask() async throws {
     // Arrange
     let token = "fake-token"
-    let facilitatorId = "fake-facilitator-uuid"
+    let facilitatorId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
     let branchId = 21
 //    let date = Date(isoDate: "2022-03-10")
 

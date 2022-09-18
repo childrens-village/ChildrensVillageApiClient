@@ -10,7 +10,7 @@ import JwtApiClient
 func clockOnPupilTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
-  _ pupilId: String,
+  _ pupilId: UUID,
   _ branchId: Int,
   _ date: Date? = Date()
 ) async throws -> ClockOnResponse {
@@ -18,7 +18,7 @@ func clockOnPupilTask(
   let (date, time) = getLocalIsoTimeParts(date ?? Date())
 
   let body: [String: Any] = [
-    "pupilId": pupilId,
+    "pupilId": pupilId.uuidString,
     "branchId": branchId,
     "date": date,
     "clockOnTime": time

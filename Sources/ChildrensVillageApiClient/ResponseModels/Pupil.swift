@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Pupil: Attending, Identifiable, Decodable {
-  public let id: String
+  public let id: UUID
   public let firstName: String
   public let lastName: String
   public let dateOfBirth: String?
