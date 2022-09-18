@@ -17,6 +17,10 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await requestTokenTask(username, password)
   }
 
+  public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilResponse {
+    try await requestPupilTask(token, pupilId)
+  }
+
   public func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
