@@ -247,7 +247,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let isoDate = "2022-03-15"
     let date = Date(isoDate: isoDate)
 
-    let facilitatorA = Parent(id: parentId, active: true, facilitating: true, primary: true, firstName: "Parent A First Name", lastName: "Parent A Last Name", prefix: TitlePrefix.Mrs, phone: "07590000000", email: "parent.a@mail.com", attendances: nil)
+    let facilitatorA = ParentModel(id: parentId, active: true, facilitating: true, primary: true, firstName: "Parent A First Name", lastName: "Parent A Last Name", prefix: TitlePrefix.Mrs, phone: "07590000000", email: "parent.a@mail.com", attendances: nil)
     let apiResponse = [facilitatorA]
 
     given(
@@ -259,7 +259,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: [Parent] = try await requestFacilitatorsRegisterTask(apiClient: client, token, date)
+    let result: [ParentModel] = try await requestFacilitatorsRegisterTask(apiClient: client, token, date)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/parents?filter=%7B%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22lastName%22:true,%22prefix%22:true,%22phone%22:true,%22email%22:true%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D,%22order%22:%22firstName,%20lastName%22,%22where%22:%7B%22facilitating%22:true,%22active%22:true%7D%7D")
@@ -270,7 +270,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         token: token
       )
     )
-      .returning([Parent].self)
+      .returning([ParentModel].self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.first?.id, apiResponse.first?.id)

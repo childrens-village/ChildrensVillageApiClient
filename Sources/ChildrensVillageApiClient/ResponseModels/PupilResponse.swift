@@ -13,7 +13,7 @@ struct PupilResponse: Attending, Identifiable, Decodable {
   public let lastName: String
   public let dateOfBirth: String?
   public let prefix: TitlePrefix
-  public let parents: [Parent]?
+  public let parents: [ParentModel]?
   public let attendances: [AttendanceModel]?
   public let branches: [BranchModel]?
   public let daysOfWeek: [DayOfWeekModel]?
@@ -40,7 +40,7 @@ extension PupilResponse {
         let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix),
         // Optional properties
         let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth),
-        let parents = try container.decodeIfPresent([Parent].self, forKey: .parents),
+        let parents = try container.decodeIfPresent([ParentModel].self, forKey: .parents),
         let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances),
         let branches = try container.decodeIfPresent([BranchModel].self, forKey: .branches),
         let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek) else {

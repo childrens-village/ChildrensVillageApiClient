@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias FacilitatorResponse = Parent
+public typealias FacilitatorResponse = ParentModel
 
 extension FacilitatorResponse {
   enum CodingKeys: CodingKey {

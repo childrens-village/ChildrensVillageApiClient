@@ -20,7 +20,7 @@ public protocol ChildrensVillageApiCompatible {
     _ date: Date
   ) async throws -> [PupilModel]
 
-  func requestFacilitatorsRegister(_ token: String, _ date: Date) async throws -> [Parent]
+  func requestFacilitatorsRegister(_ token: String, _ date: Date) async throws -> [ParentModel]
 
   func clockOnPupil(
     _ token: String,

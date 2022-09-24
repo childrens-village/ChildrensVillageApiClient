@@ -32,7 +32,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func requestFacilitatorsRegister(
     _ token: String,
     _ date: Date
-  ) async throws -> [Parent] {
+  ) async throws -> [ParentModel] {
     try await requestFacilitatorsRegisterTask(token, date)
   }
 
