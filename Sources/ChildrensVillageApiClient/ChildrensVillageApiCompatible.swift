@@ -12,7 +12,7 @@ public protocol ChildrensVillageApiCompatible {
   func requestPupil(
     _ token: String,
     _ pupilId: UUID
-  ) async throws -> PupilResponse
+  ) async throws -> Pupil
 
   func requestPupilsRegister(
     _ token: String,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PupilResponse: Attending, Identifiable, Decodable {
+struct PupilResponse: Attending, Identifiable, Decodable {
   public let id: UUID
   public let firstName: String
   public let lastName: String

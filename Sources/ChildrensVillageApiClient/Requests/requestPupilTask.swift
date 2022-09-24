@@ -12,13 +12,25 @@ func requestPupilTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ pupilId: UUID
-) async throws -> PupilResponse {
+) async throws -> Pupil {
   let urlFilter = buildPupilRequestFilter()
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildPupilUrlComponent(pupilId: pupilId, filter: filterJson).url!
 
-  return try await apiClient.get(url: endpoint, token: token)
+  let response: PupilResponse = try await apiClient.get(url: endpoint, token: token)
+
+  return Pupil(
+    id: response.id,
+    firstName: response.firstName,
+    lastName: response.lastName,
+    dateOfBirth: response.dateOfBirth,
+    prefix: response.prefix,
+    parents: response.parents,
+    attendances: response.attendances,
+    branches: response.branches,
+    daysOfWeek: response.daysOfWeek
+  )
 }
 
 fileprivate func buildPupilUrlComponent(pupilId: UUID, filter: String) -> URLComponents {
