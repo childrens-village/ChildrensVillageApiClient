@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias DailyRegisterResponse = Branch
+public typealias DailyRegisterResponse = BranchModel
 
 extension DailyRegisterResponse {
   enum CodingKeys: CodingKey {

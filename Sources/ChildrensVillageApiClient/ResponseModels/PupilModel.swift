@@ -8,6 +8,6 @@ public struct PupilModel: Attending, Identifiable, Decodable {
   public let prefix: TitlePrefix
   public let parents: [Parent]?
   public let attendances: [AttendanceModel]?
-  public let branches: [Branch]?
+  public let branches: [BranchModel]?
   public let daysOfWeek: [DayOfWeekModel]?
 }

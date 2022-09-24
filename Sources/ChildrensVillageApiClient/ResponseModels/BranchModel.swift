@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Branch: Decodable {
+public struct BranchModel: Decodable {
   public let id: Int
   public let name: String
   public let geolocation: Geolocation
