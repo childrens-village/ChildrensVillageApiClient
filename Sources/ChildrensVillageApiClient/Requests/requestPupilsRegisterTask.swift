@@ -13,7 +13,7 @@ func requestPupilsRegisterTask(
   _ token: String,
   _ branchId: Int,
   _ date: Date
-) async throws -> [Pupil] {
+) async throws -> [PupilModel] {
   let urlFilter = buildPupilsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 

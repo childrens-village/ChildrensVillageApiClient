@@ -12,13 +12,13 @@ public protocol ChildrensVillageApiCompatible {
   func requestPupil(
     _ token: String,
     _ pupilId: UUID
-  ) async throws -> Pupil
+  ) async throws -> PupilModel
 
   func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> [Pupil]
+  ) async throws -> [PupilModel]
 
   func requestFacilitatorsRegister(_ token: String, _ date: Date) async throws -> [Parent]
 

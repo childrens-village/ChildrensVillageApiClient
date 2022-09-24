@@ -6,6 +6,6 @@ public struct Branch: Decodable {
   public let geolocation: Geolocation
   public let postcode: String
   public let address: String
-  public let pupils: [Pupil]?
+  public let pupils: [PupilModel]?
   public let daysOfWeek: [DayOfWeekModel]?
 }

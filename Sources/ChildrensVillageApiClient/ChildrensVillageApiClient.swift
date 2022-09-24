@@ -17,7 +17,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await requestTokenTask(username, password)
   }
 
-  public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> Pupil {
+  public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
     try await requestPupilTask(token, pupilId)
   }
 
@@ -25,7 +25,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> [Pupil] {
+  ) async throws -> [PupilModel] {
     try await requestPupilsRegisterTask(token, branchId, date)
   }
 

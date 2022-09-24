@@ -110,7 +110,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchAddress = "Fake Address"
     let geolocation = Geolocation(latitude: 51.01, longitude: 0.07)
 
-    let pupilA = Pupil(
+    let pupilA = PupilModel(
       id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
       firstName: "Joe",
       lastName: "Bloggs",
@@ -143,7 +143,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: [Pupil] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+    let result: [PupilModel] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22active%22:true%7D,%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
@@ -186,7 +186,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: Pupil = try await requestPupilTask(apiClient: client, token, pupilId)
+    let result: PupilModel = try await requestPupilTask(apiClient: client, token, pupilId)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/pupils/753dfb2b-e6c7-4d35-9e6c-0665394b3e6a?filter=%7B%22include%22:%5B%7B%22relation%22:%22parents%22%7D,%7B%22relation%22:%22branches%22%7D,%7B%22relation%22:%22daysOfWeek%22%7D%5D,%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22active%22:true,%22lastName%22:true,%22prefix%22:true,%22dateOfBirth%22:true%7D%7D")
@@ -234,7 +234,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: [Pupil] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+    let result: [PupilModel] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
 
     // Assert
     XCTAssertEqual(result.count, 0)

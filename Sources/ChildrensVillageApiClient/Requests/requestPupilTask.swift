@@ -12,7 +12,7 @@ func requestPupilTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ pupilId: UUID
-) async throws -> Pupil {
+) async throws -> PupilModel {
   let urlFilter = buildPupilRequestFilter()
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
@@ -20,7 +20,7 @@ func requestPupilTask(
 
   let response: PupilResponse = try await apiClient.get(url: endpoint, token: token)
 
-  return Pupil(
+  return PupilModel(
     id: response.id,
     firstName: response.firstName,
     lastName: response.lastName,

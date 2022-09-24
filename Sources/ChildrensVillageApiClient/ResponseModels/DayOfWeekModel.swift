@@ -4,5 +4,5 @@ import Foundation
 public struct DayOfWeekModel: Decodable {
   public let id: Int
   public let day: DayOfWeek
-  public let pupils: [Pupil]?
+  public let pupils: [PupilModel]?
 }
