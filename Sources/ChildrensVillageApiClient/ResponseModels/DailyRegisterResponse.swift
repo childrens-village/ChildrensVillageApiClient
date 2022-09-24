@@ -16,7 +16,7 @@ extension DailyRegisterResponse {
     guard let container = try? decoder.container(keyedBy: CodingKeys.self),
        let id = try? container.decode(Int.self, forKey: .id),
        let name = try? container.decode(String.self, forKey: .name),
-       let geolocation = try? container.decode(Geolocation.self, forKey: .geolocation),
+       let geolocation = try? container.decode(GeolocationModel.self, forKey: .geolocation),
        let postcode = try? container.decode(String.self, forKey: .postcode),
        let address = try? container.decode(String.self, forKey: .address),
        let daysOfWeek = try? container.decode([DayOfWeekModel].self, forKey: .daysOfWeek) else {

@@ -108,7 +108,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchName = "Branch Name"
     let branchPostcode = "XY1 2ZZ"
     let branchAddress = "Fake Address"
-    let geolocation = Geolocation(latitude: 51.01, longitude: 0.07)
+    let geolocation = GeolocationModel(latitude: 51.01, longitude: 0.07)
 
     let pupilA = PupilModel(
       id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
@@ -213,7 +213,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchName = "Branch Name"
     let branchPostcode = "XY1 2ZZ"
     let branchAddress = "Fake Address"
-    let geolocation = Geolocation(latitude: 51.03, longitude: 0.05)
+    let geolocation = GeolocationModel(latitude: 51.03, longitude: 0.05)
 
     let apiResponse = DailyRegisterResponse(
       id: branchId,
