@@ -7,7 +7,7 @@ public struct PupilModel: Attending, Identifiable, Decodable {
   public let dateOfBirth: String?
   public let prefix: TitlePrefix
   public let parents: [Parent]?
-  public let attendances: [Attendance]?
+  public let attendances: [AttendanceModel]?
   public let branches: [Branch]?
   public let daysOfWeek: [DayOfWeekModel]?
 }

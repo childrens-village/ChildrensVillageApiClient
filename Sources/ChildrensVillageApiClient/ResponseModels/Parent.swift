@@ -10,5 +10,5 @@ public struct Parent: Attending, Identifiable, Decodable {
   public let prefix: TitlePrefix
   public let phone: String
   public let email: String?
-  public let attendances: [Attendance]?
+  public let attendances: [AttendanceModel]?
 }

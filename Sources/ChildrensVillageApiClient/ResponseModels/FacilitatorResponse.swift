@@ -26,7 +26,7 @@ extension FacilitatorResponse {
 
     // Handle properties that can have null values or might be missing
     let email = try container.decodeIfPresent(String.self, forKey: .email)
-    let attendances = try container.decodeIfPresent([Attendance].self, forKey: .attendances)
+    let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances)
 
     self.init(
       id: id,
