@@ -6,5 +6,8 @@ public struct Pupil: Attending, Identifiable, Decodable {
   public let lastName: String
   public let dateOfBirth: String?
   public let prefix: TitlePrefix
+  public let parents: [Parent]?
   public let attendances: [Attendance]?
+  public let branches: [Branch]?
+  public let daysOfWeek: [PupilsByDay]?
 }

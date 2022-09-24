@@ -116,10 +116,10 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
-//      parents: nil,
-      attendances: nil//,
-//      branches: nil,
-//      daysOfWeek: nil
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
     )
     let pupils = [pupilA]
 
