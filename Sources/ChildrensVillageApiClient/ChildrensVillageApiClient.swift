@@ -41,7 +41,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ pupilId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse{
+  ) async throws -> ClockOnConfirming {
     try await clockOnPupilTask(token, pupilId, branchId, date)
   }
 
@@ -50,7 +50,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ facilitatorId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse{
+  ) async throws -> ClockOnConfirming {
     try await clockOnFacilitatorTask(token, facilitatorId, branchId, date)
   }
 

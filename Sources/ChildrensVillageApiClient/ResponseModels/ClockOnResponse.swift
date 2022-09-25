@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ClockOnResponse: Decodable {
+public struct ClockOnResponse: ClockOnConfirming, Decodable {
   public let id: Int
   public let branchId: Int
   public let date: String

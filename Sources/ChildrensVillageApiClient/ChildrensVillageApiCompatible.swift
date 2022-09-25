@@ -27,14 +27,14 @@ public protocol ChildrensVillageApiCompatible {
     _ pupilId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse
+  ) async throws -> ClockOnConfirming
 
   func clockOnFacilitator(
     _ token: String,
     _ facilitatorId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse
+  ) async throws -> ClockOnConfirming
 
   func revertPupilClockOn(
     _ token: String,
