@@ -7,19 +7,7 @@
 
 import Foundation
 
-struct PupilResponse: Attending, Identifiable, Decodable {
-  public let id: UUID
-  public let firstName: String
-  public let lastName: String
-  public let dateOfBirth: String?
-  public let prefix: TitlePrefix
-  public let parents: [ParentModel]?
-  public let attendances: [AttendanceModel]?
-  public let branches: [BranchModel]?
-  public let daysOfWeek: [DayOfWeekModel]?
-}
-
-extension PupilResponse {
+extension PupilModel {
   enum CodingKeys: CodingKey {
     case id
     case firstName
@@ -37,15 +25,15 @@ extension PupilResponse {
         let id = try? container.decode(UUID.self, forKey: .id),
         let firstName = try? container.decode(String.self, forKey: .firstName),
         let lastName = try? container.decode(String.self, forKey: .lastName),
-        let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix),
-        // Optional properties
-        let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth),
-        let parents = try container.decodeIfPresent([ParentModel].self, forKey: .parents),
-        let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances),
-        let branches = try container.decodeIfPresent([BranchModel].self, forKey: .branches),
-        let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek) else {
+        let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix) else {
       throw try ErrorResponse(from: decoder).error
     }
+
+    let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth)
+    let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek)
+    let parents = try container.decodeIfPresent([ParentModel].self, forKey: .parents)
+    let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances)
+    let branches = try container.decodeIfPresent([BranchModel].self, forKey: .branches)
 
     self.init(
       id: id,

@@ -1,8 +1,6 @@
 import Foundation
 
-public typealias DailyRegisterResponse = BranchModel
-
-extension DailyRegisterResponse {
+extension BranchModel {
   enum CodingKeys: CodingKey {
     case id
     case name
@@ -10,6 +8,7 @@ extension DailyRegisterResponse {
     case postcode
     case address
     case daysOfWeek
+    case pupils
   }
 
   public init(from decoder: Decoder) throws {
@@ -18,10 +17,12 @@ extension DailyRegisterResponse {
        let name = try? container.decode(String.self, forKey: .name),
        let geolocation = try? container.decode(GeolocationModel.self, forKey: .geolocation),
        let postcode = try? container.decode(String.self, forKey: .postcode),
-       let address = try? container.decode(String.self, forKey: .address),
-       let daysOfWeek = try? container.decode([DayOfWeekModel].self, forKey: .daysOfWeek) else {
+       let address = try? container.decode(String.self, forKey: .address) else {
       throw try ErrorResponse(from: decoder).error
     }
+
+    let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek)
+    let pupils = try container.decodeIfPresent([PupilModel].self, forKey: .pupils)
 
     self.init(
       id: id,
@@ -29,7 +30,7 @@ extension DailyRegisterResponse {
       geolocation: geolocation,
       postcode: postcode,
       address: address,
-      pupils: nil,
+      pupils: pupils,
       daysOfWeek: daysOfWeek
     )
   }

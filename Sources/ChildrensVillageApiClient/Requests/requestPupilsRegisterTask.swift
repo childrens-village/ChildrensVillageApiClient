@@ -19,7 +19,7 @@ func requestPupilsRegisterTask(
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  let response: DailyRegisterResponse = try await apiClient.get(url: endpoint, token: token)
+  let response: BranchModel = try await apiClient.get(url: endpoint, token: token)
 
   return response.daysOfWeek?.first?.pupils ?? []
 }

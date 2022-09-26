@@ -124,7 +124,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let pupils = [pupilA]
 
     let mondayPupils = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: pupils)
-    let apiResponse = DailyRegisterResponse(
+    let apiResponse = BranchModel(
       id: branchId,
       name: branchName,
       geolocation: geolocation,
@@ -154,7 +154,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         token: token
       )
     )
-      .returning(DailyRegisterResponse.self)
+      .returning(BranchModel.self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
@@ -165,7 +165,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let token = "fake-register-token"
     let pupilId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
     let dayOfWeek = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: nil)
-    let apiResponse = PupilResponse(
+    let apiResponse = PupilModel(
       id: pupilId,
       firstName: "Joe",
       lastName: "Bloggs",
@@ -197,7 +197,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         token: token
       )
     )
-      .returning(PupilResponse.self)
+      .returning(PupilModel.self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.id, apiResponse.id)
@@ -215,7 +215,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchAddress = "Fake Address"
     let geolocation = GeolocationModel(latitude: 51.03, longitude: 0.05)
 
-    let apiResponse = DailyRegisterResponse(
+    let apiResponse = BranchModel(
       id: branchId,
       name: branchName,
       geolocation: geolocation,

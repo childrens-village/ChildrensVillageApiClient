@@ -1,10 +1,11 @@
 import Foundation
 
-public typealias FacilitatorResponse = ParentModel
-
-extension FacilitatorResponse {
+extension ParentModel {
   enum CodingKeys: CodingKey {
     case id
+    case active
+    case primary
+    case facilitating
     case firstName
     case lastName
     case prefix
@@ -25,14 +26,17 @@ extension FacilitatorResponse {
     }
 
     // Handle properties that can have null values or might be missing
+    let active = try container.decodeIfPresent(Bool.self, forKey: .active)
+    let primary = try container.decodeIfPresent(Bool.self, forKey: .primary)
+    let facilitating = try container.decodeIfPresent(Bool.self, forKey: .facilitating)
     let email = try container.decodeIfPresent(String.self, forKey: .email)
     let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances)
 
     self.init(
       id: id,
-      active: nil,
-      facilitating: nil,
-      primary: nil,
+      active: active,
+      facilitating: facilitating,
+      primary: primary,
       firstName: firstName,
       lastName: lastName,
       prefix: prefix,
