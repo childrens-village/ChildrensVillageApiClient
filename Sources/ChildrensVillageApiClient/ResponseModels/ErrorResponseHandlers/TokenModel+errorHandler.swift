@@ -1,5 +1,5 @@
 //
-//  TokenResponse.swift
+//  TokenModel.swift
 //  Successful authentication model with an extension that throws the
 //  generic ErrorResponse error for easy exception handling.
 //
@@ -12,11 +12,7 @@
 
 import Foundation
 
-public struct TokenResponse: Decodable {
-  public let token: String
-}
-
-extension TokenResponse {
+extension TokenModel {
   enum CodingKeys: CodingKey {
     case token
   }
@@ -24,7 +20,7 @@ extension TokenResponse {
   public init(from decoder: Decoder) throws {
     guard let container = try? decoder.container(keyedBy: CodingKeys.self),
           let token = try? container.decode(String.self, forKey: .token) else {
-        throw try ErrorResponse(from: decoder).error
+        throw try ErrorModel(from: decoder).error
     }
 
     self.init(token: token)

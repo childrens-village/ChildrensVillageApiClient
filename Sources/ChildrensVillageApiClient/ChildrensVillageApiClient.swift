@@ -13,7 +13,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func requestToken(
     _ username: String,
     _ password: String
-  ) async throws -> TokenResponse {
+  ) async throws -> TokenModel {
     try await requestTokenTask(username, password)
   }
 

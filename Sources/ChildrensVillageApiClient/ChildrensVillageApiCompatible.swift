@@ -7,7 +7,7 @@
 import Foundation
 
 public protocol ChildrensVillageApiCompatible {
-  func requestToken(_ username: String, _ password: String) async throws -> TokenResponse
+  func requestToken(_ username: String, _ password: String) async throws -> TokenModel
 
   func requestPupil(
     _ token: String,

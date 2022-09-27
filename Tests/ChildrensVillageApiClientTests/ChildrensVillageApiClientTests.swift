@@ -32,7 +32,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let login = "joe.bloggs@mail.com"
     let password = "topS3cret"
 
-    let apiResponse = TokenResponse(token: "fake-token")
+    let apiResponse = TokenModel(token: "fake-token")
 
     given(
       await client.post(
@@ -43,7 +43,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: TokenResponse = try await requestTokenTask(apiClient: client, login, password)
+    let result: TokenModel = try await requestTokenTask(apiClient: client, login, password)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/users/login")
@@ -58,7 +58,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         dictionary: any(where: { $0 == expectedPayload })
       )
     )
-      .returning(TokenResponse.self)
+      .returning(TokenModel.self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.token, apiResponse.token)
@@ -283,7 +283,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchId = 123
 //    let date = Date(isoDate: "2022-03-10")
 
-    let apiResponse = ClockOnResponse(id: 321, branchId: branchId, date: "2022-03-10", clockOnTime: "12:25")
+    let apiResponse = ClockOnModel(id: 321, branchId: branchId, date: "2022-03-10", clockOnTime: "12:25")
 
     given(
       await client.post(
@@ -295,7 +295,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: ClockOnResponse = try await clockOnPupilTask(apiClient: client, token, pupilId, branchId)
+    let result: ClockOnModel = try await clockOnPupilTask(apiClient: client, token, pupilId, branchId)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/attendances")
@@ -313,7 +313,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         token: token
       )
     )
-      .returning(ClockOnResponse.self)
+      .returning(ClockOnModel.self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.id, apiResponse.id)
@@ -326,7 +326,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let branchId = 21
 //    let date = Date(isoDate: "2022-03-10")
 
-    let apiResponse = ClockOnResponse(id: 333, branchId: branchId, date: "2022-03-14", clockOnTime: "16:30")
+    let apiResponse = ClockOnModel(id: 333, branchId: branchId, date: "2022-03-14", clockOnTime: "16:30")
 
     given(
       await client.post(
@@ -338,7 +338,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: ClockOnResponse = try await clockOnFacilitatorTask(apiClient: client, token, facilitatorId, branchId)
+    let result: ClockOnModel = try await clockOnFacilitatorTask(apiClient: client, token, facilitatorId, branchId)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/parent-attendances")
@@ -356,7 +356,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
         token: token
       )
     )
-      .returning(ClockOnResponse.self)
+      .returning(ClockOnModel.self)
       .wasCalled(exactly(1))
 
     XCTAssertEqual(result.id, apiResponse.id)

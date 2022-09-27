@@ -7,14 +7,7 @@
 
 import Foundation
 
-public struct ClockOnResponse: ClockOnConfirming, Decodable {
-  public let id: Int
-  public let branchId: Int
-  public let date: String
-  public let clockOnTime: String
-}
-
-extension ClockOnResponse {
+extension ClockOnModel {
   enum CodingKeys: CodingKey {
     case id
     case pupilId
@@ -29,7 +22,7 @@ extension ClockOnResponse {
        let branchId = try? container.decode(Int.self, forKey: .branchId),
        let date = try? container.decode(String.self, forKey: .date),
        let clockOnTime = try? container.decode(String.self, forKey: .clockOnTime) else {
-      throw try ErrorResponse(from: decoder).error
+      throw try ErrorModel(from: decoder).error
     }
 
     self.init(

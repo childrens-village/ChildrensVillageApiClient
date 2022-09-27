@@ -26,7 +26,7 @@ extension PupilModel {
         let firstName = try? container.decode(String.self, forKey: .firstName),
         let lastName = try? container.decode(String.self, forKey: .lastName),
         let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix) else {
-      throw try ErrorResponse(from: decoder).error
+      throw try ErrorModel(from: decoder).error
     }
 
     let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth)

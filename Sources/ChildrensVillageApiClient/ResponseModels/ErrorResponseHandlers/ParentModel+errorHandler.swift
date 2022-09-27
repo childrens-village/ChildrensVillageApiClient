@@ -22,7 +22,7 @@ extension ParentModel {
         let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix),
         let phone = try? container.decode(String.self, forKey: .phone)
     else {
-      throw try ErrorResponse(from: decoder).error
+      throw try ErrorModel(from: decoder).error
     }
 
     // Handle properties that can have null values or might be missing

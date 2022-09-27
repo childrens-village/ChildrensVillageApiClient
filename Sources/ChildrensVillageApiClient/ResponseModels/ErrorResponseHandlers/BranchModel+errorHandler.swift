@@ -18,7 +18,7 @@ extension BranchModel {
        let geolocation = try? container.decode(GeolocationModel.self, forKey: .geolocation),
        let postcode = try? container.decode(String.self, forKey: .postcode),
        let address = try? container.decode(String.self, forKey: .address) else {
-      throw try ErrorResponse(from: decoder).error
+      throw try ErrorModel(from: decoder).error
     }
 
     let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek)
