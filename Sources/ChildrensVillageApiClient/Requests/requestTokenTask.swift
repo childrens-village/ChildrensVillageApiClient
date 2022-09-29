@@ -12,7 +12,7 @@ func requestTokenTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ username: String,
   _ password: String
-) async throws -> TokenResponse {
+) async throws -> TokenModel {
   let endpoint = buildTokenUrlComponent().url
   let credentials = [
     "email": username,

@@ -1,5 +1,5 @@
 import Foundation
 
-public struct ErrorResponse: Decodable {
+public struct ErrorModel: Decodable {
   let error: ApiError
 }

@@ -18,7 +18,6 @@ class RequestFilterBuilderTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
-  func testBuildDailyRegisterRequestFilter() throws {
 //      {
 //        "include": [
 //          {
@@ -55,6 +54,7 @@ class RequestFilterBuilderTests: XCTestCase {
 //    let expectedResult = """
 //      {"include":[{"relation":"daysOfWeek","scope":{"where":{"day":"Monday"},"include":[{"relation":"pupils","scope":{"order":"lastName, firstName"}}]}}]}
 //      """
+  func testBuildDailyRegisterRequestFilter() throws {
     let sampleMonday = "2021-07-05"
     let date = Date(isoDate: sampleMonday)
     let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday)
@@ -73,7 +73,6 @@ class RequestFilterBuilderTests: XCTestCase {
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }
 
-  func testBuildFacilitatorsRequestFilter() throws {
 // Endpoint: /parents
 // Filter object:
 //  {
@@ -104,6 +103,7 @@ class RequestFilterBuilderTests: XCTestCase {
 //  }
 //      {"order":"firstName, lastName","where":{"active":true,"facilitating":true},"fields":{"id":true,"primary":true,"firstName":true,"lastName":true,"prefix":true,"phone":true,"email":true},"include":[{"relation":"attendances","scope":{"where":{"date":"<date>"}}}]}
 
+  func testBuildFacilitatorsRequestFilter() throws {
     let fieldNode = FRRF.Field(
       id: true,
       firstName: true,
@@ -123,6 +123,45 @@ class RequestFilterBuilderTests: XCTestCase {
     let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
 
     let result = buildFacilitatorsRegisterRequestFilter(date)
+    XCTAssertEqual(result, expectedResult)
+  }
+
+  // Endpoint: /pupils/{pupilId}
+  // Filter object:
+  //{
+  //  "fields": {
+  //    "id": true,
+  //    "active": true,
+  //    "firstName": true,
+  //    "lastName": true,
+  //    "dateOfBirth": true,
+  //    "prefix": true
+  //  },
+  //  "include": [
+  //    {
+  //      "relation": "parents"
+  //    },
+  //    {
+  //      "relation": "branches"
+  //    },
+  //    {
+  //      "relation": "daysOfWeek"
+  //    }
+  //  ]
+  //}
+  func testBuildPupilRequestFilter() throws {
+    let includesNode = [Include(relation: "parents"), Include(relation: "branches"), Include(relation: "daysOfWeek")]
+    let fieldNode = PRF.Field(
+      id: true,
+      active: true,
+      firstName: true,
+      lastName: true,
+      prefix: true,
+      dateOfBirth: true
+    )
+    let expectedResult = PRF(fields: fieldNode, include: includesNode)
+
+    let result = buildPupilRequestFilter()
     XCTAssertEqual(result, expectedResult)
   }
 }

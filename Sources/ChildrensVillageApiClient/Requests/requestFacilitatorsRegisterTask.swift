@@ -12,7 +12,7 @@ func requestFacilitatorsRegisterTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ date: Date
-) async throws -> [Parent] {
+) async throws -> [ParentModel] {
   let urlFilter = buildFacilitatorsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 

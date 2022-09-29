@@ -11,5 +11,5 @@ public protocol Attending {
   var prefix: TitlePrefix { get }
   var firstName: String { get }
   var lastName: String { get }
-  var attendances: [Attendance]? { get }
+  var attendances: [AttendanceModel]? { get }
 }

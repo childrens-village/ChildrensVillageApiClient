@@ -13,13 +13,13 @@ func requestPupilsRegisterTask(
   _ token: String,
   _ branchId: Int,
   _ date: Date
-) async throws -> [Pupil] {
+) async throws -> [PupilModel] {
   let urlFilter = buildPupilsRegisterRequestFilter(date)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
 
-  let response: DailyRegisterResponse = try await apiClient.get(url: endpoint, token: token)
+  let response: BranchModel = try await apiClient.get(url: endpoint, token: token)
 
   return response.daysOfWeek?.first?.pupils ?? []
 }

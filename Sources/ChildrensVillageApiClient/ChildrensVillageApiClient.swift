@@ -13,22 +13,26 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func requestToken(
     _ username: String,
     _ password: String
-  ) async throws -> TokenResponse {
+  ) async throws -> TokenModel {
     try await requestTokenTask(username, password)
+  }
+
+  public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
+    try await requestPupilTask(token, pupilId)
   }
 
   public func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> [Pupil] {
+  ) async throws -> [PupilModel] {
     try await requestPupilsRegisterTask(token, branchId, date)
   }
 
   public func requestFacilitatorsRegister(
     _ token: String,
     _ date: Date
-  ) async throws -> [Parent] {
+  ) async throws -> [ParentModel] {
     try await requestFacilitatorsRegisterTask(token, date)
   }
 
@@ -37,7 +41,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ pupilId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse{
+  ) async throws -> ClockOnConfirming {
     try await clockOnPupilTask(token, pupilId, branchId, date)
   }
 
@@ -46,7 +50,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ facilitatorId: UUID,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse{
+  ) async throws -> ClockOnConfirming {
     try await clockOnFacilitatorTask(token, facilitatorId, branchId, date)
   }
 
