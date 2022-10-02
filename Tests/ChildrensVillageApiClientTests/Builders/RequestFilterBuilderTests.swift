@@ -135,7 +135,9 @@ class RequestFilterBuilderTests: XCTestCase {
   //    "firstName": true,
   //    "lastName": true,
   //    "dateOfBirth": true,
-  //    "prefix": true
+  //    "prefix": true,
+  //    "photographyConsent": true,
+  //    "allergies": true,
   //  },
   //  "include": [
   //    {
@@ -157,7 +159,9 @@ class RequestFilterBuilderTests: XCTestCase {
       firstName: true,
       lastName: true,
       prefix: true,
-      dateOfBirth: true
+      dateOfBirth: true,
+      photographyConsent: true,
+      allergies: true
     )
     let expectedResult = PRF(fields: fieldNode, include: includesNode)
 

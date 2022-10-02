@@ -116,6 +116,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      photographyConsent: true,
+      allergies: "gluten free",
       parents: nil,
       attendances: nil,
       branches: nil,
@@ -171,6 +173,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      photographyConsent: true,
+      allergies: "",
       parents: nil,
       attendances: nil,
       branches: nil,
@@ -189,7 +193,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let result: PupilModel = try await requestPupilTask(apiClient: client, token, pupilId)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/753dfb2b-e6c7-4d35-9e6c-0665394b3e6a?filter=%7B%22include%22:%5B%7B%22relation%22:%22parents%22%7D,%7B%22relation%22:%22branches%22%7D,%7B%22relation%22:%22daysOfWeek%22%7D%5D,%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22active%22:true,%22lastName%22:true,%22prefix%22:true,%22dateOfBirth%22:true%7D%7D")
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/753dfb2b-e6c7-4d35-9e6c-0665394b3e6a?filter=%7B%22include%22:%5B%7B%22relation%22:%22parents%22%7D,%7B%22relation%22:%22branches%22%7D,%7B%22relation%22:%22daysOfWeek%22%7D%5D,%22fields%22:%7B%22active%22:true,%22prefix%22:true,%22firstName%22:true,%22id%22:true,%22allergies%22:true,%22dateOfBirth%22:true,%22photographyConsent%22:true,%22lastName%22:true%7D%7D")
 
     verify(
       await client.get(

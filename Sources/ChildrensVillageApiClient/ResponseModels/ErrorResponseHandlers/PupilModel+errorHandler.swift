@@ -14,6 +14,8 @@ extension PupilModel {
     case lastName
     case dateOfBirth
     case prefix
+    case photographyConsent
+    case allergies
     case parents
     case attendances
     case branches
@@ -30,6 +32,8 @@ extension PupilModel {
     }
 
     let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth)
+    let photographyConsent = try container.decodeIfPresent(Bool.self, forKey: .photographyConsent)
+    let allergies = try container.decodeIfPresent(String.self, forKey: .allergies)
     let daysOfWeek = try container.decodeIfPresent([DayOfWeekModel].self, forKey: .daysOfWeek)
     let parents = try container.decodeIfPresent([ParentModel].self, forKey: .parents)
     let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances)
@@ -41,6 +45,8 @@ extension PupilModel {
       lastName: lastName,
       dateOfBirth: dateOfBirth,
       prefix: prefix,
+      photographyConsent: photographyConsent,
+      allergies: allergies,
       parents: parents,
       attendances: attendances,
       branches: branches,

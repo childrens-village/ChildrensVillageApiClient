@@ -20,5 +20,7 @@ public struct PupilRequestFilter: Codable, Equatable {
     var lastName: Bool
     var prefix: Bool
     var dateOfBirth: Bool
+    var photographyConsent: Bool
+    var allergies: Bool
   }
 }

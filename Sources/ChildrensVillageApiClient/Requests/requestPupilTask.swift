@@ -19,19 +19,6 @@ func requestPupilTask(
   let endpoint = buildPupilUrlComponent(pupilId: pupilId, filter: filterJson).url!
 
   return try await apiClient.get(url: endpoint, token: token)
-
-//  return PupilModel(
-//    id: response.id,
-//    firstName: response.firstName,
-//    lastName: response.lastName,
-//    dateOfBirth: response.dateOfBirth,
-//    prefix: response.prefix,
-//    parents: response.parents,
-////    attendances: response.attendances,
-//    attendances: nil,
-////    branches: response.branches,
-//    daysOfWeek: response.daysOfWeek
-//  )
 }
 
 fileprivate func buildPupilUrlComponent(pupilId: UUID, filter: String) -> URLComponents {

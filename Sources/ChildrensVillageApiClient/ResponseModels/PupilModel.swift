@@ -6,6 +6,8 @@ public struct PupilModel: Attending, Identifiable, Decodable {
   public let lastName: String
   public let dateOfBirth: String?
   public let prefix: TitlePrefix
+  public let photographyConsent: Bool?
+  public let allergies: String?
   public let parents: [ParentModel]?
   public let attendances: [AttendanceModel]?
   public let branches: [BranchModel]?

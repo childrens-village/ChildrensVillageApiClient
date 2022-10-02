@@ -16,7 +16,9 @@ public func buildPupilRequestFilter() -> PupilRequestFilter {
       firstName: true,
       lastName: true,
       prefix: true,
-      dateOfBirth: true
+      dateOfBirth: true,
+      photographyConsent: true,
+      allergies: true
     ),
     include: [
       Include(relation: "parents"),
