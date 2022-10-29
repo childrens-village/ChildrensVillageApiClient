@@ -73,6 +73,30 @@ class RequestFilterBuilderTests: XCTestCase {
 //    assert(result == expectedResult.trimmingCharacters(in: .whitespacesAndNewlines))
   }
 
+  //  {
+  //    "where": {
+  //      "branchId": 1,
+  //      "date": "2022-09-13"
+  //    },
+  //    "fields": {
+  //      "pupilId": true
+  //    }
+  //  }
+  func testBuildAttendancesRequestFilter() throws {
+    let sampleMonday = "2022-09-13"
+    let date = Date(isoDate: sampleMonday)
+    let branchId = 1
+
+    let attendanceFields = ARRF.AttendanceField(pupilId: true)
+
+    let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday, branchId: branchId)
+
+    let expectedResult = ARRF(fields: attendanceFields, where: attendancesWhere)
+
+    let result = buildAttendancesRequestFilter(branchId, date)
+    XCTAssertEqual(result, expectedResult)
+  }
+
 // Endpoint: /parents
 // Filter object:
 //  {
