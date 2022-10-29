@@ -98,7 +98,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    }
 //  }
 
-  func testRequestPupilsRegisterTask() async throws {
+  func testRequestAllPupilsRegisterTask() async throws {
     // Arrange
     let token = "fake-register-token"
     let branchId = 345
@@ -136,19 +136,22 @@ class ChildrensVillageApiClientTests: XCTestCase {
       daysOfWeek: [mondayPupils]
     )
 
+    let deactivatedPupilId = "053dfb2b-e6c7-4d35-9e6c-0665394b3e60"
+    let clockedOnPupilIds = [UUID(uuidString: deactivatedPupilId)!]
+
     given(
       await client.get(
-        url: any(URL.self),
+        url: any(URL.self, where: { $0.description.contains("branches/") }),
         token: any(String.self)
       )
     )
       .willReturn(apiResponse)
 
     // Act
-    let result: [PupilModel] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+    let result: [PupilModel] = try await requestAllPupilsRegisterTask(apiClient: client, token, branchId, date, clockedOnPupilIds)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22active%22:true%7D,%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
+    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22or%22:%5B%7B%22active%22:true%7D,%7B%22id%22:%7B%22inq%22:%5B%22\(deactivatedPupilId.uppercased())%22%5D%7D%7D%5D%7D,%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
 
     verify(
       await client.get(
@@ -207,7 +210,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.id, apiResponse.id)
   }
 
-  func testRequestPupilsRegisterTask_noResults() async throws {
+  func testRequestAllPupilsRegisterTask_noResults() async throws {
     // Arrange
     let token = "fake-auth-token"
     let branchId = 3
@@ -238,7 +241,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: [PupilModel] = try await requestPupilsRegisterTask(apiClient: client, token, branchId, date)
+    let result: [PupilModel] = try await requestAllPupilsRegisterTask(apiClient: client, token, branchId, date, [])
 
     // Assert
     XCTAssertEqual(result.count, 0)

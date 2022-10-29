@@ -7,6 +7,7 @@
 import Foundation
 import JwtApiClient
 
+// TODO: Unit test
 func requestAttendances(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,

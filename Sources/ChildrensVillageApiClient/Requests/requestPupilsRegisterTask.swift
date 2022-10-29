@@ -8,13 +8,35 @@
 import Foundation
 import JwtApiClient
 
+// TODO: Unit test
 func requestPupilsRegisterTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ branchId: Int,
   _ date: Date
 ) async throws -> [PupilModel] {
-  let urlFilter = buildPupilsRegisterRequestFilter(date)
+//  If a pupil was present on a given day but is no longer active in the system,
+//  the main request below would exclude them. As a work-around, we are requesting
+//  all pupils clocked on that day and passing this list to the main one to be used
+//  as an additional filter
+  var clockedOnPupilIds = [UUID()]
+
+  do {
+    let attendances: [AttendanceModel] = try await requestAttendances(token, branchId, date)
+    clockedOnPupilIds = attendances.map { $0.pupilId! }
+  } catch {}
+
+  return try await requestAllPupilsRegisterTask(token, branchId, date, clockedOnPupilIds)
+}
+
+func requestAllPupilsRegisterTask(
+  apiClient: JsonApiCompatible = JsonApiClient(),
+  _ token: String,
+  _ branchId: Int,
+  _ date: Date,
+  _ clockedOnPupilIds: [UUID]
+) async throws -> [PupilModel] {
+  let urlFilter = buildPupilsRegisterRequestFilter(date, clockedOnPupilIds)
   let filterJson = JSONEncoder.encode(from: urlFilter)
 
   let endpoint = buildDailyRegisterUrlComponent(branchId: branchId, filter: filterJson).url!
@@ -24,7 +46,7 @@ func requestPupilsRegisterTask(
   return response.daysOfWeek?.first?.pupils ?? []
 }
 
-func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
+fileprivate func buildDailyRegisterUrlComponent(branchId: Int, filter: String) -> URLComponents {
   let path = "/branches/\(branchId)"
   let queryItem = URLQueryItem(name: "filter", value: filter)
 
