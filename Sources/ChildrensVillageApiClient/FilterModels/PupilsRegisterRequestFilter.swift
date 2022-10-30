@@ -30,14 +30,18 @@ public struct PupilsRegisterRequestFilter: Codable, Equatable {
     var relation: String
     var scope: PupilsScope
   }
-
-  struct PupilWhere: Codable, Equatable {
-    var active: Bool
-  }
-
   struct PupilsScope: Codable, Equatable {
-    var `where`: PupilWhere
+    var `where`: PupilOrPredicate
     var order: String?
     var include: [AttendancesRelation]
+  }
+
+  struct PupilOrPredicate: Codable, Equatable {
+    var or: [PupilWhere]
+  }
+
+  struct PupilWhere: Codable, Equatable {
+    var active: Bool?
+    var id: PredicateInUuid?
   }
 }

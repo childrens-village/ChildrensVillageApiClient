@@ -8,9 +8,15 @@ import Foundation
 
 typealias ARRF = AttendancesRelation
 
-struct AttendancesRelation: Codable, Equatable {
-  var relation: String
-  var scope: AttendancesScope
+public struct AttendancesRelation: Codable, Equatable {
+  var fields: AttendanceField?
+  var `where`: AttendancesWhere?
+  var relation: String?
+  var scope: AttendancesScope?
+
+  struct AttendanceField: Codable, Equatable {
+    var pupilId: Bool?
+  }
 
   struct AttendancesScope: Codable, Equatable {
     var `where`: AttendancesWhere
@@ -18,5 +24,6 @@ struct AttendancesRelation: Codable, Equatable {
 
   struct AttendancesWhere: Codable, Equatable {
     var date: String
+    var branchId: Int?
   }
 }
