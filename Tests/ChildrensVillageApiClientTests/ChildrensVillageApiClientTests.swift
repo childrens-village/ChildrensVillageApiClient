@@ -64,6 +64,28 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.token, apiResponse.token)
   }
 
+  func testRequestPasswordResetTask() async throws {
+    // Arrange
+    let login = "joe.bloggs@mail.com"
+
+    // Act
+    try await requestPasswordResetTask(apiClient: client, login)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/anonymous/password-resets")
+    let expectedPayload = [
+      "email": login,
+    ]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange

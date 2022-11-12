@@ -11,6 +11,13 @@ protocol ChildrensVillageApiCompatible {
     _ password: String
   ) async throws -> TokenResponse
 
+  func requestPasswordReset( _ username: String) async throws
+
+  func requestPupil(
+    _ token: String,
+    _ pupilId: UUID
+  ) async throws -> PupilModel
+
   func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
