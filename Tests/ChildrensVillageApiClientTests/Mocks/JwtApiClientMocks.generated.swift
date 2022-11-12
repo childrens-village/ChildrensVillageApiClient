@@ -64,6 +64,33 @@ public final class JsonApiClientMock: JwtApiClient.JsonApiClient, Mockingbird.Mo
     return Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, String) async throws -> Void, Void>(context: self.mockingbirdContext, invocation: Mockingbird.SwiftInvocation(selectorName: "`delete`(`url`: URL, `token`: String) async throws -> Void", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.resolve(`url`), Mockingbird.resolve(`token`)], returnType: Swift.ObjectIdentifier((Void).self)))
   }
 
+  // MARK: Mocked `post`(`url`: URL, `dictionary`: [String: Any])
+  public override func `post`(`url`: URL, `dictionary`: [String: Any]) async throws -> Void {
+    return try await self.mockingbirdContext.mocking.didInvoke(Mockingbird.SwiftInvocation(selectorName: "`post`(`url`: URL, `dictionary`: [String: Any]) async throws -> Void", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.ArgumentMatcher(`url`), Mockingbird.ArgumentMatcher(`dictionary`)], returnType: Swift.ObjectIdentifier((Void).self))) {
+      self.mockingbirdContext.recordInvocation($0)
+      let mkbImpl = self.mockingbirdContext.stubbing.implementation(for: $0)
+      if let mkbImpl = mkbImpl as? (URL, [String: Any]) async throws -> Void { return try await mkbImpl(`url`, `dictionary`) }
+      if let mkbImpl = mkbImpl as? () async throws -> Void { return try await mkbImpl() }
+      for mkbTargetBox in self.mockingbirdContext.proxy.targets(for: $0) {
+        switch mkbTargetBox.target {
+        case .super:
+          return try await super.`post`(url: `url`, dictionary: `dictionary`)
+        case .object(let mkbObject):
+          guard var mkbObject = mkbObject as? MockingbirdSupertype else { break }
+          let mkbValue: Void = try await mkbObject.`post`(url: `url`, dictionary: `dictionary`)
+          self.mockingbirdContext.proxy.updateTarget(&mkbObject, in: mkbTargetBox)
+          return mkbValue
+        }
+      }
+      if let mkbValue = self.mockingbirdContext.stubbing.defaultValueProvider.value.provideValue(for: (Void).self) { return mkbValue }
+      self.mockingbirdContext.stubbing.failTest(for: $0, at: self.mockingbirdContext.sourceLocation)
+    }
+  }
+
+  public func `post`(`url`: @autoclosure () -> URL, `dictionary`: @autoclosure () -> [String: Any]) async -> Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, [String: Any]) async throws -> Void, Void> {
+    return Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, [String: Any]) async throws -> Void, Void>(context: self.mockingbirdContext, invocation: Mockingbird.SwiftInvocation(selectorName: "`post`(`url`: URL, `dictionary`: [String: Any]) async throws -> Void", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.resolve(`url`), Mockingbird.resolve(`dictionary`)], returnType: Swift.ObjectIdentifier((Void).self)))
+  }
+
   // MARK: Mocked `patch`(`url`: URL, `dictionary`: [String: Any], `token`: String)
   public override func `patch`(`url`: URL, `dictionary`: [String: Any], `token`: String) async throws -> Void {
     return try await self.mockingbirdContext.mocking.didInvoke(Mockingbird.SwiftInvocation(selectorName: "`patch`(`url`: URL, `dictionary`: [String: Any], `token`: String) async throws -> Void", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.ArgumentMatcher(`url`), Mockingbird.ArgumentMatcher(`dictionary`), Mockingbird.ArgumentMatcher(`token`)], returnType: Swift.ObjectIdentifier((Void).self))) {
@@ -177,4 +204,3 @@ public final class JsonApiClientMock: JwtApiClient.JsonApiClient, Mockingbird.Mo
 public func mock(_ type: JwtApiClient.JsonApiClient.Type, file: StaticString = #file, line: UInt = #line) -> JsonApiClientMock.InitializerProxy.Type {
   return JsonApiClientMock.InitializerProxy.self
 }
-

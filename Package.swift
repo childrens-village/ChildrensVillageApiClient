@@ -34,5 +34,11 @@ let package = Package(
         .testTarget(
             name: "ChildrensVillageApiClientTests",
             dependencies: ["Mockingbird", "JwtApiClient", "ChildrensVillageApiClient"]),
+        // Temporarily uncomment for generating Mockingbird mocks
+//        .target(
+          // “Package” suffix below as it conflicts with an existing dependency
+//           name: "JwtApiClient",
+//           dependencies: ["Mockingbird"],
+//           path: ".build/checkouts/JsonApiClient/Sources"),
     ]
 )
