@@ -8,17 +8,25 @@
 import Foundation
 import JwtApiClient
 
+fileprivate let serverErrorCode = 500
+
 func requestPasswordResetTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ username: String
-) async throws {
+) async throws -> Int {
   let endpoint = buildPasswordResetUrlComponent().url!
 
   let payload: [String: Any] = [
-    "email": username,
+    "email": username
   ]
 
-  try await apiClient.post(url: endpoint, dictionary: payload)
+  let response: URLResponse = try await apiClient.post(url: endpoint, dictionary: payload)
+
+  guard let httpResponse = response as? HTTPURLResponse else {
+    return serverErrorCode
+  }
+
+  return httpResponse.statusCode
 }
 
 fileprivate func buildPasswordResetUrlComponent() -> URLComponents {

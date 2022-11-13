@@ -67,12 +67,22 @@ class ChildrensVillageApiClientTests: XCTestCase {
   func testRequestPasswordResetTask() async throws {
     // Arrange
     let login = "joe.bloggs@mail.com"
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/anonymous/password-resets")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "email")
+      )
+    )
+    .willReturn(urlResponse)
 
     // Act
-    try await requestPasswordResetTask(apiClient: client, login)
+    let statusCode: Int = try await requestPasswordResetTask(apiClient: client, login)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/users/anonymous/password-resets")
     let expectedPayload = [
       "email": login,
     ]
@@ -84,6 +94,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
       )
     )
       .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
   // FIXME: Mockingbird is complaining about the client.post mock

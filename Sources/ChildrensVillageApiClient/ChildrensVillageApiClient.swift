@@ -17,8 +17,8 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await requestTokenTask(username, password)
   }
 
-  public func requestPasswordReset(_ username: String) async throws {
-    try await requestPasswordResetTask(username)
+  public func requestPasswordReset(_ username: String) async throws -> Int {
+    return try await requestPasswordResetTask(username)
   }
 
   public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
