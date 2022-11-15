@@ -54,6 +54,33 @@ public final class JsonApiClientMock: JwtApiClient.JsonApiClient, Mockingbird.Mo
     return Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, [String: Any]) async throws -> URLResponse, URLResponse>(context: self.mockingbirdContext, invocation: Mockingbird.SwiftInvocation(selectorName: "`post`(`url`: URL, `dictionary`: [String: Any]) async throws -> URLResponse", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.resolve(`url`), Mockingbird.resolve(`dictionary`)], returnType: Swift.ObjectIdentifier((URLResponse).self)))
   }
 
+  // MARK: Mocked `put`(`url`: URL, `dictionary`: [String: Any])
+  public override func `put`(`url`: URL, `dictionary`: [String: Any]) async throws -> URLResponse {
+    return try await self.mockingbirdContext.mocking.didInvoke(Mockingbird.SwiftInvocation(selectorName: "`put`(`url`: URL, `dictionary`: [String: Any]) async throws -> URLResponse", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.ArgumentMatcher(`url`), Mockingbird.ArgumentMatcher(`dictionary`)], returnType: Swift.ObjectIdentifier((URLResponse).self))) {
+      self.mockingbirdContext.recordInvocation($0)
+      let mkbImpl = self.mockingbirdContext.stubbing.implementation(for: $0)
+      if let mkbImpl = mkbImpl as? (URL, [String: Any]) async throws -> URLResponse { return try await mkbImpl(`url`, `dictionary`) }
+      if let mkbImpl = mkbImpl as? () async throws -> URLResponse { return try await mkbImpl() }
+      for mkbTargetBox in self.mockingbirdContext.proxy.targets(for: $0) {
+        switch mkbTargetBox.target {
+        case .super:
+          return try await super.`put`(url: `url`, dictionary: `dictionary`)
+        case .object(let mkbObject):
+          guard var mkbObject = mkbObject as? MockingbirdSupertype else { break }
+          let mkbValue: URLResponse = try await mkbObject.`put`(url: `url`, dictionary: `dictionary`)
+          self.mockingbirdContext.proxy.updateTarget(&mkbObject, in: mkbTargetBox)
+          return mkbValue
+        }
+      }
+      if let mkbValue = self.mockingbirdContext.stubbing.defaultValueProvider.value.provideValue(for: (URLResponse).self) { return mkbValue }
+      self.mockingbirdContext.stubbing.failTest(for: $0, at: self.mockingbirdContext.sourceLocation)
+    }
+  }
+
+  public func `put`(`url`: @autoclosure () -> URL, `dictionary`: @autoclosure () -> [String: Any]) async -> Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, [String: Any]) async throws -> URLResponse, URLResponse> {
+    return Mockingbird.Mockable<Mockingbird.ThrowingAsyncFunctionDeclaration, (URL, [String: Any]) async throws -> URLResponse, URLResponse>(context: self.mockingbirdContext, invocation: Mockingbird.SwiftInvocation(selectorName: "`put`(`url`: URL, `dictionary`: [String: Any]) async throws -> URLResponse", selectorType: Mockingbird.SelectorType.method, arguments: [Mockingbird.resolve(`url`), Mockingbird.resolve(`dictionary`)], returnType: Swift.ObjectIdentifier((URLResponse).self)))
+  }
+
   // MARK: Mocked init()
   public required override init() {
     super.init()
