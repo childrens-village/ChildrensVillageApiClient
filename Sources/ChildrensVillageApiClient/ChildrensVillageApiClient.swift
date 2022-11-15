@@ -21,6 +21,10 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     return try await requestPasswordResetTask(username)
   }
 
+  public func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int {
+    return try await updatePasswordTask(verificationToken, password)
+  }
+
   public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
     try await requestPupilTask(token, pupilId)
   }

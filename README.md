@@ -13,6 +13,8 @@ protocol ChildrensVillageApiCompatible {
 
   func requestPasswordReset( _ username: String) async throws -> Int
 
+  func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int
+
   func requestPupil(
     _ token: String,
     _ pupilId: UUID

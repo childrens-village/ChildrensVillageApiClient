@@ -98,6 +98,42 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
+  func testUpdatePasswordTask() async throws {
+    // Arrange
+    let verificationToken = "fake-token"
+    let newPassword = "joe.bloggs@mail.com"
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/verified/passwords")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.put(
+        url: any(URL.self),
+        dictionary: any(keys: "verificationToken", "password")
+      )
+    )
+    .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updatePasswordTask(apiClient: client, verificationToken, newPassword)
+
+    // Assert
+    let expectedPayload = [
+      "verificationToken": verificationToken,
+      "password": newPassword,
+    ]
+
+    verify(
+      await client.put(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange

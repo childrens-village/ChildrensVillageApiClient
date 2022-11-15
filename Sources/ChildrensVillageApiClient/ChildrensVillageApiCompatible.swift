@@ -12,6 +12,9 @@ public protocol ChildrensVillageApiCompatible {
   // Returns HTTP status code
   func requestPasswordReset( _ username: String) async throws -> Int
 
+  // Returns HTTP status code
+  func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int
+
   func requestPupil(
     _ token: String,
     _ pupilId: UUID
