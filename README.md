@@ -56,3 +56,10 @@ protocol ChildrensVillageApiCompatible {
   ) async throws
 }
 ```
+
+## Re-generating test mocks
+
+1. Run `swift package update Mockingbird`
+2. Uncomment the JwtApiClient target in `Package.json`
+3. Delete the existing `Tests/ChildrensVillageApiClientTests/Mocks/JwtApiClientMocks.generated.swift` file
+4. Run `./generate-mocks.sh`
