@@ -66,26 +66,25 @@ class ChildrensVillageApiClientTests: XCTestCase {
 
   func testRequestPasswordResetTask() async throws {
     // Arrange
-    let login = "joe.bloggs@mail.com"
-    let expectedUrl = URL(string: "\(baseApiUrl)/users/anonymous/password-resets")
+    let email = "joe.bloggs@mail.com"
+    let encryptedEmail = "am9lLmJsb2dnc0BtYWlsLmNvbQ=="
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/\(encryptedEmail)/password-resets")
     let acceptedStatusCode = 204
     let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
 
     given(
       await client.post(
         url: any(URL.self),
-        dictionary: any(keys: "email")
+        dictionary: any()
       )
     )
     .willReturn(urlResponse)
 
     // Act
-    let statusCode: Int = try await requestPasswordResetTask(apiClient: client, login)
+    let statusCode: Int = try await requestPasswordResetTask(apiClient: client, email)
 
     // Assert
-    let expectedPayload = [
-      "email": login,
-    ]
+    let expectedPayload: [String:String] = [:]
 
     verify(
       await client.post(

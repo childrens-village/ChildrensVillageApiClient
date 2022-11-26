@@ -12,13 +12,12 @@ fileprivate let serverErrorCode = 500
 
 func requestPasswordResetTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
-  _ username: String
+  _ email: String
 ) async throws -> Int {
-  let endpoint = buildPasswordResetUrlComponent().url!
+  let endpoint = buildPasswordResetUrlComponent(email: email).url!
 
-  let payload: [String: Any] = [
-    "email": username
-  ]
+//  TODO: We need a method that does not require the dictionary
+  let payload: [String: String] = [:]
 
   let response: URLResponse = try await apiClient.post(url: endpoint, dictionary: payload)
 
@@ -29,8 +28,9 @@ func requestPasswordResetTask(
   return httpResponse.statusCode
 }
 
-fileprivate func buildPasswordResetUrlComponent() -> URLComponents {
-  let path = "/users/anonymous/password-resets"
+fileprivate func buildPasswordResetUrlComponent(email: String) -> URLComponents {
+  let encryptedEmail = email.data(using: .utf8)?.base64EncodedString()
+  let path = "/users/\(encryptedEmail ?? "invalid-email")/password-resets"
 
   return buildUrlComponent(path)
 }
