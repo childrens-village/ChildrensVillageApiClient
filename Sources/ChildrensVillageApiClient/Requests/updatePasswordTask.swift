@@ -15,14 +15,13 @@ func updatePasswordTask(
   _ verificationToken: String,
   _ password: String
 ) async throws -> Int {
-  let endpoint = buildPasswordUpdateUrlComponent().url!
+  let endpoint = buildPasswordUpdateUrlComponent(verificationToken).url!
 
-  let payload: [String: Any] = [
-    "verificationToken": verificationToken,
+  let payload: [String: String] = [
     "password": password
   ]
 
-  let response: URLResponse = try await apiClient.put(url: endpoint, dictionary: payload)
+  let response: URLResponse = try await apiClient.patch(url: endpoint, dictionary: payload)
 
   guard let httpResponse = response as? HTTPURLResponse else {
     return serverErrorCode
@@ -31,8 +30,8 @@ func updatePasswordTask(
   return httpResponse.statusCode
 }
 
-fileprivate func buildPasswordUpdateUrlComponent() -> URLComponents {
-  let path = "/users/verified/passwords"
+fileprivate func buildPasswordUpdateUrlComponent(_ verificationToken: String) -> URLComponents {
+  let path = "/users/\(verificationToken)"
 
   return buildUrlComponent(path)
 }

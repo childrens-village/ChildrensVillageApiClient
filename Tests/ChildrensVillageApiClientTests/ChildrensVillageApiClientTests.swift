@@ -99,16 +99,16 @@ class ChildrensVillageApiClientTests: XCTestCase {
 
   func testUpdatePasswordTask() async throws {
     // Arrange
-    let verificationToken = "fake-token"
-    let newPassword = "joe.bloggs@mail.com"
-    let expectedUrl = URL(string: "\(baseApiUrl)/users/verified/passwords")
+    let verificationToken = "fake-user-token"
+    let newPassword = "top3ecret"
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/\(verificationToken)")
     let acceptedStatusCode = 204
     let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
 
     given(
-      await client.put(
+      await client.patch(
         url: any(URL.self),
-        dictionary: any(keys: "verificationToken", "password")
+        dictionary: any(keys: "password")
       )
     )
     .willReturn(urlResponse)
@@ -118,12 +118,11 @@ class ChildrensVillageApiClientTests: XCTestCase {
 
     // Assert
     let expectedPayload = [
-      "verificationToken": verificationToken,
       "password": newPassword,
     ]
 
     verify(
-      await client.put(
+      await client.patch(
         url: expectedUrl!,
         dictionary: any(where: { $0 == expectedPayload })
       )
