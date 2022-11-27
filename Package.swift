@@ -15,10 +15,9 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-//            .upToNextMinor(from: "2.0.0")
         .package(
           name: "JwtApiClient",
-          url: "git@github.com:chris-kobrzak/JsonApiClient.git", branch: "forgotten-password"
+          url: "git@github.com:chris-kobrzak/JsonApiClient.git", .upToNextMinor(from: "3.0.0")
         ),
         .package(
           name: "Mockingbird",
