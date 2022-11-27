@@ -17,8 +17,7 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(
           name: "JwtApiClient",
-          url: "git@github.com:chris-kobrzak/JsonApiClient.git",
-            .upToNextMinor(from: "2.0.0")
+          url: "git@github.com:chris-kobrzak/JsonApiClient.git", .upToNextMinor(from: "3.0.0")
         ),
         .package(
           name: "Mockingbird",
@@ -34,5 +33,11 @@ let package = Package(
         .testTarget(
             name: "ChildrensVillageApiClientTests",
             dependencies: ["Mockingbird", "JwtApiClient", "ChildrensVillageApiClient"]),
+        // Temporarily uncomment for generating Mockingbird mocks
+//        .target(
+          // “Package” suffix below as it conflicts with an existing dependency
+//           name: "JwtApiClient",
+//           dependencies: ["Mockingbird"],
+//           path: ".build/checkouts/JsonApiClient/Sources"),
     ]
 )

@@ -11,6 +11,15 @@ protocol ChildrensVillageApiCompatible {
     _ password: String
   ) async throws -> TokenResponse
 
+  func requestPasswordReset( _ username: String) async throws -> Int
+
+  func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int
+
+  func requestPupil(
+    _ token: String,
+    _ pupilId: UUID
+  ) async throws -> PupilModel
+
   func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,
@@ -47,3 +56,10 @@ protocol ChildrensVillageApiCompatible {
   ) async throws
 }
 ```
+
+## Re-generating test mocks
+
+1. Run `swift package update Mockingbird`
+2. Uncomment the JwtApiClient target in `Package.json`
+3. Delete the existing `Tests/ChildrensVillageApiClientTests/Mocks/JwtApiClientMocks.generated.swift` file
+4. Run `./generate-mocks.sh`

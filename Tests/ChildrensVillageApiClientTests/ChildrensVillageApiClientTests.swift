@@ -64,6 +64,74 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.token, apiResponse.token)
   }
 
+  func testRequestPasswordResetTask() async throws {
+    // Arrange
+    let email = "joe.bloggs@mail.com"
+    let encryptedEmail = "am9lLmJsb2dnc0BtYWlsLmNvbQ=="
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/\(encryptedEmail)/password-resets")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any()
+      )
+    )
+    .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await requestPasswordResetTask(apiClient: client, email)
+
+    // Assert
+    let expectedPayload: [String:String] = [:]
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
+  func testUpdatePasswordTask() async throws {
+    // Arrange
+    let verificationToken = "fake-user-token"
+    let newPassword = "top3ecret"
+    let expectedUrl = URL(string: "\(baseApiUrl)/users/\(verificationToken)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "password")
+      )
+    )
+    .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updatePasswordTask(apiClient: client, verificationToken, newPassword)
+
+    // Assert
+    let expectedPayload = [
+      "password": newPassword,
+    ]
+
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { $0 == expectedPayload })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange
