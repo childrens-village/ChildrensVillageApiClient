@@ -477,6 +477,26 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .wasCalled(exactly(1))
   }
 
+  func testPupilClockOffTask() async throws {
+    // Arrange
+    let token = "fake-clock-off-token"
+    let attendanceId = 54321
+    let expectedUrl = URL(string: "\(baseApiUrl)/attendances/\(attendanceId)")
+
+    // Act
+    try await clockOffPupilTask(apiClient: client, token, attendanceId)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(keys: "clockOffTime"),
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
   func testPerformanceExample() throws {
     // This is an example of a performance test case.
     self.measure {
