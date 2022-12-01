@@ -75,4 +75,12 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   ) async throws {
     try await revertFacilitatorClockOnTask(token, attendanceId)
   }
+
+  public func clockOffPupil(
+    _ token: String,
+    _ attendanceId: Int,
+    _ date: Date?
+  ) async throws {
+    try await clockOffPupilTask(token, attendanceId, date)
+  }
 }

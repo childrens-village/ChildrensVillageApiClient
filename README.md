@@ -54,6 +54,12 @@ protocol ChildrensVillageApiCompatible {
     _ token: String,
     _ attendanceId: Int
   ) async throws
+
+  func clockOffPupil(
+    _ token: String,
+    _ attendanceId: Int,
+    _ date: Date?
+  ) async throws
 }
 ```
 
