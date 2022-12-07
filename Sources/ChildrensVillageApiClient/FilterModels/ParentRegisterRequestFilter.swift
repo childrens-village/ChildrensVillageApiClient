@@ -1,15 +1,15 @@
 //
-//  DailyRegisterRequestFilter.swift
-//  DailyRegisterRequestFilter
+//  ParentRegisterRequestFilter.swift
+//  
 //
-//  Created by Chris Kobrzak on 25/07/2021.
+//  Created by Chris Kobrzak on 05/12/2022.
 //
 
 import Foundation
 
-typealias PRRF = PupilsRegisterRequestFilter
+typealias APRRF = ParentRegisterRequestFilter
 
-public struct PupilsRegisterRequestFilter: Codable, Equatable {
+public struct ParentRegisterRequestFilter: Codable, Equatable {
   var include: [DaysOfWeekRelation]
 
   struct DaysOfWeekRelation: Codable, Equatable {
@@ -33,8 +33,7 @@ public struct PupilsRegisterRequestFilter: Codable, Equatable {
 
   struct PupilsScope: Codable, Equatable {
     var `where`: PupilOrPredicate
-    var order: String?
-    var include: [AttendancesRelation]
+    var include: [ParentsRelation]
 
     struct PupilOrPredicate: Codable, Equatable {
       var or: [PupilWhere]
@@ -44,5 +43,14 @@ public struct PupilsRegisterRequestFilter: Codable, Equatable {
       var active: Bool?
       var id: PredicateInUuid?
     }
+
+    struct ParentsRelation: Codable, Equatable {
+      var relation: String
+      var scope: ParentsScope
+    }
+  }
+
+  struct ParentsScope: Codable, Equatable {
+    var include: [AttendancesRelation]
   }
 }

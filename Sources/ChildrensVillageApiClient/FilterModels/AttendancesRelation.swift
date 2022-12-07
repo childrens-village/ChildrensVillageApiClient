@@ -10,7 +10,7 @@ typealias ARRF = AttendancesRelation
 
 public struct AttendancesRelation: Codable, Equatable {
   var fields: AttendanceField?
-  var `where`: AttendancesWhere?
+  var `where`: AttendancesScope.AttendancesWhere?
   var relation: String?
   var scope: AttendancesScope?
 
@@ -20,10 +20,10 @@ public struct AttendancesRelation: Codable, Equatable {
 
   struct AttendancesScope: Codable, Equatable {
     var `where`: AttendancesWhere
-  }
 
-  struct AttendancesWhere: Codable, Equatable {
-    var date: String
-    var branchId: Int?
+    struct AttendancesWhere: Codable, Equatable {
+      var date: String
+      var branchId: Int?
+    }
   }
 }

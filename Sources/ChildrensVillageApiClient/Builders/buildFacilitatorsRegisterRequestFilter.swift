@@ -24,7 +24,7 @@ public func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> Facilitators
       ARRF(
         relation: "attendances",
         scope: ARRF.AttendancesScope(
-          where: ARRF.AttendancesWhere(
+          where: ARRF.AttendancesScope.AttendancesWhere(
             date: isoDate
           )
         )

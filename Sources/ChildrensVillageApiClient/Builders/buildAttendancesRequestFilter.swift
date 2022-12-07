@@ -11,6 +11,6 @@ public func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> Atte
 
   return ARRF(
     fields: ARRF.AttendanceField(pupilId: true),
-    where: ARRF.AttendancesWhere(date: isoDate, branchId: branchId)
+    where: ARRF.AttendancesScope.AttendancesWhere(date: isoDate, branchId: branchId)
   )
 }
