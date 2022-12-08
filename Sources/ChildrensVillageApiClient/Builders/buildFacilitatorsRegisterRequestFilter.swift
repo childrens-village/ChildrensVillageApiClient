@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> FacilitatorsRegisterRequestFilter {
+func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> FacilitatorsRegisterRequestFilter {
   let (isoDate, _) = getLocalIsoTimeParts(date)
 
   return FRRF(

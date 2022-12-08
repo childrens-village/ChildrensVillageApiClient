@@ -9,6 +9,6 @@ import Foundation
 
 typealias PRRF = PupilsRegisterRequestFilter
 
-public struct PupilsRegisterRequestFilter: Encodable, Equatable {
+struct PupilsRegisterRequestFilter: Encodable, Equatable {
   var include: [DaysOfWeekRelation]
 }

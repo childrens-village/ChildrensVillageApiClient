@@ -9,7 +9,7 @@ import Foundation
 
 typealias PRF = PupilRequestFilter
 
-public struct PupilRequestFilter: Encodable, Equatable {
+struct PupilRequestFilter: Encodable, Equatable {
   var fields: Field?
   var include: [Include]?
   var `where`: Where?

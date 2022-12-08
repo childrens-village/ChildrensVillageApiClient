@@ -8,7 +8,7 @@ import Foundation
 
 typealias ARRF = AttendancesRelation
 
-public struct AttendancesRelation: Encodable, Equatable {
+struct AttendancesRelation: Encodable, Equatable {
   var fields: Field?
   var `where`: Where?
   var relation: String?

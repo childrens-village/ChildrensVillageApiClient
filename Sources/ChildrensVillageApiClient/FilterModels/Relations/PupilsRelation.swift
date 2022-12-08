@@ -9,7 +9,7 @@ import Foundation
 
 typealias PR = PupilsRelation
 
-public struct PupilsRelation: Encodable, Equatable {
+struct PupilsRelation: Encodable, Equatable {
   var relation: String
   var scope: Scope
   

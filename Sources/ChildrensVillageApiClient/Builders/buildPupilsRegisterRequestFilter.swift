@@ -14,7 +14,7 @@
 
 import Foundation
 
-public func buildPupilsRegisterRequestFilter(
+func buildPupilsRegisterRequestFilter(
   _ date: Date,
   _ maybeDeactivatedPupilIds: [UUID]?
 ) -> PupilsRegisterRequestFilter {

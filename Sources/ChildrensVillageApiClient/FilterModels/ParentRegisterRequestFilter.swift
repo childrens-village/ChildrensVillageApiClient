@@ -9,6 +9,6 @@ import Foundation
 
 typealias APRRF = ParentRegisterRequestFilter
 
-public struct ParentRegisterRequestFilter: Encodable, Equatable {
+struct ParentRegisterRequestFilter: Encodable, Equatable {
   var include: [DaysOfWeekRelation]
 }

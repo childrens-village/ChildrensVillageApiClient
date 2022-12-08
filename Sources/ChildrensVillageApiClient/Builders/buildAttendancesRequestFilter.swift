@@ -6,7 +6,7 @@
 
 import Foundation
 
-public func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> AttendancesRelation {
+func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> AttendancesRelation {
   let (isoDate, _) = getLocalIsoTimeParts(date)
 
   return ARRF(

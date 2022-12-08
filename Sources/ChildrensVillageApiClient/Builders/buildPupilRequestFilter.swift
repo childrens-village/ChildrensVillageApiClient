@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func buildPupilRequestFilter() -> PupilRequestFilter {
+func buildPupilRequestFilter() -> PupilRequestFilter {
   return PRF(
     fields: PRF.Field(
       id: true,

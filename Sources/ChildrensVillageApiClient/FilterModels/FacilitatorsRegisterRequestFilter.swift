@@ -9,7 +9,7 @@ import Foundation
 
 typealias FRRF = FacilitatorsRegisterRequestFilter
 
-public struct FacilitatorsRegisterRequestFilter: Encodable, Equatable {
+struct FacilitatorsRegisterRequestFilter: Encodable, Equatable {
   var fields: Field
   var include: [AttendancesRelation]
   var `where`: Where
