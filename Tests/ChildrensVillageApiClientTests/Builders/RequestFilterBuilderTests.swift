@@ -61,25 +61,25 @@ class RequestFilterBuilderTests: XCTestCase {
   func testBuildDailyRegisterRequestFilter() throws {
     let sampleMonday = "2021-07-05"
     let date = Date(isoDate: sampleMonday)
-    let attendancesWhere = ARRF.AttendancesScope.AttendancesWhere(date: sampleMonday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
+    let attendancesWhere = ARRF.Where(date: sampleMonday)
+    let attendancesScopeNode = ARRF.Scope(where: attendancesWhere)
     let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
 
-    let pupilWhereActive = PRRF.PupilsScope.PupilWhere(active: true)
+    let pupilWhereActive = PR.Where(active: true)
     // The list below should be retrieved first - it might contain pupils that have now been deactivated in the system
     let allClockedOnPupilIds: [UUID] = [
       UUID(uuidString: "efe1fffe-e9ad-477c-967f-9c964d71c120")!,
       UUID(uuidString: "f000651d-5a4e-49eb-92f2-30370f2b06b0")!
     ]
     let predicateIn = PredicateInUuid(inq: allClockedOnPupilIds)
-    let pupilWhereIdsIn = PRRF.PupilsScope.PupilWhere(id: predicateIn)
-    let pupilOrPredicate = PRRF.PupilsScope.PupilOrPredicate(or: [pupilWhereActive, pupilWhereIdsIn])
-    let pupilsScopeNode = PRRF.PupilsScope(where: pupilOrPredicate, order: "firstName, lastName", include: [attendancesRelationNode])
-    let pupilsRelationNode = PRRF.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
+    let pupilWhereIdsIn = PR.Where(id: predicateIn)
+    let pupilOrPredicate = PR.Predicate(or: [pupilWhereActive, pupilWhereIdsIn])
+    let pupilsScopeNode = PR.Scope(where: pupilOrPredicate, order: "firstName, lastName", include: Relation.attendance([attendancesRelationNode]))
+    let pupilsRelationNode = PR(relation: "pupils", scope: pupilsScopeNode)
 
-    let whereNode = PRRF.DaysOfWeekScope.DaysOfWeekWhere(day: .Monday)
-    let daysOfWeekScopeNode = PRRF.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
-    let daysOfWeekRelationNode = PRRF.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
+    let whereNode = DOWR.Where(day: .Monday)
+    let daysOfWeekScopeNode = DOWR.Scope(where: whereNode, include: [pupilsRelationNode])
+    let daysOfWeekRelationNode = DOWR(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
     let expectedResult = PRRF(include: [daysOfWeekRelationNode])
 
     let result = buildPupilsRegisterRequestFilter(date, allClockedOnPupilIds)
@@ -101,9 +101,9 @@ class RequestFilterBuilderTests: XCTestCase {
     let date = Date(isoDate: sampleMonday)
     let branchId = 1
 
-    let attendanceFields = ARRF.AttendanceField(pupilId: true)
+    let attendanceFields = ARRF.Field(pupilId: true)
 
-    let attendancesWhere = ARRF.AttendancesScope.AttendancesWhere(date: sampleMonday, branchId: branchId)
+    let attendancesWhere = ARRF.Where(date: sampleMonday, branchId: branchId)
 
     let expectedResult = ARRF(fields: attendanceFields, where: attendancesWhere)
 
@@ -154,8 +154,8 @@ class RequestFilterBuilderTests: XCTestCase {
 
     let sampleTuesday = "2021-10-18"
     let date = Date(isoDate: sampleTuesday)
-    let attendancesWhere = ARRF.AttendancesScope.AttendancesWhere(date: sampleTuesday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
+    let attendancesWhere = ARRF.Where(date: sampleTuesday)
+    let attendancesScopeNode = ARRF.Scope(where: attendancesWhere)
     let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
 
     let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")

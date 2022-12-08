@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  buildParentRegisterRequestFilter.swift
 //  
 //
 //  Created by Chris Kobrzak on 05/12/2022.
@@ -13,36 +13,36 @@ public func buildParentRegisterRequestFilter(
 ) -> ParentRegisterRequestFilter {
   let (isoDate, _) = getLocalIsoTimeParts(date)
   let dayOfWeek = try! getDayOfWeek(date: date)
-
-  var pupilPredicates: [APRRF.PupilsScope.PupilWhere] = [APRRF.PupilsScope.PupilWhere(active: true)]
-
+  
+  var pupilPredicates: [PR.Where] = [PR.Where(active: true)]
+  
   if !(maybeDeactivatedPupilIds?.isEmpty ?? true) {
     let idPredicate = PredicateInUuid(inq: maybeDeactivatedPupilIds!)
-    pupilPredicates.append(APRRF.PupilsScope.PupilWhere(id: idPredicate))
+    pupilPredicates.append(PR.Where(id: idPredicate))
   }
-
+  
   return APRRF(
     include: [
-      APRRF.DaysOfWeekRelation(
+      DOWR(
         relation: "daysOfWeek",
-        scope: APRRF.DaysOfWeekScope(
-          where: APRRF.DaysOfWeekScope.DaysOfWeekWhere(
+        scope: DOWR.Scope(
+          where: DOWR.Where(
             day: dayOfWeek
           ),
           include: [
-            APRRF.PupilsRelation(
+            PR(
               relation: "pupils",
-              scope: APRRF.PupilsScope(
-                where: APRRF.PupilsScope.PupilOrPredicate(or: pupilPredicates),
-                include: [
-                  APRRF.PupilsScope.ParentsRelation(
+              scope: PR.Scope(
+                where: PR.Predicate(or: pupilPredicates),
+                include: Relation.parent([
+                  APR(
                     relation: "parents",
-                    scope: APRRF.ParentsScope(
+                    scope: APR.Scope(
                       include: [
                         ARRF(
                           relation: "attendances",
-                          scope:  ARRF.AttendancesScope(
-                            where: ARRF.AttendancesScope.AttendancesWhere(
+                          scope:  ARRF.Scope(
+                            where: ARRF.Where(
                               date: isoDate
                             )
                           )
@@ -50,7 +50,7 @@ public func buildParentRegisterRequestFilter(
                       ]
                     )
                   )
-                ]
+                ])
               )
             )
           ]

@@ -23,8 +23,8 @@ public func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> Facilitators
     include: [
       ARRF(
         relation: "attendances",
-        scope: ARRF.AttendancesScope(
-          where: ARRF.AttendancesScope.AttendancesWhere(
+        scope: ARRF.Scope(
+          where: ARRF.Where(
             date: isoDate
           )
         )

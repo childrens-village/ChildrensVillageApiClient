@@ -9,12 +9,12 @@ import Foundation
 
 typealias PRF = PupilRequestFilter
 
-public struct PupilRequestFilter: Codable, Equatable {
+public struct PupilRequestFilter: Encodable, Equatable {
   var fields: Field?
   var include: [Include]?
-  var `where`: PupilsWhere?
+  var `where`: Where?
 
-  struct Field: Codable, Equatable {
+  struct Field: Encodable, Equatable {
     var id: Bool
     var active: Bool
     var firstName: Bool
@@ -25,7 +25,7 @@ public struct PupilRequestFilter: Codable, Equatable {
     var allergies: Bool
   }
 
-  struct PupilsWhere: Codable, Equatable {
+  struct Where: Encodable, Equatable {
     var active: Bool?
     var id: PredicateInUuid?
   }

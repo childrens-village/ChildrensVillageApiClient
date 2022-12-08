@@ -20,38 +20,39 @@ public func buildPupilsRegisterRequestFilter(
 ) -> PupilsRegisterRequestFilter {
   let (isoDate, _) = getLocalIsoTimeParts(date)
   let dayOfWeek = try! getDayOfWeek(date: date)
-
-  var pupilPredicates: [PRRF.PupilsScope.PupilWhere] = [PRRF.PupilsScope.PupilWhere(active: true)]
-
+  
+  var pupilPredicates: [PR.Where] = [PR.Where(active: true)]
+  
   if !(maybeDeactivatedPupilIds?.isEmpty ?? true) {
     let idPredicate = PredicateInUuid(inq: maybeDeactivatedPupilIds!)
-    pupilPredicates.append(PRRF.PupilsScope.PupilWhere(id: idPredicate))
+    pupilPredicates.append(PR.Where(id: idPredicate))
   }
-
+  
   return PRRF(
     include: [
-      PRRF.DaysOfWeekRelation(
+      DOWR(
         relation: "daysOfWeek",
-        scope: PRRF.DaysOfWeekScope(
-          where: PRRF.DaysOfWeekScope.DaysOfWeekWhere(
+        scope: DOWR.Scope(
+          where: DOWR.Where(
             day: dayOfWeek
           ),
           include: [
-            PRRF.PupilsRelation(
+            PR(
               relation: "pupils",
-              scope: PRRF.PupilsScope(
-                where: PRRF.PupilsScope.PupilOrPredicate(or: pupilPredicates),
+              scope: PR.Scope(
+                where: PR.Predicate(or: pupilPredicates),
                 order: "firstName, lastName",
-                include: [
-                  ARRF(
-                    relation: "attendances",
-                    scope: ARRF.AttendancesScope(
-                      where: ARRF.AttendancesScope.AttendancesWhere(
-                        date: isoDate
+                include:
+                  Relation.attendance([
+                    ARRF(
+                      relation: "attendances",
+                      scope: ARRF.Scope(
+                        where: ARRF.Where(
+                          date: isoDate
+                        )
                       )
                     )
-                  )
-                ]
+                  ])
               )
             )
           ]

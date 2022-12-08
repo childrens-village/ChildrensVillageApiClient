@@ -10,7 +10,7 @@ public func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> Atte
   let (isoDate, _) = getLocalIsoTimeParts(date)
 
   return ARRF(
-    fields: ARRF.AttendanceField(pupilId: true),
-    where: ARRF.AttendancesScope.AttendancesWhere(date: isoDate, branchId: branchId)
+    fields: ARRF.Field(pupilId: true),
+    where: ARRF.Where(date: isoDate, branchId: branchId)
   )
 }
