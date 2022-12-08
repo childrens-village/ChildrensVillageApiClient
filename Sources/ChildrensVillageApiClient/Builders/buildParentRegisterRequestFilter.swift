@@ -34,15 +34,15 @@ func buildParentRegisterRequestFilter(
               relation: "pupils",
               scope: PR.Scope(
                 where: PR.Predicate(or: pupilPredicates),
-                include: Relation.parent([
-                  APR(
+                include: [
+                  Relation(
                     relation: "parents",
-                    scope: APR.Scope(
+                    scope: Relation.Scope(
                       include: [
-                        ARRF(
+                        Relation(
                           relation: "attendances",
-                          scope:  ARRF.Scope(
-                            where: ARRF.Where(
+                          scope:  Relation.Scope(
+                            where: Relation.Where(
                               date: isoDate
                             )
                           )
@@ -50,7 +50,7 @@ func buildParentRegisterRequestFilter(
                       ]
                     )
                   )
-                ])
+                ]
               )
             )
           ]

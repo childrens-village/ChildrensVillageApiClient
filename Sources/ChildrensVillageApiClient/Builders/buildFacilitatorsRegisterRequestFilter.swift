@@ -21,10 +21,10 @@ func buildFacilitatorsRegisterRequestFilter(_ date: Date) -> FacilitatorsRegiste
       email: true
     ),
     include: [
-      ARRF(
+      Relation(
         relation: "attendances",
-        scope: ARRF.Scope(
-          where: ARRF.Where(
+        scope: Relation.Scope(
+          where: Relation.Where(
             date: isoDate
           )
         )

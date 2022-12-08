@@ -8,32 +8,23 @@
 
 import Foundation
 
-enum Relation: Encodable, Equatable {
-  case attendance([AttendancesRelation])
-  case parent([ParentsRelation])
+struct Relation: Encodable, Equatable {
+  var fields: Field?
+  var `where`: Where?
+  var relation: String?
+  var scope: Scope?
 
-  /*
-  enum CodingKeys: String, CodingKey {
-    case attendance
-    case parent
+  struct Field: Encodable, Equatable {
+    var pupilId: Bool?
   }
 
-  func encode(to encoder: Encoder) throws {
-    var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(attendance, forKey: .attendance)
-    try container.encode(parent, forKey: .parent)
-
-    switch data {
-    case .number(let values):
-      try container.encode("number", forKey: .type)
-      try container.encode(values, forKey: .data)
-    case .plot(let values):
-      try container.encode("plot", forKey: .type)
-      try container.encode(values, forKey: .data)
-    case .slice(let values):
-      try container.encode("slice", forKey: .type)
-      try container.encode(values, forKey: .data)
-    }
+  struct Where: Encodable, Equatable {
+    var date: String
+    var branchId: Int?
   }
-  */
+
+  struct Scope: Encodable, Equatable {
+    var `where`: Where?
+    var include: [Relation]?
+  }
 }

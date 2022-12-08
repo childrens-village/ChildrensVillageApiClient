@@ -11,7 +11,7 @@ typealias FRRF = FacilitatorsRegisterRequestFilter
 
 struct FacilitatorsRegisterRequestFilter: Encodable, Equatable {
   var fields: Field
-  var include: [AttendancesRelation]
+  var include: [Relation]
   var `where`: Where
   var order: String
 

@@ -61,9 +61,9 @@ class RequestFilterBuilderTests: XCTestCase {
   func testBuildDailyRegisterRequestFilter() throws {
     let sampleMonday = "2021-07-05"
     let date = Date(isoDate: sampleMonday)
-    let attendancesWhere = ARRF.Where(date: sampleMonday)
-    let attendancesScopeNode = ARRF.Scope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
+    let attendancesWhere = Relation.Where(date: sampleMonday)
+    let attendancesScopeNode = Relation.Scope(where: attendancesWhere)
+    let attendancesRelationNode = Relation(relation: "attendances", scope: attendancesScopeNode)
 
     let pupilWhereActive = PR.Where(active: true)
     // The list below should be retrieved first - it might contain pupils that have now been deactivated in the system
@@ -74,7 +74,7 @@ class RequestFilterBuilderTests: XCTestCase {
     let predicateIn = PredicateInUuid(inq: allClockedOnPupilIds)
     let pupilWhereIdsIn = PR.Where(id: predicateIn)
     let pupilOrPredicate = PR.Predicate(or: [pupilWhereActive, pupilWhereIdsIn])
-    let pupilsScopeNode = PR.Scope(where: pupilOrPredicate, order: "firstName, lastName", include: Relation.attendance([attendancesRelationNode]))
+    let pupilsScopeNode = PR.Scope(where: pupilOrPredicate, order: "firstName, lastName", include: [attendancesRelationNode])
     let pupilsRelationNode = PR(relation: "pupils", scope: pupilsScopeNode)
 
     let whereNode = DOWR.Where(day: .Monday)
@@ -101,11 +101,11 @@ class RequestFilterBuilderTests: XCTestCase {
     let date = Date(isoDate: sampleMonday)
     let branchId = 1
 
-    let attendanceFields = ARRF.Field(pupilId: true)
+    let attendanceFields = Relation.Field(pupilId: true)
 
-    let attendancesWhere = ARRF.Where(date: sampleMonday, branchId: branchId)
+    let attendancesWhere = Relation.Where(date: sampleMonday, branchId: branchId)
 
-    let expectedResult = ARRF(fields: attendanceFields, where: attendancesWhere)
+    let expectedResult = Relation(fields: attendanceFields, where: attendancesWhere)
 
     let result = buildAttendancesRequestFilter(branchId, date)
     XCTAssertEqual(result, expectedResult)
@@ -154,9 +154,9 @@ class RequestFilterBuilderTests: XCTestCase {
 
     let sampleTuesday = "2021-10-18"
     let date = Date(isoDate: sampleTuesday)
-    let attendancesWhere = ARRF.Where(date: sampleTuesday)
-    let attendancesScopeNode = ARRF.Scope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
+    let attendancesWhere = Relation.Where(date: sampleTuesday)
+    let attendancesScopeNode = Relation.Scope(where: attendancesWhere)
+    let attendancesRelationNode = Relation(relation: "attendances", scope: attendancesScopeNode)
 
     let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
 

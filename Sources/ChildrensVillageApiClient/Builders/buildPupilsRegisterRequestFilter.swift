@@ -42,17 +42,16 @@ func buildPupilsRegisterRequestFilter(
               scope: PR.Scope(
                 where: PR.Predicate(or: pupilPredicates),
                 order: "firstName, lastName",
-                include:
-                  Relation.attendance([
-                    ARRF(
-                      relation: "attendances",
-                      scope: ARRF.Scope(
-                        where: ARRF.Where(
-                          date: isoDate
-                        )
+                include: [
+                  Relation(
+                    relation: "attendances",
+                    scope: Relation.Scope(
+                      where: Relation.Where(
+                        date: isoDate
                       )
                     )
-                  ])
+                  )
+                ]
               )
             )
           ]
