@@ -9,7 +9,7 @@ protocol ChildrensVillageApiCompatible {
   func requestToken(
     _ username: String,
     _ password: String
-  ) async throws -> TokenResponse
+  ) async throws -> TokenModel
 
   func requestPasswordReset( _ username: String) async throws -> Int
 
@@ -24,26 +24,32 @@ protocol ChildrensVillageApiCompatible {
     _ token: String,
     _ branchId: Int,
     _ date: Date
-  ) async throws -> [Pupil]
+  ) async throws -> [PupilModel]
 
   func requestFacilitatorsRegister(
     _ token: String,
     _ date: Date
-  ) async throws -> [Parent]
+  ) async throws -> [ParentModel]
+
+  func requestParentsRegister(
+    _ token: String,
+    _ branchId: Int,
+    _ date: Date
+  ) async throws -> [ParentModel]
 
   func clockOnPupil(
     _ token: String,
     _ pupilId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse
+  ) async throws -> ClockOnConfirming
 
   func clockOnFacilitator(
     _ token: String,
     _ facilitatorId: String,
     _ branchId: Int,
     _ date: Date?
-  ) async throws -> ClockOnResponse
+  ) async throws -> ClockOnConfirming
 
   func revertPupilClockOn(
     _ token: String,
