@@ -351,6 +351,126 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.first?.id, apiResponse.first?.id)
   }
 
+  func testRequestAllParentsRegisterTask() async throws {
+    // Arrange
+    let token = "fake-register-token"
+    let branchId = 135
+    let isoDate = "2022-12-08"
+    let date = Date(isoDate: isoDate)
+
+    let branchName = "Branch Name"
+    let branchPostcode = "XY1 2ZZ"
+    let branchAddress = "Fake Address"
+    let geolocation = GeolocationModel(latitude: 51.01, longitude: 0.09)
+
+    let commonParentA = ParentModel(
+      id: UUID(uuidString: "77CCE5EA-9FFD-498B-8D7B-1045B62B82BC")!,
+      active: true,
+      facilitating: false,
+      primary: nil,
+      firstName: "PupilB",
+      lastName: "ParentA",
+      prefix: TitlePrefix.Mrs,
+      phone: "07123 000000",
+      email: nil,
+      attendances: nil
+    )
+    let pupilBParentB = ParentModel(
+      id: UUID(uuidString: "3F42715B-FD85-4D01-90F1-A1D6FF5CA79E")!,
+      active: false,
+      facilitating: false,
+      primary: nil,
+      firstName: "PupilB",
+      lastName: "ParentB",
+      prefix: TitlePrefix.Mr,
+      phone: "07123 456789",
+      email: nil,
+      attendances: nil
+    )
+
+    let pupilA = PupilModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Master,
+      photographyConsent: true,
+      allergies: "gluten free",
+      parents: [commonParentA],
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
+    )
+    let pupilB = PupilModel(
+      id: UUID(uuidString: "0FB40D04-AC2F-4BAD-8E74-07BF2A4DD55D")!,
+      firstName: "Amy",
+      lastName: "Smith",
+      dateOfBirth: "2017-10-10",
+      prefix: TitlePrefix.Miss,
+      photographyConsent: false,
+      allergies: "vegan",
+      parents: [commonParentA, pupilBParentB],
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
+    )
+    let pupilC = PupilModel(
+      id: UUID(uuidString: "E42636A9-AD52-4334-9953-AF0C46769CC8")!,
+      firstName: "John",
+      lastName: "Green",
+      dateOfBirth: "2013-12-12",
+      prefix: TitlePrefix.Master,
+      photographyConsent: false,
+      allergies: nil,
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
+    )
+    let pupils = [pupilA, pupilB, pupilC]
+
+    let mondayPupils = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: pupils)
+    let apiResponse = BranchModel(
+      id: branchId,
+      name: branchName,
+      geolocation: geolocation,
+      postcode: branchPostcode,
+      address: branchAddress,
+      pupils: nil,
+      daysOfWeek: [mondayPupils]
+    )
+
+    let deactivatedPupilId = "053dfb2b-e6c7-4d35-9e6c-0665394b3e60"
+    let clockedOnPupilIds = [UUID(uuidString: deactivatedPupilId)!]
+
+    given(
+      await client.get(
+        url: any(URL.self, where: { $0.description.contains("branches/") }),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let results: [ParentModel] = try await requestAllParentsRegisterTask(apiClient: client, token, branchId, date, clockedOnPupilIds)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/branches/135?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Thursday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22or%22:%5B%7B%22active%22:true%7D,%7B%22id%22:%7B%22inq%22:%5B%22\(deactivatedPupilId.uppercased())%22%5D%7D%7D%5D%7D,%22include%22:%5B%7B%22scope%22:%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22parents%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
+
+    verify(
+      await client.get(
+        url: expectedUrl!,
+        token: token
+      )
+    )
+      .returning(BranchModel.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(results.count, 2)
+    XCTAssertEqual(results.first?.lastName, "ParentA")
+    XCTAssertEqual(results.last?.lastName, "ParentB")
+  }
+
   func testClockOnPupilTask() async throws {
     // Arrange
     let token = "fake-token"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-func buildParentRegisterRequestFilter(
+func buildParentsRegisterRequestFilter(
   _ date: Date,
   _ maybeDeactivatedPupilIds: [UUID]?
 ) -> ParentRegisterRequestFilter {

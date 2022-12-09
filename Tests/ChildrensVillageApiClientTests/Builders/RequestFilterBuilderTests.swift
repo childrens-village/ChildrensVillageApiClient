@@ -227,7 +227,7 @@ class RequestFilterBuilderTests: XCTestCase {
 {"include":[{"scope":{"where":{"day":"\(dayOfWeek)"},"include":[{"scope":{"where":{"or":[{"active":true},{"id":{"inq":["\(sampleDeactivatedPupilId.uppercased())"]}}]},"include":[{"scope":{"include":[{"scope":{"where":{"date":"\(sampleFriday)"}},"relation":"attendances"}]},"relation":"parents"}]},"relation":"pupils"}]},"relation":"daysOfWeek"}]}
 """
 
-    let result = buildParentRegisterRequestFilter(date, [sampleDeactivatedPupilUuid])
+    let result = buildParentsRegisterRequestFilter(date, [sampleDeactivatedPupilUuid])
     let resultStringified = JSONEncoder.encode(from: result)
 
     XCTAssertEqual(resultStringified, expectedResultStringified)
