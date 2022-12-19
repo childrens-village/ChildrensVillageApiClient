@@ -44,6 +44,10 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await requestFacilitatorsRegisterTask(token, date)
   }
 
+  public func requestParentsRegister(_ token: String, _ branchId: Int, _ date: Date) async throws -> [ParentModel] {
+    try await requestParentsRegisterTask(token, branchId, date)
+  }
+
   public func clockOnPupil(
     _ token: String,
     _ pupilId: UUID,

@@ -9,39 +9,6 @@ import Foundation
 
 typealias PRRF = PupilsRegisterRequestFilter
 
-public struct PupilsRegisterRequestFilter: Codable, Equatable {
+struct PupilsRegisterRequestFilter: Encodable, Equatable {
   var include: [DaysOfWeekRelation]
-
-  struct DaysOfWeekRelation: Codable, Equatable {
-    var relation: String
-    var scope: DaysOfWeekScope
-  }
-
-  struct DaysOfWeekWhere: Codable, Equatable {
-    var day: DayOfWeek
-  }
-
-  struct DaysOfWeekScope: Codable, Equatable {
-    var `where`: DaysOfWeekWhere
-    var include: [PupilsRelation]
-  }
-
-  struct PupilsRelation: Codable, Equatable {
-    var relation: String
-    var scope: PupilsScope
-  }
-  struct PupilsScope: Codable, Equatable {
-    var `where`: PupilOrPredicate
-    var order: String?
-    var include: [AttendancesRelation]
-  }
-
-  struct PupilOrPredicate: Codable, Equatable {
-    var or: [PupilWhere]
-  }
-
-  struct PupilWhere: Codable, Equatable {
-    var active: Bool?
-    var id: PredicateInUuid?
-  }
 }

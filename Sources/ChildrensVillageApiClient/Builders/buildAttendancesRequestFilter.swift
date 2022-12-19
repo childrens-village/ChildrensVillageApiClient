@@ -6,11 +6,11 @@
 
 import Foundation
 
-public func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> AttendancesRelation {
+func buildAttendancesRequestFilter(_ branchId: Int, _ date: Date) -> Relation {
   let (isoDate, _) = getLocalIsoTimeParts(date)
 
-  return ARRF(
-    fields: ARRF.AttendanceField(pupilId: true),
-    where: ARRF.AttendancesWhere(date: isoDate, branchId: branchId)
+  return Relation(
+    fields: Relation.Field(pupilId: true),
+    where: Relation.Where(date: isoDate, branchId: branchId)
   )
 }

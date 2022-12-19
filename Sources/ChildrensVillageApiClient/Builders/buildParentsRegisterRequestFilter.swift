@@ -1,23 +1,16 @@
 //
-//  buildDailyRegisterRequestFilter.swift
-//  Builds a tree of nested structures representing the URL
-//  filter for the daily register API request query string.
+//  buildParentRegisterRequestFilter.swift
+//  
 //
-//  The second `maybeDeactivatedPupilIds` argument has been
-//  introduced to include past pupils that might have been
-//  present but due to the active=true filter, would not be
-//  included in the results.
-//
-//  Created by Chris Kobrzak on 20/07/2021.
-//  Updated by Chris Kobrzak on 29/10/2022.
+//  Created by Chris Kobrzak on 05/12/2022.
 //
 
 import Foundation
 
-func buildPupilsRegisterRequestFilter(
+func buildParentsRegisterRequestFilter(
   _ date: Date,
   _ maybeDeactivatedPupilIds: [UUID]?
-) -> PupilsRegisterRequestFilter {
+) -> ParentRegisterRequestFilter {
   let (isoDate, _) = getLocalIsoTimeParts(date)
   let dayOfWeek = try! getDayOfWeek(date: date)
   
@@ -28,7 +21,7 @@ func buildPupilsRegisterRequestFilter(
     pupilPredicates.append(PR.Where(id: idPredicate))
   }
   
-  return PRRF(
+  return APRRF(
     include: [
       DOWR(
         relation: "daysOfWeek",
@@ -41,14 +34,20 @@ func buildPupilsRegisterRequestFilter(
               relation: "pupils",
               scope: PR.Scope(
                 where: PR.Predicate(or: pupilPredicates),
-                order: "firstName, lastName",
                 include: [
                   Relation(
-                    relation: "attendances",
+                    relation: "parents",
                     scope: Relation.Scope(
-                      where: Relation.Where(
-                        date: isoDate
-                      )
+                      include: [
+                        Relation(
+                          relation: "attendances",
+                          scope:  Relation.Scope(
+                            where: Relation.Where(
+                              date: isoDate
+                            )
+                          )
+                        )
+                      ]
                     )
                   )
                 ]

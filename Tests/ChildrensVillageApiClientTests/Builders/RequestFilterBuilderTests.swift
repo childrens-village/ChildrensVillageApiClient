@@ -61,25 +61,25 @@ class RequestFilterBuilderTests: XCTestCase {
   func testBuildDailyRegisterRequestFilter() throws {
     let sampleMonday = "2021-07-05"
     let date = Date(isoDate: sampleMonday)
-    let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
+    let attendancesWhere = Relation.Where(date: sampleMonday)
+    let attendancesScopeNode = Relation.Scope(where: attendancesWhere)
+    let attendancesRelationNode = Relation(relation: "attendances", scope: attendancesScopeNode)
 
-    let pupilWhereActive = PRRF.PupilWhere(active: true)
+    let pupilWhereActive = PR.Where(active: true)
     // The list below should be retrieved first - it might contain pupils that have now been deactivated in the system
     let allClockedOnPupilIds: [UUID] = [
       UUID(uuidString: "efe1fffe-e9ad-477c-967f-9c964d71c120")!,
       UUID(uuidString: "f000651d-5a4e-49eb-92f2-30370f2b06b0")!
     ]
     let predicateIn = PredicateInUuid(inq: allClockedOnPupilIds)
-    let pupilWhereIdsIn = PRRF.PupilWhere(id: predicateIn)
-    let pupilOrPredicate = PRRF.PupilOrPredicate(or: [pupilWhereActive, pupilWhereIdsIn])
-    let pupilsScopeNode = PRRF.PupilsScope(where: pupilOrPredicate, order: "firstName, lastName", include: [attendancesRelationNode])
-    let pupilsRelationNode = PRRF.PupilsRelation(relation: "pupils", scope: pupilsScopeNode)
+    let pupilWhereIdsIn = PR.Where(id: predicateIn)
+    let pupilOrPredicate = PR.Predicate(or: [pupilWhereActive, pupilWhereIdsIn])
+    let pupilsScopeNode = PR.Scope(where: pupilOrPredicate, order: "firstName, lastName", include: [attendancesRelationNode])
+    let pupilsRelationNode = PR(relation: "pupils", scope: pupilsScopeNode)
 
-    let whereNode = PRRF.DaysOfWeekWhere(day: .Monday)
-    let daysOfWeekScopeNode = PRRF.DaysOfWeekScope(where: whereNode, include: [pupilsRelationNode])
-    let daysOfWeekRelationNode = PRRF.DaysOfWeekRelation(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
+    let whereNode = DOWR.Where(day: .Monday)
+    let daysOfWeekScopeNode = DOWR.Scope(where: whereNode, include: [pupilsRelationNode])
+    let daysOfWeekRelationNode = DOWR(relation: "daysOfWeek", scope: daysOfWeekScopeNode)
     let expectedResult = PRRF(include: [daysOfWeekRelationNode])
 
     let result = buildPupilsRegisterRequestFilter(date, allClockedOnPupilIds)
@@ -101,11 +101,11 @@ class RequestFilterBuilderTests: XCTestCase {
     let date = Date(isoDate: sampleMonday)
     let branchId = 1
 
-    let attendanceFields = ARRF.AttendanceField(pupilId: true)
+    let attendanceFields = Relation.Field(pupilId: true)
 
-    let attendancesWhere = ARRF.AttendancesWhere(date: sampleMonday, branchId: branchId)
+    let attendancesWhere = Relation.Where(date: sampleMonday, branchId: branchId)
 
-    let expectedResult = ARRF(fields: attendanceFields, where: attendancesWhere)
+    let expectedResult = Relation(fields: attendanceFields, where: attendancesWhere)
 
     let result = buildAttendancesRequestFilter(branchId, date)
     XCTAssertEqual(result, expectedResult)
@@ -154,14 +154,83 @@ class RequestFilterBuilderTests: XCTestCase {
 
     let sampleTuesday = "2021-10-18"
     let date = Date(isoDate: sampleTuesday)
-    let attendancesWhere = ARRF.AttendancesWhere(date: sampleTuesday)
-    let attendancesScopeNode = ARRF.AttendancesScope(where: attendancesWhere)
-    let attendancesRelationNode = ARRF(relation: "attendances", scope: attendancesScopeNode)
+    let attendancesWhere = Relation.Where(date: sampleTuesday)
+    let attendancesScopeNode = Relation.Scope(where: attendancesWhere)
+    let attendancesRelationNode = Relation(relation: "attendances", scope: attendancesScopeNode)
 
     let expectedResult = FRRF(fields: fieldNode, include: [attendancesRelationNode], where: whereNode, order: "firstName, lastName")
 
     let result = buildFacilitatorsRegisterRequestFilter(date)
     XCTAssertEqual(result, expectedResult)
+  }
+
+/*
+ {
+   "include":[
+     {
+       "relation":"daysOfWeek",
+       "scope":{
+         "where":{
+           "day":"Friday"
+         },
+         "include":[
+           {
+             "relation":"pupils",
+             "scope":{
+               "where":{
+                 "or":[
+                   {
+                     "active":true
+                   },
+                   {
+                     "id":{
+                       "inq":[
+                         "7c3e6698-2af9-45a6-825e-cdd0d5856d46"
+                       ]
+                     }
+                   }
+                 ]
+               },
+               "include":[
+               "include":[
+                 {
+                   "relation":"parents",
+                   "scope":{
+                     "include":[
+                       {
+                         "relation":"attendances",
+                         "scope":{
+                           "where":{
+                             "date":"2022-12-02"
+                           }
+                         }
+                       }
+                     ]
+                   }
+                 }
+               ]
+             }
+           }
+         ]
+       }
+     }
+   ]
+ }
+ */
+  func testBuildParentRegisterRequestFilter() throws {
+    let sampleFriday = "2022-12-02"
+    let date = Date(isoDate: sampleFriday)
+    let dayOfWeek = "Friday"
+    let sampleDeactivatedPupilId = "7c3e6698-2af9-45a6-825e-cdd0d5856d46"
+    let sampleDeactivatedPupilUuid = UUID(uuidString: sampleDeactivatedPupilId)!
+    let expectedResultStringified = """
+{"include":[{"scope":{"where":{"day":"\(dayOfWeek)"},"include":[{"scope":{"where":{"or":[{"active":true},{"id":{"inq":["\(sampleDeactivatedPupilId.uppercased())"]}}]},"include":[{"scope":{"include":[{"scope":{"where":{"date":"\(sampleFriday)"}},"relation":"attendances"}]},"relation":"parents"}]},"relation":"pupils"}]},"relation":"daysOfWeek"}]}
+"""
+
+    let result = buildParentsRegisterRequestFilter(date, [sampleDeactivatedPupilUuid])
+    let resultStringified = JSONEncoder.encode(from: result)
+
+    XCTAssertEqual(resultStringified, expectedResultStringified)
   }
 
   // Endpoint: /pupils/{pupilId}

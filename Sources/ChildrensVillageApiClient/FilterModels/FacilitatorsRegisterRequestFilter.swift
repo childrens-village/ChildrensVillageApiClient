@@ -9,13 +9,13 @@ import Foundation
 
 typealias FRRF = FacilitatorsRegisterRequestFilter
 
-public struct FacilitatorsRegisterRequestFilter: Codable, Equatable {
+struct FacilitatorsRegisterRequestFilter: Encodable, Equatable {
   var fields: Field
-  var include: [AttendancesRelation]
+  var include: [Relation]
   var `where`: Where
   var order: String
 
-  struct Field: Codable, Equatable {
+  struct Field: Encodable, Equatable {
     var id: Bool
     var primary: Bool?
     var firstName: Bool
@@ -25,7 +25,7 @@ public struct FacilitatorsRegisterRequestFilter: Codable, Equatable {
     var email: Bool
   }
 
-  struct Where: Codable, Equatable {
+  struct Where: Encodable, Equatable {
     var active: Bool
     var facilitating: Bool
   }
