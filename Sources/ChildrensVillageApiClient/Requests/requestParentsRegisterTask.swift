@@ -43,6 +43,10 @@ func requestAllParentsRegisterTask(
 
   let response: BranchModel = try await apiClient.get(url: endpoint, token: token)
 
+  return extractParents(response)
+}
+
+fileprivate func extractParents(_ response: BranchModel) -> [ParentModel] {
   var allParents = [ParentModel]()
   var parentIds = Set<UUID>()
 
@@ -61,5 +65,5 @@ func requestAllParentsRegisterTask(
     }
   }
 
-  return allParents
+  return allParents.sorted(by: { $0.firstName < $1.firstName })
 }
