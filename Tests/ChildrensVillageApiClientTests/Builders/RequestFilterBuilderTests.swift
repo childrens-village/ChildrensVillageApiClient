@@ -263,6 +263,7 @@ class RequestFilterBuilderTests: XCTestCase {
     let fieldNode = PRF.Field(
       id: true,
       active: true,
+      activeUntil: true,
       firstName: true,
       lastName: true,
       prefix: true,

@@ -17,6 +17,7 @@ struct PupilRequestFilter: Encodable, Equatable {
   struct Field: Encodable, Equatable {
     var id: Bool
     var active: Bool
+    var activeUntil: Bool
     var firstName: Bool
     var lastName: Bool
     var prefix: Bool
