@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  getDayOfWeek.swift
+//
 //
 //  Created by Chris Kobrzak on 25/09/2022.
 //
