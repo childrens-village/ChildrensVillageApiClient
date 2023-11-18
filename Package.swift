@@ -22,6 +22,10 @@ let package = Package(
         .package(
           name: "Mockingbird",
           url: "https://github.com/birdrides/mockingbird.git", .upToNextMinor(from: "0.20.0")
+        ),
+        .package(
+          name: "GenericJSON",
+          url: "https://github.com/iwill/generic-json-swift.git", .upToNextMinor(from: "2.0.2")
         )
     ],
     targets: [
@@ -32,7 +36,7 @@ let package = Package(
             dependencies: ["JwtApiClient"]),
         .testTarget(
             name: "ChildrensVillageApiClientTests",
-            dependencies: ["Mockingbird", "JwtApiClient", "ChildrensVillageApiClient"]),
+            dependencies: ["GenericJSON", "Mockingbird", "JwtApiClient", "ChildrensVillageApiClient"]),
         // Temporarily uncomment for generating Mockingbird mocks
 //        .target(
           // “Package” suffix below as it conflicts with an existing dependency

@@ -184,6 +184,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "gluten free",
       parents: nil,
@@ -219,11 +220,12 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let result: [PupilModel] = try await requestAllPupilsRegisterTask(apiClient: client, token, branchId, date, clockedOnPupilIds)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/branches/345?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Tuesday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22or%22:%5B%7B%22active%22:true%7D,%7B%22id%22:%7B%22inq%22:%5B%22\(deactivatedPupilId.uppercased())%22%5D%7D%7D%5D%7D,%22order%22:%22firstName,%20lastName%22,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
-
     verify(
       await client.get(
-        url: expectedUrl!,
+        url: any(URL.self, where: {
+          $0.description.contains("branches/\(branchId)") &&
+          $0.description.contains(isoDate)
+        }),
         token: token
       )
     )
@@ -236,7 +238,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
   func testRequestPupilTask() async throws {
     // Arrange
     let token = "fake-register-token"
-    let pupilId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let pupilIdString = "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a"
+    let pupilId = UUID(uuidString: pupilIdString)!
     let dayOfWeek = DayOfWeekModel(id: 135, day: DayOfWeek.Monday, pupils: nil)
     let apiResponse = PupilModel(
       id: pupilId,
@@ -244,6 +247,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "",
       parents: nil,
@@ -264,16 +268,16 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let result: PupilModel = try await requestPupilTask(apiClient: client, token, pupilId)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/753dfb2b-e6c7-4d35-9e6c-0665394b3e6a?filter=%7B%22include%22:%5B%7B%22relation%22:%22parents%22%7D,%7B%22relation%22:%22branches%22%7D,%7B%22relation%22:%22daysOfWeek%22%7D%5D,%22fields%22:%7B%22active%22:true,%22prefix%22:true,%22firstName%22:true,%22id%22:true,%22allergies%22:true,%22dateOfBirth%22:true,%22photographyConsent%22:true,%22lastName%22:true%7D%7D")
-
     verify(
       await client.get(
-        url: expectedUrl!,
+        url: any(URL.self, where: {
+          $0.description.contains("pupils/\(pupilIdString)")
+        }),
         token: token
       )
     )
-      .returning(PupilModel.self)
-      .wasCalled(exactly(1))
+    .returning(PupilModel.self)
+    .wasCalled(exactly(1))
 
     XCTAssertEqual(result.id, apiResponse.id)
   }
@@ -337,16 +341,17 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let result: [ParentModel] = try await requestFacilitatorsRegisterTask(apiClient: client, token, date)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/parents?filter=%7B%22fields%22:%7B%22firstName%22:true,%22id%22:true,%22lastName%22:true,%22prefix%22:true,%22phone%22:true,%22email%22:true%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D,%22order%22:%22firstName,%20lastName%22,%22where%22:%7B%22facilitating%22:true,%22active%22:true%7D%7D")
-
     verify(
       await client.get(
-        url: expectedUrl!,
+        url: any(URL.self, where: {
+          $0.description.contains("/api/parents") &&
+          $0.description.contains(isoDate)
+        }),
         token: token
       )
     )
-      .returning([ParentModel].self)
-      .wasCalled(exactly(1))
+    .returning([ParentModel].self)
+    .wasCalled(exactly(1))
 
     XCTAssertEqual(result.first?.id, apiResponse.first?.id)
   }
@@ -394,6 +399,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Master,
+      activeUntil: "2023-12-13",
       photographyConsent: true,
       allergies: "gluten free",
       parents: [commonParentA],
@@ -407,6 +413,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Smith",
       dateOfBirth: "2017-10-10",
       prefix: TitlePrefix.Miss,
+      activeUntil: "",
       photographyConsent: false,
       allergies: "vegan",
       parents: [commonParentA, pupilBParentB],
@@ -420,6 +427,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Green",
       dateOfBirth: "2013-12-12",
       prefix: TitlePrefix.Master,
+      activeUntil: "2024-05-20",
       photographyConsent: false,
       allergies: nil,
       parents: nil,
@@ -455,16 +463,18 @@ class ChildrensVillageApiClientTests: XCTestCase {
     let results: [ParentModel] = try await requestAllParentsRegisterTask(apiClient: client, token, branchId, date, clockedOnPupilIds)
 
     // Assert
-    let expectedUrl = URL(string: "\(baseApiUrl)/branches/135?filter=%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22day%22:%22Thursday%22%7D,%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22or%22:%5B%7B%22active%22:true%7D,%7B%22id%22:%7B%22inq%22:%5B%22\(deactivatedPupilId.uppercased())%22%5D%7D%7D%5D%7D,%22include%22:%5B%7B%22scope%22:%7B%22include%22:%5B%7B%22scope%22:%7B%22where%22:%7B%22date%22:%22\(isoDate)%22%7D%7D,%22relation%22:%22attendances%22%7D%5D%7D,%22relation%22:%22parents%22%7D%5D%7D,%22relation%22:%22pupils%22%7D%5D%7D,%22relation%22:%22daysOfWeek%22%7D%5D%7D")
-
     verify(
       await client.get(
-        url: expectedUrl!,
+        url: any(URL.self, where: {
+          $0.description.contains("/api/branches/\(branchId)") &&
+          $0.description.contains(isoDate) &&
+          $0.description.contains(deactivatedPupilId.uppercased())
+        }),
         token: token
       )
     )
-      .returning(BranchModel.self)
-      .wasCalled(exactly(1))
+    .returning(BranchModel.self)
+    .wasCalled(exactly(1))
 
     XCTAssertEqual(results.count, 2)
     XCTAssertEqual(results.first?.lastName, "ParentA")

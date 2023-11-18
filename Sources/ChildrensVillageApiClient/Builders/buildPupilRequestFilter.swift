@@ -13,6 +13,7 @@ func buildPupilRequestFilter() -> PupilRequestFilter {
     fields: PRF.Field(
       id: true,
       active: true,
+      activeUntil: true,
       firstName: true,
       lastName: true,
       prefix: true,

@@ -5,6 +5,7 @@
 //  Created by Chris Kobrzak on 09/03/2022.
 //
 
+import GenericJSON
 import XCTest
 @testable import ChildrensVillageApiClient
 
@@ -226,11 +227,14 @@ class RequestFilterBuilderTests: XCTestCase {
     let expectedResultStringified = """
 {"include":[{"scope":{"where":{"day":"\(dayOfWeek)"},"include":[{"scope":{"where":{"or":[{"active":true},{"id":{"inq":["\(sampleDeactivatedPupilId.uppercased())"]}}]},"include":[{"scope":{"include":[{"scope":{"where":{"date":"\(sampleFriday)"}},"relation":"attendances"}]},"relation":"parents"}]},"relation":"pupils"}]},"relation":"daysOfWeek"}]}
 """
+    let expectedResultData = expectedResultStringified.data(using: .utf8)!
 
     let result = buildParentsRegisterRequestFilter(date, [sampleDeactivatedPupilUuid])
-    let resultStringified = JSONEncoder.encode(from: result)
 
-    XCTAssertEqual(resultStringified, expectedResultStringified)
+    let expectedJson = try? JSON(JSONSerialization.jsonObject(with: expectedResultData))
+    let actualJson = try? JSON(encodable: result)
+
+    XCTAssertEqual(actualJson, expectedJson)
   }
 
   // Endpoint: /pupils/{pupilId}
@@ -263,6 +267,7 @@ class RequestFilterBuilderTests: XCTestCase {
     let fieldNode = PRF.Field(
       id: true,
       active: true,
+      activeUntil: true,
       firstName: true,
       lastName: true,
       prefix: true,
