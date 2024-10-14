@@ -6,6 +6,6 @@
 
 import Foundation
 
-public struct TokenModel: Decodable, Sendable {
+public struct TokenModel: Decodable {
   public let token: String
 }
