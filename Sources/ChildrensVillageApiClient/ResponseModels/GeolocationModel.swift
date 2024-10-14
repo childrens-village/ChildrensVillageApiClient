@@ -1,6 +1,6 @@
 import Foundation
 
-public struct GeolocationModel: Decodable {
+public struct GeolocationModel: Decodable, Sendable {
   public let latitude: Float
   public let longitude: Float
 
