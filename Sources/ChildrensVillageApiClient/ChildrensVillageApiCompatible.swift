@@ -6,7 +6,7 @@
 
 import Foundation
 
-public protocol ChildrensVillageApiCompatible {
+public protocol ChildrensVillageApiCompatible: Sendable {
   func requestToken(_ username: String, _ password: String) async throws -> TokenModel
 
   // Returns HTTP status code
