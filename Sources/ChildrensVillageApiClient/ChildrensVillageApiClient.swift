@@ -7,7 +7,7 @@
 import Foundation
 import JwtApiClient
 
-public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible, Sendable {
+public actor ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public init() {}
 
   public func requestToken(
