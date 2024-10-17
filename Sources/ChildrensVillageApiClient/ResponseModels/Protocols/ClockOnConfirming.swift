@@ -6,7 +6,7 @@
 
 import Foundation
 
-public protocol ClockOnConfirming {
+public protocol ClockOnConfirming: Sendable {
   var id: Int { get }
   var branchId: Int { get }
   var date: String { get }

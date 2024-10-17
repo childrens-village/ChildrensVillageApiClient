@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AttendanceModel: Identifiable, Decodable {
+public struct AttendanceModel: Identifiable, Decodable, Sendable {
   public let id: Int?
   public let pupilId: UUID?
   public let branchId: Int?

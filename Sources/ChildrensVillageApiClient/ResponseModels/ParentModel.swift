@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ParentModel: Attending, Identifiable, Decodable {
+public struct ParentModel: Attending, Identifiable, Decodable, Sendable {
   public let id: UUID
   public let active: Bool?
   public let facilitating: Bool?
