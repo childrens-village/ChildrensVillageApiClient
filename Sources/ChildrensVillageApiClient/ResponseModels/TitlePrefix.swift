@@ -1,6 +1,6 @@
 import Foundation
 
-public enum TitlePrefix: String, Decodable, Sendable {
+public enum TitlePrefix: String, Codable, Sendable {
   case Ms
   case Master
   case Miss
