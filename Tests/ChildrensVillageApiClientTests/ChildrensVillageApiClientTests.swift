@@ -11,10 +11,10 @@ import Mockingbird
 @testable import ChildrensVillageApiClient
 
 class ChildrensVillageApiClientTests: XCTestCase {
-  
+
   var client: JsonApiClientMock!
   var baseApiUrl = "https://childrens-village.co.uk/api"
-  
+
   override func setUp() {
     client = mock(JsonApiClient.self).initialize()
   }
@@ -132,9 +132,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
-<<<<<<< HEAD
-=======
-func testCreateParentTask() async throws {
+  func testCreateParentTask() async throws {
     // Arrange
     let token = "fake-token"
     let newParent = NewParentRequestModel(
@@ -171,7 +169,7 @@ func testCreateParentTask() async throws {
       .willReturn(apiResponse)
 
     // Act
-    let result: UUID = try await createParentTask(apiClient: client, token, newParent)
+    let result: ParentModel = try await createParentTask(apiClient: client, token, newParent)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/parents")
@@ -186,7 +184,7 @@ func testCreateParentTask() async throws {
       .returning(ParentModel.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result, apiResponse.id)
+    XCTAssertEqual(result.id, apiResponse.id)
   }
 
   func testCreatePupilTask() async throws {
@@ -229,7 +227,7 @@ func testCreateParentTask() async throws {
       .willReturn(apiResponse)
 
     // Act
-    let result: UUID = try await createPupilTask(apiClient: client, token, newPupil)
+    let result: PupilModel = try await createPupilTask(apiClient: client, token, newPupil)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/pupils")
@@ -244,10 +242,11 @@ func testCreateParentTask() async throws {
       .returning(PupilModel.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result, apiResponse.id)
+    XCTAssertEqual(result.id, apiResponse.id)
+    XCTAssertEqual(result.firstName, apiResponse.firstName)
+    XCTAssertEqual(result.lastName, apiResponse.lastName)
   }
 
->>>>>>> 4cc4d72 (fixup! Add task for requesting list of pupils)
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange

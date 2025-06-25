@@ -36,6 +36,13 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     return try await createPupilTask(apiClient: apiClient, token, pupil)
   }
 
+  public func createParent(
+    _ token: String,
+    _ parent: NewParentRequestModel
+  ) async throws -> ParentModel {
+    try await createParentTask(apiClient: apiClient, token, parent)
+  }
+
   public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
     try await requestPupilTask(apiClient: apiClient, token, pupilId)
   }
