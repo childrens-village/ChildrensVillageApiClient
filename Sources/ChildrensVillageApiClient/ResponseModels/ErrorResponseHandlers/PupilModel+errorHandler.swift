@@ -14,6 +14,7 @@ extension PupilModel {
     case lastName
     case dateOfBirth
     case prefix
+    case active
     case activeUntil
     case photographyConsent
     case allergies
@@ -33,6 +34,7 @@ extension PupilModel {
     }
 
     let dateOfBirth = try container.decodeIfPresent(String.self, forKey: .dateOfBirth)
+    let active = try container.decodeIfPresent(Bool.self, forKey: .active)
     let activeUntil = try container.decodeIfPresent(String.self, forKey: .activeUntil)
     let photographyConsent = try container.decodeIfPresent(Bool.self, forKey: .photographyConsent)
     let allergies = try container.decodeIfPresent(String.self, forKey: .allergies)
@@ -47,6 +49,7 @@ extension PupilModel {
       lastName: lastName,
       dateOfBirth: dateOfBirth,
       prefix: prefix,
+      active: active,
       activeUntil: activeUntil,
       photographyConsent: photographyConsent,
       allergies: allergies,

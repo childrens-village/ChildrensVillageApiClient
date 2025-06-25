@@ -132,6 +132,122 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
+<<<<<<< HEAD
+=======
+func testCreateParentTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let newParent = NewParentRequestModel(
+      prefix: TitlePrefix.Mrs,
+      firstName: "Jane",
+      lastName: "Doe",
+      active: true,
+      facilitating: false,
+      phone: "07700900123",
+      email: "jane.doe@example.com",
+      primary: nil
+    )
+
+    let apiResponse = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: false,
+      primary: true,
+      firstName: "Jane",
+      lastName: "Doe",
+      prefix: TitlePrefix.Mrs,
+      phone: "07700900123",
+      email: "jane.doe@example.com",
+      attendances: nil
+    )
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "active", "facilitating", "prefix", "firstName", "lastName", "phone", "email"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: UUID = try await createParentTask(apiClient: client, token, newParent)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents")
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ParentModel.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result, apiResponse.id)
+  }
+
+  func testCreatePupilTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let newPupil = NewPupilRequestModel(
+      prefix: TitlePrefix.Master,
+      firstName: "John",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      active: true,
+      activeUntil: nil,
+      photographyConsent: true,
+      allergies: "None"
+    )
+
+    let apiResponse = PupilModel(
+      id: UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!,
+      firstName: "John",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      prefix: TitlePrefix.Master,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: true,
+      allergies: "None",
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
+    )
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "prefix", "firstName", "lastName", "dateOfBirth", "active", "photographyConsent", "allergies"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: UUID = try await createPupilTask(apiClient: client, token, newPupil)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils")
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(PupilModel.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result, apiResponse.id)
+  }
+
+>>>>>>> 4cc4d72 (fixup! Add task for requesting list of pupils)
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange
@@ -184,6 +300,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      active: false,
       activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "gluten free",
@@ -235,6 +352,76 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
   }
 
+func testRequestPupilSummariesTask() async throws {
+    // Arrange
+    let token = "fake-pupils-token"
+
+    let pupilA = PupilModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Master,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: nil,
+      allergies: nil,
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil,
+      // FIXME: This field must be returned
+//      active: true
+    )
+
+    let pupilB = PupilModel(
+      id: UUID(uuidString: "0FB40D04-AC2F-4BAD-8E74-07BF2A4DD55D")!,
+      firstName: "Amy",
+      lastName: "Smith",
+      dateOfBirth: "2017-10-10",
+      prefix: TitlePrefix.Miss,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: nil,
+      allergies: "Peanuts",
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil,
+//      active: false
+    )
+
+    let apiResponse = [pupilA, pupilB]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [PupilModel] = try await requestPupilSummariesTask(apiClient: client, token)
+
+    // Assert
+    verify(
+      await client.get(
+        url: any(URL.self, where: {
+          $0.description.contains("/api/pupils") &&
+          $0.description.contains("filter=")
+        }),
+        token: token
+      )
+    )
+    .returning([PupilModel].self)
+    .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.count, 2)
+    XCTAssertEqual(result.first?.id, apiResponse.first?.id)
+    XCTAssertEqual(result.last?.firstName, "Amy")
+  }
+
   func testRequestPupilTask() async throws {
     // Arrange
     let token = "fake-register-token"
@@ -247,6 +434,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      active: true,
       activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "",
@@ -399,6 +587,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Master,
+      active: false,
       activeUntil: "2023-12-13",
       photographyConsent: true,
       allergies: "gluten free",
@@ -413,6 +602,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Smith",
       dateOfBirth: "2017-10-10",
       prefix: TitlePrefix.Miss,
+      active: true,
       activeUntil: "",
       photographyConsent: false,
       allergies: "vegan",
@@ -427,6 +617,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Green",
       dateOfBirth: "2013-12-12",
       prefix: TitlePrefix.Master,
+      active: false,
       activeUntil: "2024-05-20",
       photographyConsent: false,
       allergies: nil,
