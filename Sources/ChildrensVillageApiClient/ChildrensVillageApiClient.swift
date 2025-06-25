@@ -29,6 +29,10 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await requestPupilTask(token, pupilId)
   }
 
+  public func requestPupilSummaries(_ token: String) async throws -> [PupilSummaryModel] {
+    try await requestPupilSummariesTask(token)
+  }
+
   public func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,

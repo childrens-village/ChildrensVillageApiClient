@@ -20,6 +20,10 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ pupilId: UUID
   ) async throws -> PupilModel
 
+  func requestPupilSummaries(
+    _ token: String
+  ) async throws -> [PupilSummaryModel]
+
   func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,

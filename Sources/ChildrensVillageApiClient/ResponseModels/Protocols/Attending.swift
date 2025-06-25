@@ -6,7 +6,7 @@
 
 import Foundation
 
-public protocol Attending: Sendable {
+public protocol Attending: Person, Sendable {
   var id: UUID  { get }
   var prefix: TitlePrefix { get }
   var firstName: String { get }

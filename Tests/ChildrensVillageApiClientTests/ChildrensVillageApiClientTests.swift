@@ -235,6 +235,59 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
   }
 
+func testRequestPupilSummariesTask() async throws {
+    // Arrange
+    let token = "fake-pupils-token"
+
+    let pupilA = PupilSummaryModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Master,
+      active: true
+    )
+
+    let pupilB = PupilSummaryModel(
+      id: UUID(uuidString: "0FB40D04-AC2F-4BAD-8E74-07BF2A4DD55D")!,
+      firstName: "Amy",
+      lastName: "Smith",
+      dateOfBirth: "2017-10-10",
+      prefix: TitlePrefix.Miss,
+      active: false
+    )
+
+    let apiResponse = [pupilA, pupilB]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [PupilSummaryModel] = try await requestPupilSummariesTask(apiClient: client, token)
+
+    // Assert
+    verify(
+      await client.get(
+        url: any(URL.self, where: {
+          $0.description.contains("/api/pupils") &&
+          $0.description.contains("filter=")
+        }),
+        token: token
+      )
+    )
+    .returning([PupilSummaryModel].self)
+    .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.count, 2)
+    XCTAssertEqual(result.first?.id, apiResponse.first?.id)
+    XCTAssertEqual(result.last?.firstName, "Amy")
+  }
+
   func testRequestPupilTask() async throws {
     // Arrange
     let token = "fake-register-token"
