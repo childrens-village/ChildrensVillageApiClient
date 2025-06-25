@@ -422,6 +422,67 @@ func testRequestPupilSummariesTask() async throws {
     XCTAssertEqual(result.last?.firstName, "Amy")
   }
 
+  func testRequestParentSummariesTask() async throws {
+    // Arrange
+    let token = "fake-parents-token"
+
+    let parentA = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: true,
+      primary: true,
+      firstName: "Jane",
+      lastName: "Doe",
+      prefix: TitlePrefix.Mrs,
+      phone: "07012345678",
+      email: "",
+      attendances: nil
+    )
+
+    let parentB = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: false,
+      primary: true,
+      firstName: "John",
+      lastName: "Smith",
+      prefix: TitlePrefix.Mr,
+      phone: "07987654321",
+      email: "",
+      attendances: nil
+    )
+
+    let apiResponse = [parentA, parentB]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [ParentModel] = try await requestParentSummariesTask(apiClient: client, token)
+
+    // Assert
+    verify(
+      await client.get(
+        url: any(URL.self, where: {
+          $0.description.contains("/api/parents") &&
+          $0.description.contains("filter=")
+        }),
+        token: token
+      )
+    )
+    .returning([ParentModel].self)
+    .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.count, 2)
+    XCTAssertEqual(result.first?.firstName, "Jane")
+    XCTAssertEqual(result.last?.facilitating, false)
+  }
+
   func testRequestPupilTask() async throws {
     // Arrange
     let token = "fake-register-token"

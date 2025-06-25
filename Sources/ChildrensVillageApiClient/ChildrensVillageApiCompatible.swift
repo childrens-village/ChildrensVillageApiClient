@@ -24,6 +24,10 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ token: String
   ) async throws -> [PupilModel]
 
+  func requestParentSummaries(
+    _ token: String
+  ) async throws -> [ParentModel]
+
   func requestPupilsRegister(
     _ token: String,
     _ branchId: Int,

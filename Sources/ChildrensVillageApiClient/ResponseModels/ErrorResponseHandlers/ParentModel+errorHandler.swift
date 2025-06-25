@@ -19,8 +19,7 @@ extension ParentModel {
         let id = try? container.decode(UUID.self, forKey: .id),
         let firstName = try? container.decode(String.self, forKey: .firstName),
         let lastName = try? container.decode(String.self, forKey: .lastName),
-        let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix),
-        let phone = try? container.decode(String.self, forKey: .phone)
+        let prefix = try? container.decode(TitlePrefix.self, forKey: .prefix)
     else {
       throw try ErrorModel(from: decoder).error
     }
@@ -30,6 +29,7 @@ extension ParentModel {
     let primary = try container.decodeIfPresent(Bool.self, forKey: .primary)
     let facilitating = try container.decodeIfPresent(Bool.self, forKey: .facilitating)
     let email = try container.decodeIfPresent(String.self, forKey: .email)
+    let phone = try container.decodeIfPresent(String.self, forKey: .phone) ?? ""
     let attendances = try container.decodeIfPresent([AttendanceModel].self, forKey: .attendances)
 
     self.init(
