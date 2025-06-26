@@ -5,28 +5,32 @@
 //
 
 import Foundation
-import JwtApiClient
+@preconcurrency import JwtApiClient
 
 public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
-  public init() {}
+  private let apiClient: JsonApiCompatible
+
+  public init(apiClient: JsonApiCompatible? = nil) {
+    self.apiClient = apiClient ?? JsonApiClient()
+  }
 
   public func requestToken(
     _ username: String,
     _ password: String
   ) async throws -> TokenModel {
-    try await requestTokenTask(username, password)
+    try await requestTokenTask(apiClient: apiClient, username, password)
   }
 
   public func requestPasswordReset(_ username: String) async throws -> Int {
-    return try await requestPasswordResetTask(username)
+    return try await requestPasswordResetTask(apiClient: apiClient, username)
   }
 
   public func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int {
-    return try await updatePasswordTask(verificationToken, password)
+    return try await updatePasswordTask(apiClient: apiClient, verificationToken, password)
   }
 
   public func requestPupil(_ token: String, _ pupilId: UUID) async throws -> PupilModel {
-    try await requestPupilTask(token, pupilId)
+    try await requestPupilTask(apiClient: apiClient, token, pupilId)
   }
 
   public func requestPupilsRegister(
@@ -34,18 +38,18 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ branchId: Int,
     _ date: Date
   ) async throws -> [PupilModel] {
-    try await requestPupilsRegisterTask(token, branchId, date)
+    try await requestPupilsRegisterTask(apiClient: apiClient, token, branchId, date)
   }
 
   public func requestFacilitatorsRegister(
     _ token: String,
     _ date: Date
   ) async throws -> [ParentModel] {
-    try await requestFacilitatorsRegisterTask(token, date)
+    try await requestFacilitatorsRegisterTask(apiClient: apiClient, token, date)
   }
 
   public func requestParentsRegister(_ token: String, _ branchId: Int, _ date: Date) async throws -> [ParentModel] {
-    try await requestParentsRegisterTask(token, branchId, date)
+    try await requestParentsRegisterTask(apiClient: apiClient, token, branchId, date)
   }
 
   public func clockOnPupil(
@@ -54,7 +58,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ branchId: Int,
     _ date: Date?
   ) async throws -> ClockOnConfirming {
-    try await clockOnPupilTask(token, pupilId, branchId, date)
+    try await clockOnPupilTask(apiClient: apiClient, token, pupilId, branchId, date)
   }
 
   public func clockOnFacilitator(
@@ -63,21 +67,21 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ branchId: Int,
     _ date: Date?
   ) async throws -> ClockOnConfirming {
-    try await clockOnFacilitatorTask(token, facilitatorId, branchId, date)
+    try await clockOnFacilitatorTask(apiClient: apiClient, token, facilitatorId, branchId, date)
   }
 
   public func revertPupilClockOn(
     _ token: String,
     _ attendanceId: Int
   ) async throws {
-    try await revertPupilClockOnTask(token, attendanceId)
+    try await revertPupilClockOnTask(apiClient: apiClient, token, attendanceId)
   }
 
   public func revertFacilitatorClockOn(
     _ token: String,
     _ attendanceId: Int
   ) async throws {
-    try await revertFacilitatorClockOnTask(token, attendanceId)
+    try await revertFacilitatorClockOnTask(apiClient: apiClient, token, attendanceId)
   }
 
   public func clockOffPupil(
@@ -85,6 +89,6 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ attendanceId: Int,
     _ date: Date?
   ) async throws {
-    try await clockOffPupilTask(token, attendanceId, date)
+    try await clockOffPupilTask(apiClient: apiClient, token, attendanceId, date)
   }
 }
