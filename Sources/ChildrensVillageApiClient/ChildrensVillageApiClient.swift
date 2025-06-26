@@ -5,7 +5,7 @@
 //
 
 import Foundation
-@preconcurrency import JwtApiClient
+import JwtApiClient
 
 public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   private let apiClient: JsonApiCompatible
