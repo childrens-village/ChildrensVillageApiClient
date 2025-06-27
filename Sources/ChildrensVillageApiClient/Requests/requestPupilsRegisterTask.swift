@@ -26,7 +26,7 @@ func requestPupilsRegisterTask(
     clockedOnPupilIds = attendances.map { $0.pupilId! }
   } catch {}
 
-  return try await requestAllPupilsRegisterTask(token, branchId, date, clockedOnPupilIds)
+  return try await requestAllPupilsRegisterTask(apiClient: apiClient, token, branchId, date, clockedOnPupilIds)
 }
 
 func requestAllPupilsRegisterTask(
