@@ -281,6 +281,108 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    }
 //  }
 
+  func testUpdateParentTask() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let parentId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let updateParent = UpdateParentRequestModel(
+      prefix: TitlePrefix.Mr,
+      firstName: "John",
+      lastName: "Doe",
+      active: true,
+      facilitating: true,
+      phone: "07700900456",
+      email: "john.doe@example.com"
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents/\(parentId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "active", "facilitating", "prefix", "firstName", "lastName", "phone", "email")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Compare the dictionaries - all fields should be present since we provided all values
+          guard let active = dict["active"] as? Bool,
+                let facilitating = dict["facilitating"] as? Bool,
+                let prefix = dict["prefix"] as? String,
+                let firstName = dict["firstName"] as? String,
+                let lastName = dict["lastName"] as? String,
+                let phone = dict["phone"] as? String,
+                let email = dict["email"] as? String else { return false }
+
+          return active == updateParent.active! &&
+                 facilitating == updateParent.facilitating! &&
+                 prefix == updateParent.prefix!.rawValue &&
+                 firstName == updateParent.firstName! &&
+                 lastName == updateParent.lastName! &&
+                 phone == updateParent.phone! &&
+                 email == updateParent.email!
+        })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
+  func testUpdateParentTask_partialUpdate() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let parentId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let updateParent = UpdateParentRequestModel(
+      firstName: "Jane",
+      active: false
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents/\(parentId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "firstName", "active")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Only firstName and active should be present
+          guard dict.count == 2,
+                let active = dict["active"] as? Bool,
+                let firstName = dict["firstName"] as? String else { return false }
+
+          return active == updateParent.active! &&
+                 firstName == updateParent.firstName!
+        })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
   func testRequestAllPupilsRegisterTask() async throws {
     // Arrange
     let token = "fake-register-token"

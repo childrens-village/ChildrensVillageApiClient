@@ -20,6 +20,13 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ parent: NewParentRequestModel
   ) async throws -> ParentModel
 
+  // Returns HTTP status code
+  func updateParent(
+    _ token: String,
+    _ parentId: UUID,
+    _ parent: UpdateParentRequestModel
+  ) async throws -> Int
+
   func requestPupil(
     _ token: String,
     _ pupilId: UUID
