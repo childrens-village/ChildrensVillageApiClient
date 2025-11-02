@@ -43,6 +43,14 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await createParentTask(apiClient: apiClient, token, parent)
   }
 
+  public func updatePupil(
+    _ token: String,
+    _ pupilId: UUID,
+    _ pupil: UpdatePupilRequestModel
+  ) async throws -> Int {
+    try await updatePupilTask(apiClient: apiClient, token, pupilId, pupil)
+  }
+
   public func updateParent(
     _ token: String,
     _ parentId: UUID,

@@ -381,6 +381,114 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
+  func testUpdatePupilTask() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let pupilId = UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+    let updatePupil = UpdatePupilRequestModel(
+      prefix: TitlePrefix.Master,
+      firstName: "Johnny",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      active: true,
+      activeUntil: "2025-12-31",
+      photographyConsent: false,
+      allergies: "Peanuts"
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/\(pupilId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "prefix", "firstName", "lastName", "dateOfBirth", "active", "activeUntil", "photographyConsent", "allergies")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updatePupilTask(apiClient: client, token, pupilId, updatePupil)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Compare the dictionaries - all fields should be present since we provided all values
+          guard let prefix = dict["prefix"] as? String,
+                let firstName = dict["firstName"] as? String,
+                let lastName = dict["lastName"] as? String,
+                let dateOfBirth = dict["dateOfBirth"] as? String,
+                let active = dict["active"] as? Bool,
+                let activeUntil = dict["activeUntil"] as? String,
+                let photographyConsent = dict["photographyConsent"] as? Bool,
+                let allergies = dict["allergies"] as? String else { return false }
+
+          return prefix == updatePupil.prefix!.rawValue &&
+                 firstName == updatePupil.firstName! &&
+                 lastName == updatePupil.lastName! &&
+                 dateOfBirth == updatePupil.dateOfBirth! &&
+                 active == updatePupil.active! &&
+                 activeUntil == updatePupil.activeUntil! &&
+                 photographyConsent == updatePupil.photographyConsent! &&
+                 allergies == updatePupil.allergies!
+        })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
+  func testUpdatePupilTask_partialUpdate() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let pupilId = UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+    let updatePupil = UpdatePupilRequestModel(
+      firstName: "Johnny",
+      active: false,
+      photographyConsent: true
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/\(pupilId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "firstName", "active", "photographyConsent")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    let statusCode: Int = try await updatePupilTask(apiClient: client, token, pupilId, updatePupil)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Only firstName, active, and photographyConsent should be present
+          guard dict.count == 3,
+                let firstName = dict["firstName"] as? String,
+                let active = dict["active"] as? Bool,
+                let photographyConsent = dict["photographyConsent"] as? Bool else { return false }
+
+          return firstName == updatePupil.firstName! &&
+                 active == updatePupil.active! &&
+                 photographyConsent == updatePupil.photographyConsent!
+        })
+      )
+    )
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(statusCode, acceptedStatusCode)
+  }
+
   func testRequestAllPupilsRegisterTask() async throws {
     // Arrange
     let token = "fake-register-token"
