@@ -15,10 +15,11 @@ public protocol ChildrensVillageApiCompatible: Sendable {
   // Returns HTTP status code
   func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int
 
+  // Returns created parent UUID
   func createParent(
     _ token: String,
     _ parent: NewParentRequestModel
-  ) async throws -> ParentModel
+  ) async throws -> UUID
 
   // Returns HTTP status code
   func updateParent(

@@ -169,7 +169,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: ParentModel = try await createParentTask(apiClient: client, token, newParent)
+    let result: UUID = try await createParentTask(apiClient: client, token, newParent)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/parents")
@@ -184,7 +184,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .returning(ParentModel.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result.id, apiResponse.id)
+    XCTAssertEqual(result, apiResponse.id)
   }
 
   func testCreatePupilTask() async throws {

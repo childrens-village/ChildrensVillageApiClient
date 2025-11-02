@@ -12,7 +12,7 @@ func createParentTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ parent: NewParentRequestModel
-) async throws -> ParentModel {
+) async throws -> UUID {
   let endpoint = buildParentsUrlComponent().url!
 
   let body: [String: Any] = [
@@ -26,7 +26,8 @@ func createParentTask(
     "email": parent.email
   ]
 
-  return try await apiClient.post(url: endpoint, dictionary: body, token: token)
+  let createdParent: ParentModel = try await apiClient.post(url: endpoint, dictionary: body, token: token)
+  return createdParent.id
 }
 
 fileprivate func buildParentsUrlComponent() -> URLComponents {

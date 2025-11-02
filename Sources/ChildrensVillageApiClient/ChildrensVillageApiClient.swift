@@ -39,7 +39,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func createParent(
     _ token: String,
     _ parent: NewParentRequestModel
-  ) async throws -> ParentModel {
+  ) async throws -> UUID {
     try await createParentTask(apiClient: apiClient, token, parent)
   }
 
