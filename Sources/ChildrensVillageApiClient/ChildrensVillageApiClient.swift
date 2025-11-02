@@ -32,7 +32,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func createPupil(
     _ token: String,
     _ pupil: NewPupilRequestModel
-  ) async throws -> PupilModel {
+  ) async throws -> UUID {
     return try await createPupilTask(apiClient: apiClient, token, pupil)
   }
 

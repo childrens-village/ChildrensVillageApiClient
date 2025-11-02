@@ -12,7 +12,7 @@ func createPupilTask(
   apiClient: JsonApiCompatible = JsonApiClient(),
   _ token: String,
   _ pupil: NewPupilRequestModel
-) async throws -> PupilModel {
+) async throws -> UUID {
   let endpoint = buildPupilsUrlComponent().url!
 
   var body: [String: Any] = [
@@ -35,7 +35,8 @@ func createPupilTask(
     body["activeUntil"] = activeUntil
   }
 
-  return try await apiClient.post(url: endpoint, dictionary: body, token: token)
+  let createdPupil: PupilModel = try await apiClient.post(url: endpoint, dictionary: body, token: token)
+  return createdPupil.id
 }
 
 fileprivate func buildPupilsUrlComponent() -> URLComponents {

@@ -227,7 +227,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(apiResponse)
 
     // Act
-    let result: PupilModel = try await createPupilTask(apiClient: client, token, newPupil)
+    let result: UUID = try await createPupilTask(apiClient: client, token, newPupil)
 
     // Assert
     let expectedUrl = URL(string: "\(baseApiUrl)/pupils")
@@ -242,9 +242,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .returning(PupilModel.self)
       .wasCalled(exactly(1))
 
-    XCTAssertEqual(result.id, apiResponse.id)
-    XCTAssertEqual(result.firstName, apiResponse.firstName)
-    XCTAssertEqual(result.lastName, apiResponse.lastName)
+    XCTAssertEqual(result, apiResponse.id)
   }
 
   // FIXME: Mockingbird is complaining about the client.post mock
