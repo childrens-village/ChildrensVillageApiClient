@@ -15,7 +15,7 @@ func updateParentTask(
   _ token: String,
   _ parentId: UUID,
   _ parent: UpdateParentRequestModel
-) async throws -> Int {
+) async throws {
   let endpoint = buildParentUrlComponent(parentId: parentId).url!
 
   var body: [String: Any] = [:]
@@ -44,11 +44,10 @@ func updateParentTask(
 
   let response: URLResponse = try await apiClient.patch(url: endpoint, dictionary: body)
 
-  guard let httpResponse = response as? HTTPURLResponse else {
-    return serverErrorCode
+  guard let httpResponse = response as? HTTPURLResponse,
+      200...299 ~= httpResponse.statusCode else {
+    throw URLError(.badServerResponse)
   }
-
-  return httpResponse.statusCode
 }
 
 fileprivate func buildParentUrlComponent(parentId: UUID) -> URLComponents {

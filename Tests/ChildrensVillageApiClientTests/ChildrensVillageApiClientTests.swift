@@ -306,7 +306,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(urlResponse)
 
     // Act
-    let statusCode: Int = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+    _ = try await updateParentTask(apiClient: client, token, parentId, updateParent)
 
     // Assert
     verify(
@@ -333,8 +333,6 @@ class ChildrensVillageApiClientTests: XCTestCase {
       )
     )
       .wasCalled(exactly(1))
-
-    XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
   func testUpdateParentTask_partialUpdate() async throws {
@@ -359,7 +357,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       .willReturn(urlResponse)
 
     // Act
-    let statusCode: Int = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+    _ = try await updateParentTask(apiClient: client, token, parentId, updateParent)
 
     // Assert
     verify(
@@ -377,8 +375,6 @@ class ChildrensVillageApiClientTests: XCTestCase {
       )
     )
       .wasCalled(exactly(1))
-
-    XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
   func testUpdatePupilTask() async throws {

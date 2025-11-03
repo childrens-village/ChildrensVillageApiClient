@@ -55,7 +55,7 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ token: String,
     _ parentId: UUID,
     _ parent: UpdateParentRequestModel
-  ) async throws -> Int {
+  ) async throws {
     try await updateParentTask(apiClient: apiClient, token, parentId, parent)
   }
 
