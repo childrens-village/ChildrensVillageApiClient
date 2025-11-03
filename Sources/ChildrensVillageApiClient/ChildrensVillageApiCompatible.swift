@@ -27,12 +27,11 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ pupil: NewPupilRequestModel
   ) async throws -> UUID
 
-  // Returns HTTP status code
   func updatePupil(
     _ token: String,
     _ pupilId: UUID,
     _ pupil: UpdatePupilRequestModel
-  ) async throws -> Int
+  ) async throws
 
   // Returns HTTP status code
   func updateParent(

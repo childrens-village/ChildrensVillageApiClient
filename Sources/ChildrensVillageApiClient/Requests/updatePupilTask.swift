@@ -13,7 +13,7 @@ func updatePupilTask(
   _ token: String,
   _ pupilId: UUID,
   _ pupil: UpdatePupilRequestModel
-) async throws -> Int {
+) async throws {
   let endpoint = buildPupilUrlComponent(pupilId: pupilId).url!
 
   var body: [String: Any] = [:]
@@ -43,8 +43,7 @@ func updatePupilTask(
     body["allergies"] = allergies
   }
 
-  let _ = try await apiClient.patch(url: endpoint, dictionary: body, token: token)
-  return 1
+  try await apiClient.patch(url: endpoint, dictionary: body, token: token)
 }
 
 fileprivate func buildPupilUrlComponent(pupilId: UUID) -> URLComponents {
