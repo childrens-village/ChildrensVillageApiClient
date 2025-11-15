@@ -18,6 +18,7 @@ func buildPupilSummariesRequestFilter() -> PupilSummariesRequestFilter {
       dateOfBirth: false,
       prefix: true
     ),
-    order: "firstName"
+    order: "firstName",
+    limit: 1000
   )
 }

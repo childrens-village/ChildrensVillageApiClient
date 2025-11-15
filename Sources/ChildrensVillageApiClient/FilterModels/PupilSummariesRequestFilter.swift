@@ -12,7 +12,8 @@ typealias PSRF = PupilSummariesRequestFilter
 struct PupilSummariesRequestFilter: Encodable {
   let fields: Field
   let order: String
-  
+  let limit: Int
+
   struct Field: Encodable {
     let id: Bool
     let active: Bool
