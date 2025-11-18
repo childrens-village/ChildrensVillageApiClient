@@ -43,6 +43,25 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     try await createParentTask(apiClient: apiClient, token, parent)
   }
 
+  public func updatePupilWithAssociations(
+    _ token: String,
+    _ pupilId: UUID,
+    _ pupil: UpdatePupilRequestModel,
+    _ parentIds: [UUID],
+    _ branchIds: [Int],
+    _ dayIds: [Int]
+  ) async throws {
+    try await updatePupilWithAssociationsTask(
+      apiClient: apiClient,
+      token,
+      pupilId,
+      pupil,
+      parentIds,
+      branchIds,
+      dayIds
+    )
+  }
+
   public func updatePupil(
     _ token: String,
     _ pupilId: UUID,
@@ -128,5 +147,29 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     _ date: Date?
   ) async throws {
     try await clockOffPupilTask(apiClient: apiClient, token, attendanceId, date)
+  }
+
+  public func updatePupilParents(
+    _ token: String,
+    _ pupilId: UUID,
+    _ parentIds: [UUID]
+  ) async throws {
+    try await updatePupilParentsTask(apiClient: apiClient, token, pupilId, parentIds)
+  }
+
+  public func updatePupilBranches(
+    _ token: String,
+    _ pupilId: UUID,
+    _ branchIds: [Int]
+  ) async throws {
+    try await updatePupilBranchesTask(apiClient: apiClient, token, pupilId, branchIds)
+  }
+
+  public func updatePupilDaysOfWeek(
+    _ token: String,
+    _ pupilId: UUID,
+    _ dayIds: [Int]
+  ) async throws {
+    try await updatePupilDaysOfWeekTask(apiClient: apiClient, token, pupilId, dayIds)
   }
 }

@@ -27,6 +27,15 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ pupil: NewPupilRequestModel
   ) async throws -> UUID
 
+  func updatePupilWithAssociations(
+    _ token: String,
+    _ pupilId: UUID,
+    _ pupil: UpdatePupilRequestModel,
+    _ parentIds: [UUID],
+    _ branchIds: [Int],
+    _ dayIds: [Int]
+  ) async throws
+
   func updatePupil(
     _ token: String,
     _ pupilId: UUID,
@@ -90,5 +99,23 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ token: String,
     _ attendanceId: Int,
     _ date: Date?
+  ) async throws
+
+  func updatePupilParents(
+    _ token: String,
+    _ pupilId: UUID,
+    _ parentIds: [UUID]
+  ) async throws
+
+  func updatePupilBranches(
+    _ token: String,
+    _ pupilId: UUID,
+    _ branchIds: [Int]
+  ) async throws
+
+  func updatePupilDaysOfWeek(
+    _ token: String,
+    _ pupilId: UUID,
+    _ dayIds: [Int]
   ) async throws
 }
