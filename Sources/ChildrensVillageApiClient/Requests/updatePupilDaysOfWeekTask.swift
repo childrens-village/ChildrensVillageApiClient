@@ -15,11 +15,11 @@ func updatePupilDaysOfWeekTask(
 ) async throws {
   let endpoint = buildPupilDaysOfWeekUrlComponent(pupilId: pupilId).url!
 
-  let days: [[String: Int]] = dayIds.map { dayId in
+  let days = dayIds.map { dayId in
     ["id": dayId]
   }
 
-  try await apiClient.put(url: endpoint, dictionary: ["days": days], token: token)
+  try await apiClient.put(url: endpoint, dictionaries: days, token: token)
 }
 
 fileprivate func buildPupilDaysOfWeekUrlComponent(pupilId: UUID) -> URLComponents {

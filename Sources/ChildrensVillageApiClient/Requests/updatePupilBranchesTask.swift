@@ -15,13 +15,13 @@ func updatePupilBranchesTask(
 ) async throws {
   let endpoint = buildPupilBranchesUrlComponent(pupilId: pupilId).url!
 
-  let branches: [[String: Int]] = branchIds.map { branchId in
+  let branches = branchIds.map { branchId in
     ["id": branchId]
   }
 
-  let _ = try await apiClient.put(
+  try await apiClient.put(
     url: endpoint,
-    dictionary: ["branches": branches],
+    dictionaries: branches,
     token: token
   )
 }
