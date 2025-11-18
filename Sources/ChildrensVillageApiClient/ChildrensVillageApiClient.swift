@@ -29,6 +29,23 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
     return try await updatePasswordTask(apiClient: apiClient, verificationToken, password)
   }
 
+  public func createPupilWithAssociations(
+    _ token: String,
+    _ pupil: NewPupilRequestModel,
+    _ parentIds: [UUID],
+    _ branchIds: [Int],
+    _ dayIds: [Int]
+  ) async throws -> UUID {
+    try await createPupilWithAssociationsTask(
+      apiClient: apiClient,
+      token,
+      pupil,
+      parentIds,
+      branchIds,
+      dayIds
+    )
+  }
+
   public func createPupil(
     _ token: String,
     _ pupil: NewPupilRequestModel
