@@ -8,3 +8,14 @@ public enum TitlePrefix: String, Codable, Sendable, CaseIterable {
   case Mr
   case Mx
 }
+
+// MARK: - Category extensions
+public extension TitlePrefix {
+  static var childCases: [TitlePrefix] {
+    [.Miss, .Master, .Mx]
+  }
+
+  static var adultCases: [TitlePrefix] {
+    [.Ms, .Mrs, .Mr, .Mx]
+  }
+}
