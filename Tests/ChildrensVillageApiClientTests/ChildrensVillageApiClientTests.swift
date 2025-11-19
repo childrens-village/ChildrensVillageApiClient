@@ -329,7 +329,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
                  lastName == updateParent.lastName! &&
                  phone == updateParent.phone! &&
                  email == updateParent.email!
-        })
+        }),
+        token: token
       )
     )
       .wasCalled(exactly(1))
@@ -371,7 +372,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
 
           return active == updateParent.active! &&
                  firstName == updateParent.firstName!
-        })
+        }),
+        token: token
       )
     )
       .wasCalled(exactly(1))
@@ -430,7 +432,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
                  activeUntil == updatePupil.activeUntil! &&
                  photographyConsent == updatePupil.photographyConsent! &&
                  allergies == updatePupil.allergies!
-        })
+        }),
+        token: token
       )
     )
       .wasCalled(exactly(1))
@@ -475,7 +478,8 @@ class ChildrensVillageApiClientTests: XCTestCase {
           return firstName == updatePupil.firstName! &&
                  active == updatePupil.active! &&
                  photographyConsent == updatePupil.photographyConsent!
-        })
+        }),
+        token: token
       )
     )
       .wasCalled(exactly(1))
