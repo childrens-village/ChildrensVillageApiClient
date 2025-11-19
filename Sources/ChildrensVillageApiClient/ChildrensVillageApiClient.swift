@@ -31,18 +31,15 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
 
   public func createPupilWithAssociations(
     _ token: String,
-    _ pupil: NewPupilRequestModel,
-    _ parentIds: [UUID],
-    _ branchIds: [Int],
-    _ dayIds: [Int]
+    _ pupilRequest: NewPupilWithAssociationsRequestModel
   ) async throws -> UUID {
     try await createPupilWithAssociationsTask(
       apiClient: apiClient,
       token,
-      pupil,
-      parentIds,
-      branchIds,
-      dayIds
+      pupilRequest.pupilData,
+      pupilRequest.parentIds,
+      pupilRequest.branchIds,
+      pupilRequest.dayIds
     )
   }
 
@@ -63,19 +60,16 @@ public struct ChildrensVillageApiClient: ChildrensVillageApiCompatible {
   public func updatePupilWithAssociations(
     _ token: String,
     _ pupilId: UUID,
-    _ pupil: UpdatePupilRequestModel,
-    _ parentIds: [UUID],
-    _ branchIds: [Int],
-    _ dayIds: [Int]
+    _ pupilRequest: UpdatePupilWithAssociationsRequestModel
   ) async throws {
     try await updatePupilWithAssociationsTask(
       apiClient: apiClient,
       token,
       pupilId,
-      pupil,
-      parentIds,
-      branchIds,
-      dayIds
+      pupilRequest.pupilData,
+      pupilRequest.parentIds ?? [],
+      pupilRequest.branchIds ?? [],
+      pupilRequest.dayIds ?? []
     )
   }
 

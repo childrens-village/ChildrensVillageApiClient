@@ -24,10 +24,7 @@ public protocol ChildrensVillageApiCompatible: Sendable {
   // Returns created pupil UUID
   func createPupilWithAssociations(
     _ token: String,
-    _ pupil: NewPupilRequestModel,
-    _ parentIds: [UUID],
-    _ branchIds: [Int],
-    _ dayIds: [Int]
+    _ pupilRequest: NewPupilWithAssociationsRequestModel
   ) async throws -> UUID
 
   func createPupil(
@@ -38,10 +35,7 @@ public protocol ChildrensVillageApiCompatible: Sendable {
   func updatePupilWithAssociations(
     _ token: String,
     _ pupilId: UUID,
-    _ pupil: UpdatePupilRequestModel,
-    _ parentIds: [UUID],
-    _ branchIds: [Int],
-    _ dayIds: [Int]
+    _ pupilRequest: UpdatePupilWithAssociationsRequestModel
   ) async throws
 
   func updatePupil(
