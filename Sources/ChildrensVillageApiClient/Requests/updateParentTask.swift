@@ -42,12 +42,7 @@ func updateParentTask(
     body["email"] = email
   }
 
-  let response: URLResponse = try await apiClient.patch(url: endpoint, dictionary: body)
-
-  guard let httpResponse = response as? HTTPURLResponse,
-      200...299 ~= httpResponse.statusCode else {
-    throw URLError(.badServerResponse)
-  }
+  try await apiClient.patch(url: endpoint, dictionary: body, token: token)
 }
 
 fileprivate func buildParentUrlComponent(parentId: UUID) -> URLComponents {
