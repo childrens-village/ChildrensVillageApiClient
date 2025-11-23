@@ -15,10 +15,58 @@ public protocol ChildrensVillageApiCompatible: Sendable {
   // Returns HTTP status code
   func updatePassword(_ verificationToken: String, _ password: String) async throws -> Int
 
+  // Returns created parent UUID
+  func createParent(
+    _ token: String,
+    _ parent: NewParentRequestModel
+  ) async throws -> UUID
+
+  // Returns created pupil UUID
+  func createPupilWithAssociations(
+    _ token: String,
+    _ pupilRequest: NewPupilWithAssociationsRequestModel
+  ) async throws -> UUID
+
+  func createPupil(
+    _ token: String,
+    _ pupil: NewPupilRequestModel
+  ) async throws -> UUID
+
+  func updatePupilWithAssociations(
+    _ token: String,
+    _ pupilId: UUID,
+    _ pupilRequest: UpdatePupilWithAssociationsRequestModel
+  ) async throws
+
+  func updatePupil(
+    _ token: String,
+    _ pupilId: UUID,
+    _ pupil: UpdatePupilRequestModel
+  ) async throws
+
+  func updateParent(
+    _ token: String,
+    _ parentId: UUID,
+    _ parent: UpdateParentRequestModel
+  ) async throws
+
   func requestPupil(
     _ token: String,
     _ pupilId: UUID
   ) async throws -> PupilModel
+
+  func requestParent(
+    _ token: String,
+    _ parentId: UUID
+  ) async throws -> ParentModel
+
+  func requestPupilSummaries(
+    _ token: String
+  ) async throws -> [PupilModel]
+
+  func requestParentSummaries(
+    _ token: String
+  ) async throws -> [ParentModel]
 
   func requestPupilsRegister(
     _ token: String,
@@ -58,5 +106,23 @@ public protocol ChildrensVillageApiCompatible: Sendable {
     _ token: String,
     _ attendanceId: Int,
     _ date: Date?
+  ) async throws
+
+  func updatePupilParents(
+    _ token: String,
+    _ pupilId: UUID,
+    _ parentIds: [UUID]
+  ) async throws
+
+  func updatePupilBranches(
+    _ token: String,
+    _ pupilId: UUID,
+    _ branchIds: [Int]
+  ) async throws
+
+  func updatePupilDaysOfWeek(
+    _ token: String,
+    _ pupilId: UUID,
+    _ dayIds: [Int]
   ) async throws
 }

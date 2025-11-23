@@ -11,10 +11,10 @@ import Mockingbird
 @testable import ChildrensVillageApiClient
 
 class ChildrensVillageApiClientTests: XCTestCase {
-  
+
   var client: JsonApiClientMock!
   var baseApiUrl = "https://childrens-village.co.uk/api"
-  
+
   override func setUp() {
     client = mock(JsonApiClient.self).initialize()
   }
@@ -132,6 +132,119 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(statusCode, acceptedStatusCode)
   }
 
+  func testCreateParentTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let newParent = NewParentRequestModel(
+      prefix: TitlePrefix.Mrs,
+      firstName: "Jane",
+      lastName: "Doe",
+      active: true,
+      facilitating: false,
+      phone: "07700900123",
+      email: "jane.doe@example.com",
+      primary: nil
+    )
+
+    let apiResponse = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: false,
+      primary: true,
+      firstName: "Jane",
+      lastName: "Doe",
+      prefix: TitlePrefix.Mrs,
+      phone: "07700900123",
+      email: "jane.doe@example.com",
+      attendances: nil
+    )
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "active", "facilitating", "prefix", "firstName", "lastName", "phone", "email"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: UUID = try await createParentTask(apiClient: client, token, newParent)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents")
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(ParentModel.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result, apiResponse.id)
+  }
+
+  func testCreatePupilTask() async throws {
+    // Arrange
+    let token = "fake-token"
+    let newPupil = NewPupilRequestModel(
+      prefix: TitlePrefix.Master,
+      firstName: "John",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      active: true,
+      activeUntil: nil,
+      photographyConsent: true,
+      allergies: "None"
+    )
+
+    let apiResponse = PupilModel(
+      id: UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!,
+      firstName: "John",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      prefix: TitlePrefix.Master,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: true,
+      allergies: "None",
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil
+    )
+
+    given(
+      await client.post(
+        url: any(URL.self),
+        dictionary: any(keys: "prefix", "firstName", "lastName", "dateOfBirth", "active", "photographyConsent", "allergies"),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: UUID = try await createPupilTask(apiClient: client, token, newPupil)
+
+    // Assert
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils")
+
+    verify(
+      await client.post(
+        url: expectedUrl!,
+        dictionary: any([String: Any].self),
+        token: token
+      )
+    )
+      .returning(PupilModel.self)
+      .wasCalled(exactly(1))
+
+    XCTAssertEqual(result, apiResponse.id)
+  }
+
   // FIXME: Mockingbird is complaining about the client.post mock
 //  func testRequestTokenTask_withRequestError() async throws {
 //    // Arrange
@@ -166,6 +279,212 @@ class ChildrensVillageApiClientTests: XCTestCase {
 //    }
 //  }
 
+  func testUpdateParentTask() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let parentId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let updateParent = UpdateParentRequestModel(
+      prefix: TitlePrefix.Mr,
+      firstName: "John",
+      lastName: "Doe",
+      active: true,
+      facilitating: true,
+      phone: "07700900456",
+      email: "john.doe@example.com"
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents/\(parentId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "active", "facilitating", "prefix", "firstName", "lastName", "phone", "email")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    _ = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Compare the dictionaries - all fields should be present since we provided all values
+          guard let active = dict["active"] as? Bool,
+                let facilitating = dict["facilitating"] as? Bool,
+                let prefix = dict["prefix"] as? String,
+                let firstName = dict["firstName"] as? String,
+                let lastName = dict["lastName"] as? String,
+                let phone = dict["phone"] as? String,
+                let email = dict["email"] as? String else { return false }
+
+          return active == updateParent.active! &&
+                 facilitating == updateParent.facilitating! &&
+                 prefix == updateParent.prefix!.rawValue &&
+                 firstName == updateParent.firstName! &&
+                 lastName == updateParent.lastName! &&
+                 phone == updateParent.phone! &&
+                 email == updateParent.email!
+        }),
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
+  func testUpdateParentTask_partialUpdate() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let parentId = UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!
+    let updateParent = UpdateParentRequestModel(
+      firstName: "Jane",
+      active: false
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/parents/\(parentId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "firstName", "active")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    _ = try await updateParentTask(apiClient: client, token, parentId, updateParent)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Only firstName and active should be present
+          guard dict.count == 2,
+                let active = dict["active"] as? Bool,
+                let firstName = dict["firstName"] as? String else { return false }
+
+          return active == updateParent.active! &&
+                 firstName == updateParent.firstName!
+        }),
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
+  func testUpdatePupilTask() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let pupilId = UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+    let updatePupil = UpdatePupilRequestModel(
+      prefix: TitlePrefix.Master,
+      firstName: "Johnny",
+      lastName: "Smith",
+      dateOfBirth: "2015-03-20",
+      active: true,
+      activeUntil: "2025-12-31",
+      photographyConsent: false,
+      allergies: "Peanuts"
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/\(pupilId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "prefix", "firstName", "lastName", "dateOfBirth", "active", "activeUntil", "photographyConsent", "allergies")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    try await updatePupilTask(apiClient: client, token, pupilId, updatePupil)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Compare the dictionaries - all fields should be present since we provided all values
+          guard let prefix = dict["prefix"] as? String,
+                let firstName = dict["firstName"] as? String,
+                let lastName = dict["lastName"] as? String,
+                let dateOfBirth = dict["dateOfBirth"] as? String,
+                let active = dict["active"] as? Bool,
+                let activeUntil = dict["activeUntil"] as? String,
+                let photographyConsent = dict["photographyConsent"] as? Bool,
+                let allergies = dict["allergies"] as? String else { return false }
+
+          return prefix == updatePupil.prefix!.rawValue &&
+                 firstName == updatePupil.firstName! &&
+                 lastName == updatePupil.lastName! &&
+                 dateOfBirth == updatePupil.dateOfBirth! &&
+                 active == updatePupil.active! &&
+                 activeUntil == updatePupil.activeUntil! &&
+                 photographyConsent == updatePupil.photographyConsent! &&
+                 allergies == updatePupil.allergies!
+        }),
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
+  func testUpdatePupilTask_partialUpdate() async throws {
+    // Arrange
+    let token = "fake-update-token"
+    let pupilId = UUID(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+    let updatePupil = UpdatePupilRequestModel(
+      firstName: "Johnny",
+      active: false,
+      photographyConsent: true
+    )
+
+    let expectedUrl = URL(string: "\(baseApiUrl)/pupils/\(pupilId)")
+    let acceptedStatusCode = 204
+    let urlResponse: URLResponse = HTTPURLResponse(url: expectedUrl!, statusCode: acceptedStatusCode, httpVersion: "1.1", headerFields: nil)!
+
+    given(
+      await client.patch(
+        url: any(URL.self),
+        dictionary: any(keys: "firstName", "active", "photographyConsent")
+      )
+    )
+      .willReturn(urlResponse)
+
+    // Act
+    try await updatePupilTask(apiClient: client, token, pupilId, updatePupil)
+
+    // Assert
+    verify(
+      await client.patch(
+        url: expectedUrl!,
+        dictionary: any(where: { dict in
+          // Only firstName, active, and photographyConsent should be present
+          guard dict.count == 3,
+                let firstName = dict["firstName"] as? String,
+                let active = dict["active"] as? Bool,
+                let photographyConsent = dict["photographyConsent"] as? Bool else { return false }
+
+          return firstName == updatePupil.firstName! &&
+                 active == updatePupil.active! &&
+                 photographyConsent == updatePupil.photographyConsent!
+        }),
+        token: token
+      )
+    )
+      .wasCalled(exactly(1))
+  }
+
   func testRequestAllPupilsRegisterTask() async throws {
     // Arrange
     let token = "fake-register-token"
@@ -184,6 +503,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      active: false,
       activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "gluten free",
@@ -235,6 +555,137 @@ class ChildrensVillageApiClientTests: XCTestCase {
     XCTAssertEqual(result.first?.id, apiResponse.daysOfWeek?.first?.pupils?.first?.id)
   }
 
+func testRequestPupilSummariesTask() async throws {
+    // Arrange
+    let token = "fake-pupils-token"
+
+    let pupilA = PupilModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      firstName: "Joe",
+      lastName: "Bloggs",
+      dateOfBirth: "2015-01-01",
+      prefix: TitlePrefix.Master,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: nil,
+      allergies: nil,
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil,
+      // FIXME: This field must be returned
+//      active: true
+    )
+
+    let pupilB = PupilModel(
+      id: UUID(uuidString: "0FB40D04-AC2F-4BAD-8E74-07BF2A4DD55D")!,
+      firstName: "Amy",
+      lastName: "Smith",
+      dateOfBirth: "2017-10-10",
+      prefix: TitlePrefix.Miss,
+      active: true,
+      activeUntil: nil,
+      photographyConsent: nil,
+      allergies: "Peanuts",
+      parents: nil,
+      attendances: nil,
+      branches: nil,
+      daysOfWeek: nil,
+//      active: false
+    )
+
+    let apiResponse = [pupilA, pupilB]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [PupilModel] = try await requestPupilSummariesTask(apiClient: client, token)
+
+    // Assert
+    verify(
+      await client.get(
+        url: any(URL.self, where: {
+          $0.description.contains("/api/pupils") &&
+          $0.description.contains("filter=")
+        }),
+        token: token
+      )
+    )
+    .returning([PupilModel].self)
+    .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.count, 2)
+    XCTAssertEqual(result.first?.id, apiResponse.first?.id)
+    XCTAssertEqual(result.last?.firstName, "Amy")
+  }
+
+  func testRequestParentSummariesTask() async throws {
+    // Arrange
+    let token = "fake-parents-token"
+
+    let parentA = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: true,
+      primary: true,
+      firstName: "Jane",
+      lastName: "Doe",
+      prefix: TitlePrefix.Mrs,
+      phone: "07012345678",
+      email: "",
+      attendances: nil
+    )
+
+    let parentB = ParentModel(
+      id: UUID(uuidString: "753dfb2b-e6c7-4d35-9e6c-0665394b3e6a")!,
+      active: true,
+      facilitating: false,
+      primary: true,
+      firstName: "John",
+      lastName: "Smith",
+      prefix: TitlePrefix.Mr,
+      phone: "07987654321",
+      email: "",
+      attendances: nil
+    )
+
+    let apiResponse = [parentA, parentB]
+
+    given(
+      await client.get(
+        url: any(URL.self),
+        token: any(String.self)
+      )
+    )
+      .willReturn(apiResponse)
+
+    // Act
+    let result: [ParentModel] = try await requestParentSummariesTask(apiClient: client, token)
+
+    // Assert
+    verify(
+      await client.get(
+        url: any(URL.self, where: {
+          $0.description.contains("/api/parents") &&
+          $0.description.contains("filter=")
+        }),
+        token: token
+      )
+    )
+    .returning([ParentModel].self)
+    .wasCalled(exactly(1))
+
+    XCTAssertEqual(result.count, 2)
+    XCTAssertEqual(result.first?.firstName, "Jane")
+    XCTAssertEqual(result.last?.facilitating, false)
+  }
+
   func testRequestPupilTask() async throws {
     // Arrange
     let token = "fake-register-token"
@@ -247,6 +698,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Miss,
+      active: true,
       activeUntil: "2023-12-15",
       photographyConsent: true,
       allergies: "",
@@ -399,6 +851,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Bloggs",
       dateOfBirth: "2015-01-01",
       prefix: TitlePrefix.Master,
+      active: false,
       activeUntil: "2023-12-13",
       photographyConsent: true,
       allergies: "gluten free",
@@ -413,6 +866,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Smith",
       dateOfBirth: "2017-10-10",
       prefix: TitlePrefix.Miss,
+      active: true,
       activeUntil: "",
       photographyConsent: false,
       allergies: "vegan",
@@ -427,6 +881,7 @@ class ChildrensVillageApiClientTests: XCTestCase {
       lastName: "Green",
       dateOfBirth: "2013-12-12",
       prefix: TitlePrefix.Master,
+      active: false,
       activeUntil: "2024-05-20",
       photographyConsent: false,
       allergies: nil,
